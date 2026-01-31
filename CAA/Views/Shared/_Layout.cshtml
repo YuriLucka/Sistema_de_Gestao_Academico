@@ -1,0 +1,246 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <meta name="description" content="@ViewData["Description"]">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect width='48' height='48' rx='8' fill='%2300AD8E'/%3E%3Ctext x='24' y='32' text-anchor='middle' font-size='28' font-family='Arial, Helvetica, sans-serif' fill='white' font-weight='bold'%3EA%3C/text%3E%3C/svg%3E" />
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #128C7E 0%, #075E54 50%, #25D366 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+            .gradient-bg::before {
+                content: '';
+                position: absolute;
+                width: 200%;
+                height: 200%;
+                background: radial-gradient(circle at 20% 50%, rgba(37, 211, 102, 0.3) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(18, 140, 126, 0.3) 0%, transparent 50%);
+                animation: gradientShift 15s ease infinite;
+            }
+
+        @@keyframes gradientShift {
+            0%, 100% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+
+            50% {
+                transform: translate(-10%, -10%) rotate(180deg);
+            }
+        }
+
+        .image-side-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .input-focus {
+            transition: all 0.3s ease;
+        }
+
+            .input-focus:focus {
+                border-color: #25D366;
+                box-shadow: 0 0 0 3px rgba(37, 211, 102, 0.1);
+                outline: none;
+            }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+            transition: all 0.3s ease;
+        }
+
+            .btn-primary:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 10px 30px rgba(37, 211, 102, 0.3);
+            }
+
+        .btn-secondary {
+            transition: all 0.3s ease;
+            border: 2px solid #e5e7eb;
+        }
+
+            .btn-secondary:hover {
+                border-color: #25D366;
+                background: rgba(37, 211, 102, 0.05);
+            }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+            .stat-card:hover {
+                background: rgba(255, 255, 255, 0.15);
+                transform: translateY(-5px);
+            }
+
+        @@media (max-width: 1024px) {
+            .image-side {
+                display: none;
+            }
+
+            .form-side {
+                width: 100%;
+            }
+        }
+
+        @@media (max-width: 640px) {
+            .content-container {
+                padding: 1.5rem;
+            }
+        }
+
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #25D366;
+            border-radius: 5px;
+        }
+
+            ::-webkit-scrollbar-thumb:hover {
+                background: #128C7E;
+            }
+
+        .bg-video {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+            opacity: 0.25; /* ajuste conforme desejar */
+        }
+
+        .image-side-content {
+            position: relative;
+            z-index: 1;
+        }
+    </style>
+
+    @await RenderSectionAsync("Styles", required: false)
+</head>
+<body class="min-h-screen flex">
+    <!-- Left Side - Image/Branding -->
+    <div class="image-side hidden lg:flex lg:w-1/2 gradient-bg items-center justify-center p-12 relative">
+        <video autoplay loop muted playsinline class="bg-video">
+            <source src="~/video/videoLogin.mp4" type="video/mp4" />
+            Seu navegador não suporta vídeo em HTML5.
+        </video>
+        <div class="image-side-content max-w-lg text-white">
+            <div class="image-side-content max-w-lg text-white">
+
+                <!-- Features List -->
+                <div class="image-side-content max-w-lg flex items-center justify-center h-full">
+                    <img src="~/img/marca_uam_campus_athon_branca_horizontal.png" alt="Equipe Athon" class="w-5/5 max-w-md rounded-2xl mx-auto" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Side - Form Content (RenderBody) -->
+    <div class="form-side w-full lg:w-1/2 flex items-center justify-center p-6 bg-gray-50" style="background: url('/img/bgLoginIco.png') center center / cover no-repeat;">
+        <div class="w-full max-w-md">
+            <!-- Mobile Logo -->
+            <div class="lg:hidden text-center mb-8">
+                <div class="flex items-center justify-center gap-2 text-green-600 mb-2">
+                    <i data-lucide="book" class="w-12 h-12"></i>
+                    <span class="text-2xl font-bold">CAA</span>
+                </div>
+            </div>
+
+            <!-- Content Card -->
+            <div class="bg-white rounded-2xl shadow-lg p-8 content-container">
+                @RenderBody()
+            </div>
+        </div>
+    </div>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // Input Focus Animations (aplica a todos os inputs do Identity)
+        document.addEventListener('DOMContentLoaded', function() {
+            const inputs = document.querySelectorAll('input[type="email"], input[type="password"], input[type="text"]');
+            inputs.forEach(input => {
+                // Adiciona classes Tailwind aos inputs do Identity
+                input.classList.add('input-focus', 'w-full', 'px-4', 'py-3', 'border-2', 'border-gray-200', 'rounded-xl', 'text-gray-900', 'placeholder-gray-400', 'text-base');
+
+                // Animação de foco
+                input.addEventListener('focus', function() {
+                    const icon = this.parentElement.querySelector('i[data-lucide]');
+                    if (icon) {
+                        icon.style.color = '#25D366';
+                    }
+                });
+
+                input.addEventListener('blur', function() {
+                    if (!this.value) {
+                        const icon = this.parentElement.querySelector('i[data-lucide]');
+                        if (icon) {
+                            icon.style.color = '#9ca3af';
+                        }
+                    }
+                });
+            });
+
+            // Estiliza botões do Identity automaticamente
+            const submitButtons = document.querySelectorAll('button[type="submit"], input[type="submit"]');
+            submitButtons.forEach(button => {
+                button.classList.add('btn-primary', 'w-full', 'py-4', 'px-4', 'rounded-xl', 'text-white', 'font-semibold', 'text-base');
+            });
+
+            // Estiliza labels
+            const labels = document.querySelectorAll('label');
+            labels.forEach(label => {
+                label.classList.add('block', 'text-sm', 'font-semibold', 'text-gray-700', 'mb-2');
+            });
+
+            // Reinicializa ícones após manipulação do DOM
+            lucide.createIcons();
+        });
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

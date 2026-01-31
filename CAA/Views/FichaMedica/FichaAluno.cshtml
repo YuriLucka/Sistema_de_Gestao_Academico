@@ -1,0 +1,612 @@
+﻿@model CAA.Models.FichaMedica
+
+@{
+    Layout = null;
+    var senhaCadastrada = ViewBag.SenhaCadastrada == true;
+}
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Ficha Médica</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect width='48' height='48' rx='8' fill='%2300AD8E'/%3E%3Ctext x='24' y='32' text-anchor='middle' font-size='28' font-family='Arial, Helvetica, sans-serif' fill='white' font-weight='bold'%3EA%3C/text%3E%3C/svg%3E" />
+    <style>
+        :root {
+            --green-main: #00594e;
+            --green-light: #a6d8cc;
+            --green-bg: #e0f7f4;
+            --gray-text: #646363;
+            --btn-bg: var(--green-main);
+            --btn-hover-bg: #00493f;
+            --input-border: var(--green-main);
+            --input-focus: #a42b81;
+            /* CAA Theme Colors */
+            --caa-green-main: #00594e;
+            --caa-green-dark: #00493f;
+        }
+
+        /* Checkbox custom style for theme color */
+        .form-check-input[type="checkbox"] {
+            width: 1.2em;
+            height: 1.2em;
+            border-radius: 0.25em;
+            border: 2px solid var(--caa-green-main);
+            background-color: #fff;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+            .form-check-input[type="checkbox"]:checked {
+                background-color: var(--caa-green-main);
+                border-color: var(--caa-green-main);
+            }
+
+            .form-check-input[type="checkbox"]:focus {
+                box-shadow: 0 0 0 0.2rem rgba(0,173,142,0.25);
+                border-color: var(--caa-green-dark);
+            }
+
+            .form-check-input[type="checkbox"]:active {
+                filter: brightness(0.95);
+            }
+
+        @@page {
+            size: A4;
+            margin: 15mm;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            font-size: 0.9rem;
+            color: var(--green-main);
+        }
+
+        .container {
+            max-width: 850px;
+            margin: 0 auto;
+            padding: 10mm;
+            background: #fff;
+            border-radius: 16px;
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+            header h1 {
+                font-size: 1.8rem;
+                margin: 0;
+            }
+
+        .logo-placeholder {
+            height: 50px;
+            opacity: 0.85;
+        }
+
+        section {
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-bottom: 10px;
+            box-shadow: none;
+        }
+
+            section > h2 {
+                font-size: 1.1rem;
+                margin-bottom: 10px;
+                border-bottom: 1px solid var(--green-main);
+                padding-bottom: 4px;
+            }
+
+        label.form-label {
+            font-weight: 600;
+            color: var(--green-main);
+            font-size: 1rem;
+        }
+
+        input[type="text"],
+        textarea {
+            border: 1.5px solid var(--input-border);
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-size: 0.9rem;
+            width: 100%;
+        }
+
+        textarea {
+            min-height: 70px;
+            resize: vertical;
+        }
+
+        .form-check-label {
+            user-select: none;
+            color: var(--green-main);
+            font-weight: 500;
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+
+        .form-check-input:checked + .form-check-label {
+            font-weight: 700;
+        }
+
+        .form-check {
+            margin-bottom: 8px;
+        }
+
+        .checkbox-group,
+        .radio-group {
+            margin-bottom: 12px;
+        }
+
+        button[type="submit"] {
+            background-color: var(--btn-bg);
+            border: none;
+            padding: 10px 26px;
+            color: white;
+            font-weight: 700;
+            font-size: 1rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 89, 78, 0.3);
+            cursor: pointer;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+            button[type="submit"]:hover {
+                background-color: var(--btn-hover-bg);
+                box-shadow: 0 8px 24px rgba(0, 89, 78, 0.4);
+            }
+
+        .form-inline-row {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+            .form-inline-row > div {
+                flex: 1 1 48%;
+                min-width: 300px;
+            }
+
+        /* Contato - layout compacto com padding lateral */
+        #contato-title {
+            margin-bottom: 15px;
+        }
+
+            #contato-title + div {
+                padding-left: 16px;
+                padding-right: 16px;
+            }
+
+                #contato-title + div > .col-12 {
+                    padding-left: 0;
+                    padding-right: 0;
+                }
+
+        .d-flex.flex-row.flex-wrap.align-items-end.gap-3 {
+            gap: 15px;
+        }
+
+            .d-flex.flex-row.flex-wrap.align-items-end.gap-3 > div {
+                min-width: 180px;
+                flex-grow: 1;
+            }
+
+        /* Layout horizontal para alguns labels-inputs com input abaixo da label */
+        .horizontal-label-input {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0;
+            margin-bottom: 12px;
+        }
+
+            .horizontal-label-input > label {
+                width: 100%;
+                margin-bottom: 6px;
+                font-weight: 600;
+                color: var(--green-main);
+            }
+
+            .horizontal-label-input > input[type="text"] {
+                width: 100%;
+                max-width: none;
+            }
+
+        /* Duas colunas para checkbox grupo - problema crônico */
+        .checkbox-columns {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+        }
+
+        .checkbox-column {
+            flex: 1;
+            min-width: 150px;
+        }
+
+        /* Duas colunas para portador de deficiência */
+        .deficiencia-columns {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+        }
+
+        .deficiencia-column {
+            flex: 1;
+            min-width: 150px;
+        }
+
+        @@media (max-width: 767px) {
+            .form-inline-row > div {
+                flex: 1 1 100%;
+                min-width: 100%;
+            }
+
+            .d-flex.flex-row.flex-wrap.align-items-end.gap-3 {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+                .d-flex.flex-row.flex-wrap.align-items-end.gap-3 > div {
+                    min-width: 100%;
+                    flex-grow: unset;
+                }
+
+            .checkbox-columns,
+            .deficiencia-columns {
+                flex-direction: column;
+            }
+
+            #contato-title + div {
+                padding-left: 0;
+                padding-right: 0;
+            }
+        }
+
+        input[type="text"]:not(:placeholder-shown):not([readonly]),
+        textarea:not(:placeholder-shown):not([readonly]) {
+            /* No change for normal view */
+        }
+
+        @@media print {
+            input[type="text"],
+            textarea {
+                /* Remove placeholder text when printing */
+                color: #000;
+            }
+
+                input[type="text"]::placeholder,
+                textarea::placeholder {
+                    color: transparent !important;
+                }
+        }
+
+        @@media print {
+            .btn-print-hide {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <form id="fichaForm" asp-action="FichaAluno" method="post">
+        <div class="container">
+            <header>
+                <h1><i class="fa fa-notes-medical"></i> FICHA MÉDICA</h1>
+                <img src="~/img/marca_uam_campus_athon.png" alt="Logo Instituição" class="logo-placeholder" />
+            </header>
+            @if (ViewBag.SenhaErro != null)
+            {
+                <div class="alert alert-danger text-center">@ViewBag.SenhaErro</div>
+            }
+
+            <!-- Nome completo e RA obrigatórios -->
+            <section aria-label="Informações pessoais">
+                <div class="row g-3">
+                    <div class="col-12 col-md-8">
+                        <label for="NomeCompleto" class="form-label">Nome Completo</label>
+                        <input type="text" id="NomeCompleto" name="NomeCompleto" value="@Model?.NomeCompleto" placeholder="Digite seu nome completo" required />
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <label for="RA" class="form-label">RA</label>
+                        <input type="text" id="RA" name="RA" value="@Model?.RA" placeholder="Registro Acadêmico" maxlength="9" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0,9)" />
+                    </div>
+                </div>
+            </section>
+
+            <!-- Sofre algum problema crônico? -->
+            <section aria-labelledby="problema-cronico-title">
+                <h2 id="problema-cronico-title"><i class="fa fa-heartbeat"></i> Sofre algum problema crônico?</h2>
+                <div class="checkbox-columns" role="group" aria-label="Problemas crônicos">
+                    <div class="checkbox-column">
+                        <div class="form-check">
+                            <input type="checkbox" id="Diabetes" name="Diabetes" class="form-check-input" value="true" @(Model?.Diabetes == true ? "checked" : "") />
+                            <label for="Diabetes" class="form-check-label">Diabetes</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" id="CriseConvulsiva" name="CriseConvulsiva" class="form-check-input" value="true" @(Model?.CriseConvulsiva == true ? "checked" : "") />
+                            <label for="CriseConvulsiva" class="form-check-label">Crise convulsiva</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" id="Taquicardia" name="Taquicardia" class="form-check-input" value="true" @(Model?.Taquicardia == true ? "checked" : "") />
+                            <label for="Taquicardia" class="form-check-label">Taquicardia</label>
+                        </div>
+                    </div>
+                    <div class="checkbox-column">
+                        <div class="form-check">
+                            <input type="checkbox" id="Bronquite" name="Bronquite" class="form-check-input" value="true" @(Model?.Bronquite == true ? "checked" : "") />
+                            <label for="Bronquite" class="form-check-label">Bronquite</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" id="Rinite" name="Rinite" class="form-check-input" value="true" @(Model?.Rinite == true ? "checked" : "") />
+                            <label for="Rinite" class="form-check-label">Rinite</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" id="Sinusite" name="Sinusite" class="form-check-input" value="true" @(Model?.Sinusite == true ? "checked" : "") />
+                            <label for="Sinusite" class="form-check-label">Sinusite</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row g-3">
+                    <div class="col-12 col-md-12">
+                        <label for="OutrosProblemasCronicos" class="form-label">Outros, quais?</label>
+                        <input type="text" id="OutrosProblemasCronicos" name="OutrosProblemasCronicos" value="@Model?.OutrosProblemasCronicos" placeholder="Descreva outros problemas" />
+                    </div>
+                </div>
+            </section>
+
+            <!-- Faz uso de algum medicamento? -->
+            <section aria-labelledby="uso-medicamento-title">
+                <h2 id="uso-medicamento-title"><i class="fa fa-pills"></i> Faz uso de algum medicamento?</h2>
+                <div class="row">
+                    <div class="col-12">
+                        <label for="Medicamentos" class="form-label">Sim, qual?</label>
+                        <input type="text" id="Medicamentos" name="Medicamentos" value="@Model?.Medicamentos" placeholder="Informe quais" />
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tem alergia? -->
+            <section aria-labelledby="alergia-title">
+                <h2 id="alergia-title"><i class="fa fa-allergies"></i> Tem alergia?</h2>
+                <div>
+                    <label for="AlergiaMedicamentos" class="form-label">Medicamentos, quais?</label>
+                    <input type="text" id="AlergiaMedicamentos" name="AlergiaMedicamentos" value="@Model?.AlergiaMedicamentos" placeholder="Informe medicamentos" />
+                </div>
+                <div>
+                    <label for="AlergiaInsetos" class="form-label">Picada de insetos, quais?</label>
+                    <input type="text" id="AlergiaInsetos" name="AlergiaInsetos" value="@Model?.AlergiaInsetos" placeholder="Informe insetos" />
+                </div>
+                <div>
+                    <label for="AlergiaAlimentos" class="form-label">Alimentos, quais?</label>
+                    <input type="text" id="AlergiaAlimentos" name="AlergiaAlimentos" value="@Model?.AlergiaAlimentos" placeholder="Informe alimentos" />
+                </div>
+                <div>
+                    <label for="OutrasAlergias" class="form-label">Outros, quais?</label>
+                    <input type="text" id="OutrasAlergias" name="OutrasAlergias" value="@Model?.OutrasAlergias" placeholder="Detalhe a alergia" />
+                </div>
+            </section>
+
+            <!-- Está se submetendo a algum tratamento atualmente? -->
+            <section aria-labelledby="tratamento-title">
+                <h2 id="tratamento-title"><i class="fa fa-stethoscope"></i> Está se submetendo a algum tratamento atualmente?</h2>
+                <div class="row">
+                    <div class="col-12">
+                        <label for="TratamentoMedico" class="form-label">Sim, qual?</label>
+                        <input type="text" id="TratamentoMedico" name="TratamentoMedico" value="@Model?.TratamentoMedico" placeholder="Descreva o tratamento" />
+                    </div>
+                </div>
+            </section>
+
+            <!-- Possui convênio médico? -->
+            <section>
+                <label for="ConvenioMedico" class="form-label">Possui convênio médico?</label>
+                <input type="text" id="ConvenioMedico" name="ConvenioMedico" value="@Model?.ConvenioMedico" placeholder="Digite o nome do convênio, se houver" />
+            </section>
+
+            <!-- Portador de deficiência? -->
+            <section aria-labelledby="deficiencia-title">
+                <h2 id="deficiencia-title"><i class="fa fa-wheelchair"></i> Portador de deficiência?</h2>
+                <div class="deficiencia-columns" role="group" aria-label="Deficiências listadas">
+                    <div class="deficiencia-column">
+                        <div class="form-check">
+                            <input type="checkbox" id="DefCegueira" name="DefCegueira" class="form-check-input" value="true" @(Model?.DefCegueira == true ? "checked" : "") />
+                            <label for="DefCegueira" class="form-check-label">Cegueira</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" id="DefBaixaVisao" name="DefBaixaVisao" class="form-check-input" value="true" @(Model?.DefBaixaVisao == true ? "checked" : "") />
+                            <label for="DefBaixaVisao" class="form-check-label">Baixa visão</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" id="DefSurdocegueira" name="DefSurdocegueira" class="form-check-input" value="true" @(Model?.DefSurdocegueira == true ? "checked" : "") />
+                            <label for="DefSurdocegueira" class="form-check-label">Surdocegueira</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" id="DefSurdez" name="DefSurdez" class="form-check-input" value="true" @(Model?.DefSurdez == true ? "checked" : "") />
+                            <label for="DefSurdez" class="form-check-label">Surdez</label>
+                        </div>
+                    </div>
+                    <div class="deficiencia-column">
+                        <div class="form-check">
+                            <input type="checkbox" id="DefAuditiva" name="DefAuditiva" class="form-check-input" value="true" @(Model?.DefAuditiva == true ? "checked" : "") />
+                            <label for="DefAuditiva" class="form-check-label">Auditiva</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" id="DefFisica" name="DefFisica" class="form-check-input" value="true" @(Model?.DefFisica == true ? "checked" : "") />
+                            <label for="DefFisica" class="form-check-label">Física</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" id="DefMultipla" name="DefMultipla" class="form-check-input" value="true" @(Model?.DefMultipla == true ? "checked" : "") />
+                            <label for="DefMultipla" class="form-check-label">Múltipla</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" id="DefIntelectual" name="DefIntelectual" class="form-check-input" value="true" @(Model?.DefIntelectual == true ? "checked" : "") />
+                            <label for="DefIntelectual" class="form-check-label">Intelectual</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row g-3 mt-3">
+                    <div class="col-12 col-md-12">
+                        <label for="OutrasDeficiencias" class="form-label">Outros, quais?</label>
+                        <input type="text" id="OutrasDeficiencias" name="OutrasDeficiencias" value="@Model?.OutrasDeficiencias" placeholder="Descreva a deficiência" />
+                    </div>
+                </div>
+            </section>
+
+            <!-- Outras informações -->
+            <section>
+                <label for="InformacoesAdicionais" class="form-label">Descreva outras informações que julgar importante ou algum procedimento específico que deva ser tomado.</label>
+                <textarea id="InformacoesAdicionais" name="InformacoesAdicionais" placeholder="Detalhes adicionais..." style="resize: none;" rows="3">@Model?.InformacoesAdicionais</textarea>
+            </section>
+
+            <!-- Contatos -->
+            <section aria-labelledby="contato-title">
+                <h2 id="contato-title"><i class="fa fa-phone"></i> Contato</h2>
+                <div class="row g-3" style="padding-left:16px; padding-right:16px;">
+                    <div class="col-12">
+                        <div class="d-flex flex-row flex-wrap align-items-end gap-3">
+                            <div style="min-width:180px; flex-grow:1;">
+                                <label for="NomeContato1" class="form-label">Nome do contato 1</label>
+                                <input type="text" id="NomeContato1" name="NomeContato1" value="@Model?.NomeContato1" placeholder="Nome da pessoa" />
+                            </div>
+                            <div style="min-width:180px; flex-grow:1;">
+                                <label for="Contato1" class="form-label">Telefone</label>
+                                <input type="text" id="Contato1" name="Contato1" value="@Model?.Contato1" placeholder="Contato 1" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="d-flex flex-row flex-wrap align-items-end gap-3">
+                            <div style="min-width:180px; flex-grow:1;">
+                                <label for="NomeContato2" class="form-label">Nome do contato 2</label>
+                                <input type="text" id="NomeContato2" name="NomeContato2" value="@Model?.NomeContato2" placeholder="Nome da pessoa" />
+                            </div>
+                            <div style="min-width:180px; flex-grow:1;">
+                                <label for="Contato2" class="form-label">Telefone</label>
+                                <input type="text" id="Contato2" name="Contato2" value="@Model?.Contato2" placeholder="Contato 2" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="d-flex flex-row flex-wrap align-items-end gap-3">
+                            <div style="min-width:180px; flex-grow:1;">
+                                <label for="NomeContato3" class="form-label">Nome do contato 3</label>
+                                <input type="text" id="NomeContato3" name="NomeContato3" value="@Model?.NomeContato3" placeholder="Nome da pessoa" />
+                            </div>
+                            <div style="min-width:180px; flex-grow:1;">
+                                <label for="Contato3" class="form-label">Telefone</label>
+                                <input type="text" id="Contato3" name="Contato3" value="@Model?.Contato3" placeholder="Contato 3" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <div class="mt-4 d-flex justify-content-center gap-3">
+                <button type="button" id="btnEnviarFicha" class="btn btn-success btn-print-hide" style="font-weight:700;" disabled>
+                    <i class="fa fa-paper-plane"></i> Enviar
+                </button>
+                <input type="hidden" name="Senha" id="SenhaHidden" />
+            </div>
+        </div>
+    </form>
+
+    <div class="modal fade" id="senhaModal" tabindex="-1" aria-labelledby="senhaModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="senhaModalLabel">Confirmação de Envio</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="senhaInput" class="form-label">Digite sua senha para confirmar o envio:</label>
+                        <input type="password" class="form-control" id="senhaInput" autocomplete="current-password" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="btnConfirmarSenha">Confirmar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var btnVoltar = document.getElementById('btn-voltar-ficha');
+            if (btnVoltar) {
+                btnVoltar.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    Swal.fire({
+                        title: 'Tem certeza que deseja voltar?',
+                        text: 'Se voltar, você perderá qualquer preenchimento feito no formulário.',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#00594e',
+                        confirmButtonText: 'Sim, voltar',
+                        cancelButtonText: 'Cancelar'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = btnVoltar.getAttribute('href');
+                        }
+                    });
+                });
+            }
+
+            var btnEnviar = document.getElementById('btnEnviarFicha');
+            var nomeInput = document.getElementById('NomeCompleto');
+            var raInput = document.getElementById('RA');
+
+            function toggleEnviarButton() {
+                btnEnviar.disabled = !(nomeInput.value.trim());
+            }
+            nomeInput.addEventListener('input', toggleEnviarButton);
+            raInput.addEventListener('input', toggleEnviarButton);
+            toggleEnviarButton(); // inicializa estado
+
+            var senhaModal = new bootstrap.Modal(document.getElementById('senhaModal'));
+            var btnConfirmarSenha = document.getElementById('btnConfirmarSenha');
+            var senhaInput = document.getElementById('senhaInput');
+            var form = document.getElementById('fichaForm');
+            var senhaHidden = document.getElementById('SenhaHidden');
+            var senhaCadastrada = @senhaCadastrada.ToString().ToLower();
+
+            btnEnviar.addEventListener('click', function (e) {
+                e.preventDefault();
+                if (senhaCadastrada) {
+                    senhaInput.value = '';
+                    senhaModal.show();
+                } else {
+                    form.submit();
+                }
+            });
+
+            btnConfirmarSenha.addEventListener('click', function () {
+                if (!senhaInput.value) {
+                    senhaInput.classList.add('is-invalid');
+                    senhaInput.focus();
+                    return;
+                }
+                senhaHidden.value = senhaInput.value;
+                senhaModal.hide();
+                form.submit();
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,70 @@
+﻿@page
+@model RegisterModel
+@{
+    ViewData["Title"] = "Registrar";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <h1 class="display-6 fw-bold text-primary text-center mb-4">Registrar</h1>
+                    <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3" role="alert"></div>
+                        <div class="form-floating mb-3">
+                            <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="nome@exemplo.com" />
+                            <label asp-for="Input.Email">E-mail</label>
+                            <span asp-validation-for="Input.Email" class="text-danger"></span>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input asp-for="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="senha" />
+                            <label asp-for="Input.Password">Senha</label>
+                            <span asp-validation-for="Input.Password" class="text-danger"></span>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="senha" />
+                            <label asp-for="Input.ConfirmPassword">Confirmar senha</label>
+                            <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+                        </div>
+                        <button id="registerSubmit" type="submit" class="btn btn-primary w-100 mb-3">Registrar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-5 mt-4 mt-md-0">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body p-4 text-center d-flex flex-column justify-content-center">
+                    <h3 class="fw-bold text-secondary mb-3">Registrar com serviço externo</h3>
+                    <hr />
+                    @if ((Model.ExternalLogins?.Count ?? 0) == 0)
+                    {
+                        <div>
+                            <p class="text-muted">
+                                Não há serviços de autenticação externa configurados.<br />
+                                Veja este <a href="https://go.microsoft.com/fwlink/?LinkID=532715">artigo sobre como configurar este aplicativo ASP.NET para suportar login via serviços externos</a>.
+                            </p>
+                        </div>
+                    }
+                    else
+                    {
+                        <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
+                            <div class="d-flex flex-wrap gap-2 justify-content-center">
+                                @foreach (var provider in Model.ExternalLogins!)
+                                {
+                                    <button type="submit" class="btn btn-outline-primary" name="provider" value="@provider.Name" title="Entrar usando sua conta @provider.DisplayName">
+                                        <i class="bi bi-box-arrow-in-right me-2"></i>@provider.DisplayName
+                                    </button>
+                                }
+                            </div>
+                        </form>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

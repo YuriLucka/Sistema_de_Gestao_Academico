@@ -1,0 +1,71 @@
+﻿@page
+@model LoginWithRecoveryCodeModel
+@{
+    ViewData["Title"] = "Verificação do código de recuperação";
+    Layout = "/Views/Shared/_Layout.cshtml";
+}
+
+<div class="flex items-center justify-center min-h-[60vh] py-8 px-4">
+    <div class="w-full max-w-md">
+        <div class="mb-6 text-center">
+            <i data-lucide="refresh-cw" class="w-12 h-12 text-[#25D366] mb-4"></i>
+            <h1 class="text-2xl md:text-3xl font-bold text-gray-900 mb-2">@ViewData["Title"]</h1>
+            <p class="text-gray-600 text-base mb-4">Você solicitou entrar com um código de recuperação.<br>Este login não será lembrado até que você forneça um código do autenticador ao entrar ou desative a autenticação em dois fatores e entre novamente.</p>
+        </div>
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded-lg animate-pulse" role="alert"></div>
+            <!-- Recovery Code -->
+            <div class="mb-5">
+                <label asp-for="Input.RecoveryCode" class="block text-sm font-semibold text-gray-700 mb-2">Código de recuperação</label>
+                <div class="relative flex items-center">
+                    <div class="absolute left-0 pl-4 flex items-center h-full pointer-events-none">
+                        <i data-lucide="key" class="w-5 h-5 text-gray-400"></i>
+                    </div>
+                    <input asp-for="Input.RecoveryCode"
+                           class="input-focus w-full pl-12 pr-4 py-3.5 border-2 border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 text-base"
+                           autocomplete="off"
+                           aria-required="true"
+                           placeholder="Digite o código de recuperação" />
+                </div>
+                <span asp-validation-for="Input.RecoveryCode" class="text-red-600 text-sm mt-1 block"></span>
+            </div>
+            <button type="submit" class="btn-primary w-full py-4 px-4 rounded-xl text-white font-semibold text-base mb-3 transition-all hover:shadow-lg flex items-center justify-center gap-2">
+                <i data-lucide="log-in" class="w-5 h-5"></i>
+                Entrar
+            </button>
+            <div class="text-center pt-2 flex flex-col gap-2">
+                <a asp-page="./LoginWith2fa" class="text-gray-600 hover:text-green-600 text-sm font-medium flex items-center justify-center gap-2 transition-colors">
+                    <i data-lucide="shield" class="w-4 h-4"></i>
+                    Voltar para digitar o código do autenticador
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>lucide.createIcons();</script>
+}
+
+<style>
+    .btn-primary {
+        background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+        transition: all 0.3s ease;
+    }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(37, 211, 102, 0.3);
+        }
+
+    .input-focus {
+        transition: all 0.3s ease;
+    }
+
+        .input-focus:focus {
+            border-color: #25D366;
+            box-shadow: 0 0 0 3px rgba(37, 211, 102, 0.1);
+            outline: none;
+        }
+</style>

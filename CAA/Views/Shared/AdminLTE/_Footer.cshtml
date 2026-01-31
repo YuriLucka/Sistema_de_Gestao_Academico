@@ -1,0 +1,198 @@
+﻿<!--begin::Footer-->
+<footer class="app-footer">
+    <div class="footer-content">
+        <div class="footer-left">
+            <div class="footer-logo-section">
+                <i class="bi bi-mortarboard-fill footer-icon"></i>
+                <div class="footer-info">
+                    <strong class="footer-brand">
+                        Sistema CAA -
+                        <a href="https://anhembisorocaba.com.br/" target="_blank" class="footer-link">
+                            Anhembi Morumbi Sorocaba
+                        </a>
+                    </strong>
+                    <span class="footer-subtitle">Central de Atendimento ao Aluno</span>
+                </div>
+            </div>
+        </div>
+        <div class="footer-right">
+            <div class="footer-meta">
+                <span class="footer-version">
+                    <i class="bi bi-code-square"></i>
+                    Versão 1.0.0
+                </span>
+                <span class="footer-copyright">
+                    <i class="bi bi-c-circle"></i>
+                    @DateTime.Now.Year - Todos os direitos reservados
+                </span>
+            </div>
+        </div>
+    </div>
+</footer>
+<!--end::Footer-->
+
+<style>
+    /* Footer Styling */
+    .app-footer {
+        background: linear-gradient(135deg, rgba(37, 211, 102, 0.03) 0%, rgba(18, 140, 126, 0.03) 100%);
+        border-top: 2px solid rgba(37, 211, 102, 0.15);
+        padding: 1.5rem 2rem;
+        margin-top: auto;
+        backdrop-filter: blur(10px);
+    }
+
+    .footer-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+
+    /* Footer Left Section */
+    .footer-left {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .footer-logo-section {
+        display: flex;
+        align-items: center;
+        gap: 0.875rem;
+    }
+
+    .footer-icon {
+        width: 42px;
+        height: 42px;
+        background: linear-gradient(135deg, var(--caa-green-main), var(--caa-green-dark));
+        color: white;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+        flex-shrink: 0;
+        box-shadow: 0 3px 10px rgba(37, 211, 102, 0.25);
+    }
+
+    .footer-info {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+
+    .footer-brand {
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: #374151;
+        line-height: 1.3;
+    }
+
+    .footer-link {
+        color: var(--caa-green-dark);
+        text-decoration: none;
+        font-weight: 700;
+        transition: all 0.3s ease;
+        position: relative;
+    }
+
+        .footer-link:hover {
+            color: var(--caa-green-main);
+            text-decoration: none;
+        }
+
+        .footer-link::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--caa-green-main);
+            transition: width 0.3s ease;
+        }
+
+        .footer-link:hover::after {
+            width: 100%;
+        }
+
+    .footer-subtitle {
+        font-size: 0.8rem;
+        color: #6b7280;
+        font-weight: 500;
+    }
+
+    /* Footer Right Section */
+    .footer-right {
+        display: flex;
+        align-items: center;
+    }
+
+    .footer-meta {
+        display: flex;
+        flex-direction: column;
+        gap: 0.35rem;
+        text-align: right;
+    }
+
+    .footer-version,
+    .footer-copyright {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        font-size: 0.85rem;
+        color: #6b7280;
+        font-weight: 500;
+    }
+
+    .footer-version {
+        justify-content: flex-end;
+    }
+
+        .footer-version i,
+        .footer-copyright i {
+            color: var(--caa-green-main);
+            font-size: 0.9rem;
+        }
+
+    /* Responsive Design */
+    @@media (max-width: 768px) {
+        .app-footer
+
+    {
+        padding: 1.25rem 1rem;
+    }
+
+    .footer-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 1.25rem;
+    }
+
+    .footer-left,
+    .footer-logo-section {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .footer-meta {
+        text-align: center;
+        align-items: center;
+    }
+
+    .footer-version,
+    .footer-copyright {
+        justify-content: center;
+    }
+
+    .footer-brand,
+    .footer-subtitle {
+        text-align: center;
+    }
+
+    }
+
+</style>

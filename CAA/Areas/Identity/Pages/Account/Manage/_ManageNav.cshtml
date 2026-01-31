@@ -1,0 +1,38 @@
+﻿@using CAA.Models
+@inject SignInManager<Usuario> SignInManager
+@{
+    var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
+}
+<ul class="nav flex-column py-3 px-2 rounded-4 caa-manage-nav">
+    <li class="nav-item mb-2">
+        <a class="nav-link d-flex align-items-center gap-2 @ManageNavPages.IndexNavClass(ViewContext) link-caa fw-semibold px-3 py-2 rounded-3" id="profile" asp-page="./Index">
+            <span class="bi bi-person-circle"></span> Perfil
+        </a>
+    </li>
+    <li class="nav-item mb-2">
+        <a class="nav-link d-flex align-items-center gap-2 @ManageNavPages.ChangePasswordNavClass(ViewContext) link-caa fw-semibold px-3 py-2 rounded-3" id="change-password" asp-page="./ChangePassword">
+            <span class="bi bi-key"></span> Senha
+        </a>
+    </li>
+    <li class="nav-item mb-2">
+        <a class="nav-link d-flex align-items-center gap-2 @ManageNavPages.TwoFactorAuthenticationNavClass(ViewContext) link-caa fw-semibold px-3 py-2 rounded-3" id="two-factor" asp-page="./TwoFactorAuthentication">
+            <span class="bi bi-shield-lock"></span> Autenticação
+        </a>
+    </li>
+</ul>
+
+<style>
+.caa-manage-nav .nav-link {
+    color: var(--caa-green-main, #00ad8e) !important;
+    background: transparent;
+    transition: background 0.2s, color 0.2s;
+}
+.caa-manage-nav .nav-link.active, .caa-manage-nav .nav-link:focus, .caa-manage-nav .nav-link:hover {
+    background: var(--caa-green-main, #00ad8e);
+    color: #fff !important;
+}
+.caa-manage-nav .nav-link .bi {
+    font-size: 1.2rem;
+    opacity: 0.85;
+}
+</style>

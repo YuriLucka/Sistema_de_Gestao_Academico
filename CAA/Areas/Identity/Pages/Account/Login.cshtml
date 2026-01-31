@@ -1,0 +1,181 @@
+﻿@page
+@model LoginModel
+
+@{
+    ViewData["Title"] = "Login";
+    Layout = "/Views/Shared/_Layout.cshtml";
+}
+
+<div class="mb-8">
+    <h1 class="text-3xl font-bold text-gray-900 mb-2 text-center">Bem-vindo de volta</h1>
+    <p class="text-gray-600 text-center">Entre com seus dados para acessar sua conta</p>
+</div>
+
+<section>
+    <form id="account" method="post">
+        <div asp-validation-summary="ModelOnly" class="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded-lg" role="alert"></div>
+
+        <!-- UserName -->
+        <div class="mb-5">
+            <label asp-for="Input.UserName" class="block text-sm font-semibold text-gray-700 mb-2">Usuário</label>
+            <div class="relative flex items-center">
+                <div class="absolute left-0 pl-4 flex items-center h-full pointer-events-none">
+                    <i data-lucide="user" class="w-5 h-5 text-gray-400"></i>
+                </div>
+                <input asp-for="Input.UserName"
+                       class="input-focus w-full pl-12 pr-4 py-3.5 border-2 border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 text-base"
+                       autocomplete="username"
+                       aria-required="true"
+                       placeholder="Digite seu usuário" />
+            </div>
+            <span asp-validation-for="Input.UserName" class="text-red-600 text-sm mt-1 block"></span>
+        </div>
+
+        <!-- Password -->
+        <div class="mb-5">
+            <label asp-for="Input.Password" class="block text-sm font-semibold text-gray-700 mb-2">Senha</label>
+            <div class="relative flex items-center">
+                <div class="absolute left-0 pl-4 flex items-center h-full pointer-events-none">
+                    <i data-lucide="lock" class="w-5 h-5 text-gray-400"></i>
+                </div>
+                <input asp-for="Input.Password"
+                       type="password"
+                       id="password-field"
+                       class="input-focus w-full pl-12 pr-12 py-3.5 border-2 border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 text-base"
+                       autocomplete="current-password"
+                       aria-required="true"
+                       placeholder="Digite sua senha" />
+            </div>
+            <span asp-validation-for="Input.Password" class="text-red-600 text-sm mt-1 block"></span>
+        </div>
+
+        <!-- Remember Me & Forgot Password -->
+        <div class="flex items-center justify-between mb-6">
+            <label class="flex items-center cursor-pointer">
+                <input asp-for="Input.RememberMe"
+                       class="checkbox-whatsapp w-5 h-5 border-2 border-gray-300 rounded focus:ring-2 focus:ring-[#25D366] focus:border-[#25D366] transition-all duration-200 cursor-pointer" />
+                <span class="ml-2 text-sm text-gray-700">
+                    @Html.DisplayNameFor(m => m.Input.RememberMe)
+                </span>
+            </label>
+            <a id="forgot-password" asp-page="./ForgotPassword" class="text-sm text-green-600 hover:text-green-700 font-semibold transition-colors">
+                Esqueceu sua senha?
+            </a>
+        </div>
+
+        <!-- Submit Button -->
+        <button id="login-submit"
+                type="submit"
+                class="btn-primary w-full py-4 px-4 rounded-xl text-white font-semibold text-base mb-6 transition-all hover:shadow-lg">
+            Entrar na minha conta
+        </button>
+    </form>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // Form Validation Enhancement
+        const form = document.getElementById('account');
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                const userName = document.querySelector('input[name="Input.UserName"]');
+                const password = document.querySelector('input[name="Input.Password"]');
+
+                if (!userName.value || !password.value) {
+                    e.preventDefault();
+
+                    // Show custom error message
+                    const errorDiv = document.createElement('div');
+                    errorDiv.className = 'bg-red-50 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded-lg animate-pulse';
+                    errorDiv.innerHTML = `
+                        <div class="flex items-center gap-2">
+                            <i data-lucide="alert-circle" class="w-5 h-5"></i>
+                            <span class="font-medium">Por favor, preencha todos os campos obrigatórios.</span>
+                        </div>
+                    `;
+
+                    // Remove existing error if present
+                    const existingError = document.querySelector('.animate-pulse');
+                    if (existingError) {
+                        existingError.remove();
+                    }
+
+                    form.parentNode.insertBefore(errorDiv, form);
+                    lucide.createIcons();
+
+                    // Scroll to error
+                    errorDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+                    // Remove after 5 seconds
+                    setTimeout(() => {
+                        errorDiv.remove();
+                    }, 5000);
+                }
+            });
+        }
+    </script>
+}
+
+<style>
+    /* Custom styles for this page */
+    .input-focus {
+        transition: all 0.3s ease;
+    }
+
+        .input-focus:focus {
+            border-color: #25D366;
+            box-shadow: 0 0 0 3px rgba(37, 211, 102, 0.1);
+            outline: none;
+        }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+        transition: all 0.3s ease;
+    }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(37, 211, 102, 0.3);
+        }
+
+    /* Checkbox WhatsApp Style */
+    .checkbox-whatsapp {
+        accent-color: #25D366;
+        border-radius: 6px;
+        border: 2px solid #25D366;
+        box-shadow: 0 2px 8px rgba(37, 211, 102, 0.08);
+        transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+        .checkbox-whatsapp:focus {
+            outline: none;
+            border-color: #128C7E;
+            box-shadow: 0 0 0 2px #25D36644;
+        }
+
+        .checkbox-whatsapp:checked {
+            background-color: #25D366;
+            border-color: #128C7E;
+        }
+
+    /* Smooth animation for validation errors */
+    @@keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .animate-pulse {
+        animation: slideIn 0.3s ease;
+    }
+</style>

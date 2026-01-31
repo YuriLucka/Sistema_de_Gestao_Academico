@@ -1,0 +1,525 @@
+﻿@model CAA.Models.Desconto
+
+@{
+    ViewData["Title"] = "Criar Desconto";
+}
+
+<style>
+    :root {
+        --primary-green: #25D366;
+        --secondary-green: #128C7E;
+        --discount-purple: #8b5cf6;
+        --discount-purple-dark: #7c3aed;
+        --discount-purple-light: rgba(139, 92, 246, 0.1);
+    }
+
+    /* Page Container */
+    .form-page-container {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    /* Page Header */
+    .form-page-header {
+        background: linear-gradient(135deg, rgba(139, 92, 246, 0.05) 0%, rgba(124, 58, 237, 0.05) 100%);
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        border: 1px solid rgba(139, 92, 246, 0.2);
+        backdrop-filter: blur(10px);
+        text-align: center;
+    }
+
+        .form-page-header h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--discount-purple);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+        }
+
+            .form-page-header h1 i {
+                font-size: 2rem;
+            }
+
+        .form-page-header p {
+            color: #6b7280;
+            margin: 0;
+            font-size: 0.95rem;
+        }
+
+    /* Form Card */
+    .form-card {
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+        border: 2px solid #f3f4f6;
+        transition: all 0.3s ease;
+    }
+
+        .form-card:hover {
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+            border-color: rgba(139, 92, 246, 0.3);
+        }
+
+    .form-card-body {
+        padding: 2.5rem;
+    }
+
+    /* Validation Summary */
+    .validation-summary {
+        background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(220, 38, 38, 0.1) 100%);
+        border-left: 4px solid #ef4444;
+        border-radius: 12px;
+        padding: 1rem 1.25rem;
+        margin-bottom: 1.5rem;
+        color: #dc2626;
+        font-size: 0.9rem;
+    }
+
+        .validation-summary ul {
+            margin: 0.5rem 0 0 0;
+            padding-left: 1.25rem;
+        }
+
+    /* Form Groups */
+    .form-group-modern {
+        margin-bottom: 1.75rem;
+        position: relative;
+    }
+
+        .form-group-modern:last-of-type {
+            margin-bottom: 2rem;
+        }
+
+    /* Labels */
+    .form-label-modern {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 0.75rem;
+        font-size: 0.95rem;
+        transition: color 0.3s ease;
+    }
+
+        .form-label-modern i {
+            color: var(--discount-purple);
+            font-size: 1rem;
+        }
+
+    .form-group-modern:focus-within .form-label-modern {
+        color: var(--discount-purple);
+    }
+
+    /* Input Fields */
+    .form-control-modern {
+        border: 2px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 0.875rem 1.125rem;
+        transition: all 0.3s ease;
+        font-size: 0.95rem;
+        background: white;
+        width: 100%;
+        color: #1f2937;
+    }
+
+        .form-control-modern:focus {
+            border-color: var(--discount-purple);
+            box-shadow: 0 0 0 4px var(--discount-purple-light);
+            outline: none;
+            background: #fafafa;
+        }
+
+        .form-control-modern::placeholder {
+            color: #9ca3af;
+        }
+
+    /* Select Fields */
+    .form-select-modern {
+        border: 2px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 0.875rem 1.125rem;
+        transition: all 0.3s ease;
+        font-size: 0.95rem;
+        background: white;
+        width: 100%;
+        color: #1f2937;
+        cursor: pointer;
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%236b7280' viewBox='0 0 16 16'%3E%3Cpath d='M8 11.5l-5-5h10l-5 5z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 1rem center;
+        background-size: 16px;
+        padding-right: 3rem;
+    }
+
+        .form-select-modern:focus {
+            border-color: var(--discount-purple);
+            box-shadow: 0 0 0 4px var(--discount-purple-light);
+            outline: none;
+            background-color: #fafafa;
+        }
+
+    /* Validation Messages */
+    .field-validation-error {
+        color: #ef4444;
+        font-size: 0.85rem;
+        margin-top: 0.5rem;
+        display: block;
+        font-weight: 500;
+    }
+
+    /* Input with validation error */
+    .input-validation-error {
+        border-color: #ef4444 !important;
+        background-color: rgba(239, 68, 68, 0.05) !important;
+    }
+
+        .input-validation-error:focus {
+            box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1) !important;
+        }
+
+    /* Form Actions */
+    .form-actions {
+        display: flex;
+        gap: 1rem;
+        padding-top: 1.5rem;
+        border-top: 2px solid #f3f4f6;
+        flex-wrap: wrap;
+    }
+
+    .btn-form {
+        flex: 1;
+        min-width: 140px;
+        border-radius: 12px;
+        padding: 0.875rem 1.5rem;
+        font-size: 0.95rem;
+        font-weight: 600;
+        border: none;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+        .btn-form i {
+            font-size: 1.1rem;
+        }
+
+    .btn-submit-form {
+        background: linear-gradient(135deg, var(--discount-purple), var(--discount-purple-dark));
+        color: white;
+        box-shadow: 0 4px 15px rgba(139, 92, 246, 0.2);
+    }
+
+        .btn-submit-form:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.35);
+            color: white;
+        }
+
+    .btn-cancel-form {
+        background: #f3f4f6;
+        border: 2px solid #e5e7eb;
+        color: #6b7280;
+    }
+
+        .btn-cancel-form:hover {
+            background: #e5e7eb;
+            border-color: #d1d5db;
+            color: #374151;
+            transform: translateY(-2px);
+        }
+
+    /* Helper Text */
+    .form-helper-text {
+        font-size: 0.85rem;
+        color: #6b7280;
+        margin-top: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+    }
+
+        .form-helper-text i {
+            font-size: 0.9rem;
+            color: var(--discount-purple);
+        }
+
+    /* Info Box */
+    .info-box-form {
+        background: linear-gradient(135deg, rgba(139, 92, 246, 0.05) 0%, rgba(124, 58, 237, 0.05) 100%);
+        border-left: 4px solid var(--discount-purple);
+        border-radius: 12px;
+        padding: 1.25rem 1.5rem;
+        margin-bottom: 2rem;
+        display: flex;
+        align-items: start;
+        gap: 1rem;
+    }
+
+        .info-box-form i {
+            font-size: 1.5rem;
+            color: var(--discount-purple);
+            flex-shrink: 0;
+            margin-top: 0.125rem;
+        }
+
+    .info-box-form-content p {
+        color: #6b21a8;
+        margin: 0;
+        line-height: 1.6;
+    }
+
+    /* Responsive */
+    @@media (max-width: 768px) {
+        .form-card-body
+
+    {
+        padding: 1.5rem;
+    }
+
+    .form-page-header {
+        padding: 1.5rem;
+    }
+
+        .form-page-header h1 {
+            font-size: 1.5rem;
+        }
+
+    .form-actions {
+        flex-direction: column;
+    }
+
+    .btn-form {
+        width: 100%;
+    }
+
+    }
+</style>
+
+<div class="form-page-container">
+    <!-- Page Header -->
+    <div class="form-page-header">
+        <h1>
+            <i class="bi bi-plus-circle"></i>
+            Novo Desconto
+        </h1>
+        <p>Cadastre um novo desconto para o plano financeiro</p>
+    </div>
+
+    <!-- Info Box -->
+    <div class="info-box-form">
+        <i class="bi bi-lightbulb"></i>
+        <div class="info-box-form-content">
+            <p>
+                <strong>Dica:</strong> Você pode criar descontos em valor fixo (ex: R$ 100,00) ou em porcentagem (ex: 15%).
+                Escolha o tipo que melhor se adapta à sua estratégia de precificação.
+            </p>
+        </div>
+    </div>
+
+    <!-- Form Card -->
+    <div class="form-card">
+        <div class="form-card-body">
+            <form asp-action="Create" method="post">
+                <!-- Validation Summary -->
+                <div asp-validation-summary="ModelOnly" class="validation-summary"></div>
+
+                <input asp-for="PlanoFinanceiroId" type="hidden" />
+
+                <!-- Tipo de Desconto -->
+                <div class="form-group-modern">
+                    <label asp-for="TipoDescontoId" class="form-label-modern">
+                        <i class="bi bi-tag"></i>
+                        <span>Tipo de Desconto</span>
+                    </label>
+                    <select asp-for="TipoDescontoId"
+                            class="form-select-modern"
+                            asp-items="ViewBag.TipoDescontoId">
+                        <option value="">--Selecione o tipo de desconto--</option>
+                    </select>
+                    <span asp-validation-for="TipoDescontoId" class="field-validation-error"></span>
+                    <div class="form-helper-text">
+                        <i class="bi bi-info-circle"></i>
+                        <span>Exemplo: Desconto para colaborador, estudante, antecipação, etc.</span>
+                    </div>
+                </div>
+
+                <!-- Formato do Desconto -->
+                <div class="form-group-modern">
+                    <label asp-for="TipoDescontoValor" class="form-label-modern">
+                        <i class="bi bi-calculator"></i>
+                        <span>Formato do Desconto</span>
+                    </label>
+                    <select asp-for="TipoDescontoValor"
+                            class="form-select-modern"
+                            asp-items="Html.GetEnumSelectList<TipoDescontoValor>()"
+                            id="tipoDescontoValor">
+                        <option value="">--Selecione o formato--</option>
+                    </select>
+                    <span asp-validation-for="TipoDescontoValor" class="field-validation-error"></span>
+                    <div class="form-helper-text">
+                        <i class="bi bi-info-circle"></i>
+                        <span id="formatHelp">Escolha entre valor fixo ou porcentagem</span>
+                    </div>
+                </div>
+
+                <!-- Valor do Desconto -->
+                <div class="form-group-modern">
+                    <label asp-for="Valor" class="form-label-modern">
+                        <i class="bi bi-percent" id="valorIcon"></i>
+                        <span id="valorLabel">Valor do Desconto</span>
+                    </label>
+                    <input asp-for="Valor"
+                           type="number"
+                           step="0.01"
+                           class="form-control-modern"
+                           id="valorInput"
+                           placeholder="Digite o valor" />
+                    <span asp-validation-for="Valor" class="field-validation-error"></span>
+                    <div class="form-helper-text">
+                        <i class="bi bi-info-circle"></i>
+                        <span id="valorHelp">Digite o valor numérico do desconto</span>
+                    </div>
+                </div>
+
+                <!-- Form Actions -->
+                <div class="form-actions">
+                    <button type="submit" class="btn-form btn-submit-form">
+                        <i class="bi bi-check-circle"></i>
+                        Criar Desconto
+                    </button>
+                    <a asp-action="Index" asp-route-planoFinanceiroId="@ViewBag.VbPlanoFinanceiroId" class="btn-form btn-cancel-form">
+                        <i class="bi bi-arrow-left-circle"></i>
+                        Voltar para a Lista
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elementos principais
+            const tipoDescontoSelect = document.querySelector('select[name="TipoDescontoId"]');
+            const tipoDescontoValorSelect = document.getElementById('tipoDescontoValor');
+            const valorInput = document.getElementById('valorInput');
+            const valorLabel = document.getElementById('valorLabel');
+            const valorIcon = document.getElementById('valorIcon');
+            const valorHelp = document.getElementById('valorHelp');
+            const formatHelp = document.getElementById('formatHelp');
+
+            // AJAX para preencher tipo e valor do desconto automaticamente
+            if (tipoDescontoSelect) {
+                tipoDescontoSelect.addEventListener('change', function() {
+                    const tipoDescontoId = this.value;
+                    if (!tipoDescontoId) {
+                        // Limpa campos se nada selecionado
+                        if (tipoDescontoValorSelect) {
+                            tipoDescontoValorSelect.value = "";
+                            tipoDescontoValorSelect.dispatchEvent(new Event('change'));
+                        }
+                        if (valorInput) {
+                            valorInput.value = "";
+                        }
+                        return;
+                    }
+
+                    fetch(`/Desconto/GetParametroDesconto?tipoDescontoId=${tipoDescontoId}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            // Só preenche se vier tipo e valor válidos
+                            if (data.found && data.tipoDescontoValor && data.valor !== null && data.valor !== undefined) {
+                                if (tipoDescontoValorSelect) {
+                                    tipoDescontoValorSelect.value = data.tipoDescontoValor;
+                                    tipoDescontoValorSelect.dispatchEvent(new Event('change'));
+                                }
+                                if (valorInput) {
+                                    // Garante ponto como separador decimal para o input type="number"
+                                    valorInput.value = String(data.valor).replace(',', '.');
+                                }
+                            } else {
+                                // Limpa campos se não houver tipo/valor padrão
+                                if (tipoDescontoValorSelect) {
+                                    tipoDescontoValorSelect.value = "";
+                                    tipoDescontoValorSelect.dispatchEvent(new Event('change'));
+                                }
+                                if (valorInput) {
+                                    valorInput.value = "";
+                                }
+                            }
+                        });
+                });
+            }
+
+            // Animação do card do formulário ao carregar
+            const formCard = document.querySelector('.form-card');
+            formCard.style.opacity = '0';
+            formCard.style.transform = 'translateY(20px)';
+            setTimeout(function() {
+                formCard.style.transition = 'all 0.5s ease';
+                formCard.style.opacity = '1';
+                formCard.style.transform = 'translateY(0)';
+            }, 100);
+
+            // Foco no primeiro select
+            const firstSelect = document.querySelector('.form-select-modern');
+            if (firstSelect) {
+                firstSelect.focus();
+            }
+
+            // Atualização dinâmica dos textos de ajuda e ícones conforme o formato do desconto
+            if (tipoDescontoValorSelect) {
+                tipoDescontoValorSelect.addEventListener('change', function() {
+                    const selectedText = this.options[this.selectedIndex].text.toLowerCase();
+
+                    if (selectedText.includes('porcentagem')) {
+                        valorIcon.className = 'bi bi-percent';
+                        valorLabel.textContent = 'Porcentagem de Desconto';
+                        valorInput.placeholder = 'Ex: 15 (para 15%)';
+                        valorInput.max = '100';
+                        valorHelp.textContent = 'Digite apenas o número. Ex: 15 para 15%';
+                        formatHelp.textContent = 'Modo porcentagem selecionado - desconto percentual sobre o valor';
+                    } else if (selectedText.includes('fixo')) {
+                        valorIcon.className = 'bi bi-currency-dollar';
+                        valorLabel.textContent = 'Valor Fixo do Desconto';
+                        valorInput.placeholder = 'Ex: 100.00';
+                        valorInput.removeAttribute('max');
+                        valorHelp.textContent = 'Digite o valor em reais. Ex: 100.00 para R$ 100,00';
+                        formatHelp.textContent = 'Modo valor fixo selecionado - desconto de valor específico';
+                    } else {
+                        valorIcon.className = 'bi bi-percent';
+                        valorLabel.textContent = 'Valor do Desconto';
+                        valorInput.placeholder = 'Digite o valor';
+                        valorInput.removeAttribute('max');
+                        valorHelp.textContent = 'Digite o valor numérico do desconto';
+                        formatHelp.textContent = 'Escolha entre valor fixo ou porcentagem';
+                    }
+                });
+            }
+
+            // Feedback visual para campos preenchidos
+            const inputs = document.querySelectorAll('.form-control-modern, .form-select-modern');
+            inputs.forEach(function(input) {
+                input.addEventListener('change', function() {
+                    if (this.value) {
+                        this.style.backgroundColor = '#fafafa';
+                    } else {
+                        this.style.backgroundColor = 'white';
+                    }
+                });
+            });
+        });
+    </script>
+}

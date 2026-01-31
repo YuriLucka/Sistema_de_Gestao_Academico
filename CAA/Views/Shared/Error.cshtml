@@ -1,0 +1,16 @@
+﻿@model ErrorViewModel
+@{
+    ViewData["Title"] = "Erro";
+}
+
+<div class="d-flex flex-column justify-content-center align-items-center" style="min-height: 60vh;">
+    <img src="~/img/500 Internal Server Error-bro.svg" alt="Erro ao processar requisição"
+         class="mb-4 shadow-lg bg-light rounded"
+         style="max-width: 320px; width: 100%; height: auto;" />
+
+    <h1 class="text-danger fw-bold mb-2" style="font-size:2rem;">Ocorreu um erro</h1>
+    <p class="fs-5 text-center" style="max-width: 500px;">
+        Ocorreu um erro inesperado ao processar sua solicitação.<br />
+        Por favor, entre em contato com o suporte para obter ajuda.
+    </p>
+</div>

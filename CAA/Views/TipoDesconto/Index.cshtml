@@ -1,0 +1,380 @@
+﻿@model IEnumerable<CAA.Models.TipoDesconto>
+
+@{
+    ViewData["Title"] = "Tipos de Desconto";
+}
+
+<style>
+    :root {
+        --caa-green-main: #25D366;
+        --caa-green-dark: #128C7E;
+        --caa-green-light: rgba(37, 211, 102, 0.1);
+    }
+
+    /* Page Header */
+    .tipo-desconto-page-header {
+        background: linear-gradient(135deg, rgba(37, 211, 102, 0.05) 0%, rgba(18, 140, 126, 0.05) 100%);
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        border: 1px solid rgba(37, 211, 102, 0.2);
+        backdrop-filter: blur(10px);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .tipo-desconto-header-content h1 {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: var(--caa-green-dark);
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+        .tipo-desconto-header-content h1 i {
+            font-size: 2rem;
+        }
+
+    .tipo-desconto-header-content p {
+        color: #6b7280;
+        margin: 0;
+        font-size: 0.95rem;
+    }
+
+    .btn-new-tipo-desconto {
+        background: linear-gradient(135deg, var(--caa-green-main), var(--caa-green-dark));
+        color: white;
+        border: none;
+        border-radius: 12px;
+        padding: 0.875rem 1.75rem;
+        font-weight: 600;
+        font-size: 0.95rem;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        text-decoration: none;
+        box-shadow: 0 4px 15px rgba(37, 211, 102, 0.2);
+    }
+
+        .btn-new-tipo-desconto:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(37, 211, 102, 0.35);
+            color: white;
+        }
+
+    /* List Container */
+    .tipos-desconto-list-container {
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+        border: 2px solid #f3f4f6;
+    }
+
+    .tipos-desconto-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .tipo-desconto-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1.5rem 2rem;
+        border-bottom: 1px solid #f3f4f6;
+        transition: all 0.3s ease;
+        gap: 1.5rem;
+    }
+
+        .tipo-desconto-item:last-child {
+            border-bottom: none;
+        }
+
+        .tipo-desconto-item:hover {
+            background: var(--caa-green-light);
+        }
+
+    .tipo-desconto-content {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        flex: 1;
+        min-width: 0;
+    }
+
+    .tipo-desconto-icon {
+        width: 48px;
+        height: 48px;
+        background: var(--caa-green-light);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+        .tipo-desconto-icon i {
+            font-size: 1.5rem;
+            color: var(--caa-green-main);
+        }
+
+    .tipo-desconto-details {
+        display: flex;
+        gap: 2rem;
+        flex: 1;
+        min-width: 0;
+        align-items: center;
+    }
+
+    .tipo-desconto-col {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .tipo-desconto-col-label {
+        font-size: 0.75rem;
+        color: #6b7280;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+    }
+
+    .tipo-desconto-col-value {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #111b21;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+        .tipo-desconto-col-value.valor {
+            color: var(--caa-green-main);
+            font-size: 1.1rem;
+        }
+
+    .tipo-desconto-actions {
+        display: flex;
+        gap: 0.5rem;
+        flex-shrink: 0;
+    }
+
+    .btn-action {
+        padding: 0.5rem 0.875rem;
+        border-radius: 10px;
+        border: none;
+        font-size: 0.85rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    .btn-edit {
+        background: rgba(37, 211, 102, 0.1);
+        color: var(--caa-green-main);
+    }
+
+        .btn-edit:hover {
+            background: var(--caa-green-main);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
+        }
+
+    .btn-details {
+        background: rgba(59, 130, 246, 0.1);
+        color: #3b82f6;
+    }
+
+        .btn-details:hover {
+            background: #3b82f6;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+
+    .btn-delete {
+        background: rgba(239, 68, 68, 0.1);
+        color: #ef4444;
+    }
+
+        .btn-delete:hover {
+            background: #ef4444;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+        }
+
+    /* Empty State */
+    .empty-state {
+        text-align: center;
+        padding: 5rem 2rem;
+        color: #6b7280;
+    }
+
+        .empty-state i {
+            font-size: 5rem;
+            color: #d1d7db;
+            margin-bottom: 1.5rem;
+        }
+
+        .empty-state h3 {
+            color: #374151;
+            margin-bottom: 0.75rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .empty-state p {
+            color: #9ca3af;
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+    /* Responsive */
+    @@media (max-width: 992px) {
+        .tipo-desconto-details
+
+    {
+        flex-direction: column;
+        gap: 0.75rem;
+        align-items: flex-start;
+    }
+
+    .tipo-desconto-col {
+        width: 100%;
+    }
+
+    }
+
+    @@media (max-width: 768px) {
+        .tipo-desconto-page-header
+
+    {
+        flex-direction: column;
+        align-items: stretch;
+        text-align: center;
+    }
+
+    .tipo-desconto-header-content h1 {
+        justify-content: center;
+    }
+
+    .btn-new-tipo-desconto {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .tipo-desconto-item {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+    }
+
+    .tipo-desconto-content {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .tipo-desconto-actions {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .btn-action {
+        flex: 1;
+        min-width: 100px;
+        justify-content: center;
+    }
+
+    }
+</style>
+
+<div class="container-fluid px-3">
+    <!-- Page Header -->
+    <div class="tipo-desconto-page-header">
+        <div class="tipo-desconto-header-content">
+            <h1>
+                <i class="bi bi-percent"></i>
+                <span>Tipos de Desconto</span>
+            </h1>
+            <p>Gerencie os tipos de desconto aplicáveis</p>
+        </div>
+        <a asp-action="Create" class="btn-new-tipo-desconto">
+            <i class="bi bi-plus-circle"></i>
+            <span>Novo Tipo de Desconto</span>
+        </a>
+    </div>
+
+    <!-- Tipos Desconto List -->
+    <div class="tipos-desconto-list-container">
+        @if (Model != null && Model.Any())
+        {
+            <ul class="tipos-desconto-list">
+                @foreach (var tipo in Model)
+                {
+                    <li class="tipo-desconto-item">
+                        <div class="tipo-desconto-content">
+                            <div class="tipo-desconto-icon">
+                                <i class="bi bi-tag-fill"></i>
+                            </div>
+                            <div class="tipo-desconto-details">
+                                <div class="tipo-desconto-col">
+                                    <div class="tipo-desconto-col-label">Nome</div>
+                                    <div class="tipo-desconto-col-value">@Html.DisplayFor(modelItem => tipo.Nome)</div>
+                                </div>
+                                <div class="tipo-desconto-col">
+                                    <div class="tipo-desconto-col-label">Valor Padrão</div>
+                                    <div class="tipo-desconto-col-value valor">@Html.DisplayFor(modelItem => tipo.ValorPadrao)</div>
+                                </div>
+                                <div class="tipo-desconto-col">
+                                    <div class="tipo-desconto-col-label">Tipo</div>
+                                    <div class="tipo-desconto-col-value">@Html.DisplayFor(modelItem => tipo.TipoDescontoValor)</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tipo-desconto-actions">
+                            <a asp-action="Edit" asp-route-id="@tipo.TipoDescontoId" class="btn-action btn-edit" title="Editar">
+                                <i class="bi bi-pencil"></i>
+                                <span>Editar</span>
+                            </a>
+                            <a asp-action="Details" asp-route-id="@tipo.TipoDescontoId" class="btn-action btn-details" title="Detalhes">
+                                <i class="bi bi-eye"></i>
+                                <span>Ver</span>
+                            </a>
+                            <a asp-action="Delete" asp-route-id="@tipo.TipoDescontoId" class="btn-action btn-delete" title="Excluir">
+                                <i class="bi bi-trash"></i>
+                                <span>Excluir</span>
+                            </a>
+                        </div>
+                    </li>
+                }
+            </ul>
+        }
+        else
+        {
+            <div class="empty-state">
+                <i class="bi bi-percent"></i>
+                <h3>Nenhum tipo de desconto cadastrado</h3>
+                <p>Cadastre o primeiro tipo de desconto</p>
+                <a asp-action="Create" class="btn-new-tipo-desconto">
+                    <i class="bi bi-plus-circle"></i>
+                    <span>Cadastrar Primeiro Tipo</span>
+                </a>
+            </div>
+        }
+    </div>
+</div>

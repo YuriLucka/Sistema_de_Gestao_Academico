@@ -1,0 +1,590 @@
+﻿@model IEnumerable<CAA.Models.Matricula>
+
+@{
+    ViewData["Title"] = "Matrículas";
+}
+
+<style>
+    :root {
+        --caa-green-main: #25D366;
+        --caa-green-dark: #128C7E;
+        --caa-green-light: rgba(37, 211, 102, 0.1);
+    }
+
+    /* Page Header */
+    .colaboradores-page-header {
+        background: linear-gradient(135deg, var(--caa-green-light) 0%, rgba(18, 140, 126, 0.05) 100%);
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        border: 1px solid var(--caa-green-light);
+        backdrop-filter: blur(10px);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .colaboradores-header-content h1 {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: var(--caa-green-dark);
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+        .colaboradores-header-content h1 i {
+            font-size: 2rem;
+        }
+
+    .colaboradores-header-content p {
+        color: #6b7280;
+        margin: 0;
+        font-size: 0.95rem;
+    }
+
+    /* Container para os botões de ação no header */
+    .header-actions {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    /* Button Novo com efeito círculo crescendo */
+    .btn-new-colaborador {
+        background: linear-gradient(135deg, var(--caa-green-main), var(--caa-green-dark));
+        color: white;
+        border: none;
+        border-radius: 16px;
+        padding: 1rem 2rem;
+        font-weight: 600;
+        font-size: 1rem;
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(37, 211, 102, 0.2);
+        text-decoration: none;
+        cursor: pointer;
+        white-space: nowrap;
+    }
+
+        .btn-new-colaborador::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s ease, height 0.6s ease;
+            z-index: 0;
+        }
+
+        .btn-new-colaborador:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-new-colaborador:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(37, 211, 102, 0.35);
+            color: white;
+            z-index: 1;
+        }
+
+        .btn-new-colaborador i,
+        .btn-new-colaborador span {
+            position: relative;
+            z-index: 1;
+        }
+
+    /* Estilo específico para o botão Excel */
+    .btn-excel {
+        background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%) !important;
+        box-shadow: 0 4px 15px rgba(59, 130, 246, 0.2) !important;
+    }
+
+        .btn-excel:hover {
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.35) !important;
+        }
+
+    /* Table Container */
+    .table-container {
+        border-radius: 20px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+        padding: 2rem;
+        background: white;
+    }
+
+    /* DataTables Custom Styling */
+    .dataTables_wrapper {
+        padding: 0 !important;
+    }
+
+    .dataTables_length,
+    .dataTables_filter {
+        margin-bottom: 1.5rem;
+    }
+
+        .dataTables_length label,
+        .dataTables_filter label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            color: var(--caa-green-dark);
+        }
+
+        .dataTables_length select,
+        .dataTables_filter input {
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 0.5rem 0.75rem;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+            .dataTables_length select:focus,
+            .dataTables_filter input:focus {
+                border-color: var(--caa-green-main);
+                box-shadow: 0 0 0 3px var(--caa-green-light);
+                outline: none;
+            }
+
+    table.dataTable {
+        border-collapse: separate !important;
+        border-spacing: 0 0.5rem !important;
+        width: 100% !important;
+    }
+
+        table.dataTable thead th {
+            background: linear-gradient(135deg, var(--caa-green-light) 0%, rgba(18, 140, 126, 0.05) 100%);
+            color: var(--caa-green-dark);
+            font-weight: 700;
+            padding: 1rem 1.5rem;
+            border: none;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+
+            table.dataTable thead th:first-child {
+                border-radius: 12px 0 0 12px;
+            }
+
+            table.dataTable thead th:last-child {
+                border-radius: 0 12px 12px 0;
+            }
+
+        table.dataTable tbody tr {
+            background: white;
+            transition: all 0.3s ease;
+        }
+
+            table.dataTable tbody tr:hover {
+                background: var(--caa-green-light);
+                transform: scale(1.005);
+                box-shadow: 0 4px 12px rgba(18, 140, 126, 0.15);
+            }
+
+        table.dataTable tbody td {
+            padding: 1.25rem 1.5rem;
+            border: none;
+            vertical-align: middle;
+            font-size: 0.95rem;
+            color: #374151;
+            white-space: nowrap;
+        }
+
+        table.dataTable tbody tr td:first-child {
+            border-radius: 12px 0 0 12px;
+            font-weight: 600;
+            color: var(--caa-green-dark);
+        }
+
+        table.dataTable tbody tr td:last-child {
+            border-radius: 0 12px 12px 0;
+        }
+
+    /* Action Buttons */
+    .btn-action-table {
+        border: none;
+        border-radius: 10px;
+        padding: 0.5rem 0.75rem;
+        font-size: 1rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        cursor: pointer;
+        min-width: 38px;
+        height: 38px;
+        margin: 0 0.15rem;
+    }
+
+    .btn-edit-table {
+        background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+        color: white;
+    }
+
+        .btn-edit-table:hover {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            transform: translateY(-2px) scale(1.1);
+            box-shadow: 0 6px 20px rgba(251, 191, 36, 0.4);
+            color: white;
+        }
+
+    .btn-details-table {
+        background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+        color: white;
+    }
+
+        .btn-details-table:hover {
+            background: linear-gradient(135deg, #2563eb 0%, #1e3a8a 100%);
+            transform: translateY(-2px) scale(1.1);
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+            color: white;
+        }
+
+    .btn-delete-table {
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        color: white;
+    }
+
+        .btn-delete-table:hover {
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+            transform: translateY(-2px) scale(1.1);
+            box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
+            color: white;
+        }
+
+    /* Pagination */
+    .dataTables_paginate {
+        padding-top: 1.5rem;
+    }
+
+        .dataTables_paginate .paginate_button {
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            margin: 0 0.25rem;
+            border: 2px solid #e5e7eb;
+            background: white;
+            color: #374151;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+            .dataTables_paginate .paginate_button:hover {
+                background: var(--caa-green-light);
+                border-color: var(--caa-green-main);
+                color: var(--caa-green-dark);
+            }
+
+            .dataTables_paginate .paginate_button.current {
+                background: var(--caa-green-main);
+                border-color: var(--caa-green-main);
+                color: white;
+            }
+
+            .dataTables_paginate .paginate_button.disabled {
+                opacity: 0.5;
+                cursor: not-allowed;
+            }
+
+    /* Info Text */
+    .dataTables_info {
+        color: #6b7280;
+        font-weight: 500;
+        padding-top: 1.5rem;
+    }
+
+    /* Empty State */
+    .empty-state {
+        text-align: center;
+        padding: 5rem 2rem;
+        color: #6b7280;
+    }
+
+        .empty-state i {
+            font-size: 5rem;
+            color: #d1d5db;
+            margin-bottom: 1.5rem;
+            animation: float 3s ease-in-out infinite;
+        }
+
+    @@keyframes float {
+        0%, 100% {
+            transform: translateY(0);
+        }
+
+        50% {
+            transform: translateY(-10px);
+        }
+    }
+
+    .empty-state h3 {
+        color: #374151;
+        margin-bottom: 0.75rem;
+        font-size: 1.5rem;
+        font-weight: 700;
+    }
+
+    .empty-state p {
+        color: #9ca3af;
+        font-size: 1rem;
+    }
+
+    /* Esconde a tabela até o DataTable estar pronto */
+    .table-invisible {
+        visibility: hidden;
+    }
+
+    /* Responsive Adjustments */
+    @@media (max-width: 768px) {
+        /* Header */
+        .colaboradores-page-header {
+            flex-direction: column;
+            align-items: stretch;
+            padding: 1.5rem;
+        }
+
+        .colaboradores-header-content h1 {
+            justify-content: center;
+        }
+        /* Botões empilhados e full width */
+        .header-actions {
+            flex-direction: column;
+            width: 100%;
+            gap: 0.75rem;
+        }
+
+        .btn-new-colaborador {
+            width: 100%;
+            justify-content: center;
+        }
+        /* DataTables Controls - Full Width Stacking */
+        .dataTables_wrapper .dataTables_filter,
+        .dataTables_wrapper .dataTables_length {
+            text-align: left !important;
+            float: none !important;
+            margin-bottom: 1rem;
+            width: 100%;
+        }
+            /* Força label a ser flex vertical para que o input fique embaixo do texto */
+            .dataTables_wrapper .dataTables_length label,
+            .dataTables_wrapper .dataTables_filter label {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+                width: 100%;
+                gap: 0.5rem;
+            }
+            /* Inputs ocupando 100% */
+            .dataTables_wrapper .dataTables_length select,
+            .dataTables_wrapper .dataTables_filter input {
+                width: 100% !important;
+                margin-left: 0 !important;
+                display: block;
+                font-size: 1rem; /* Melhor para toque */
+                padding: 0.75rem;
+            }
+
+        .table-container {
+            padding: 1rem;
+        }
+    }
+</style>
+
+
+<div class="container-fluid px-3">
+    <!-- Page Header -->
+    <div class="colaboradores-page-header">
+        <div class="colaboradores-header-content">
+            <h1>
+                <i class="bi bi-person-check-fill"></i>
+                <span>Matrículas</span>
+            </h1>
+            <p>Gerencie as matrículas dos alunos</p>
+        </div>
+        <div class="header-actions">
+            <a asp-action="ExportarExcel" class="btn-new-colaborador btn-excel">
+                <i class="bi bi-file-earmark-excel"></i>
+                <span>Exportar Excel</span>
+            </a>
+            <a asp-action="Create" class="btn-new-colaborador">
+                <i class="bi bi-plus-circle"></i>
+                <span>Nova Matrícula</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Table Container -->
+    <div class="table-container">
+        <div class="table-responsive">
+            <table id="matriculasTable" class="table table-hover align-middle nowrap table-invisible" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>Data Matrícula</th>
+                        <th>Nome Completo</th>
+                        <th>Email</th>
+                        <th>Celular</th>
+                        <th>Escola Origem</th>
+                        <th>Cidade</th>
+                        <th>Ano Formação</th>
+                        <th>Eixo</th>
+                        <th>Curso</th>
+                        <th>Turno</th>
+                        <th>Modalidade</th>
+                        <th>Status</th>
+                        <th>Tipo Ingresso</th>
+                        <th>Instituição Transf.</th>
+                        <th>Atendente</th>
+                        <th>Brinde</th>
+                        <th>Observação</th>
+                        <th>Motivação</th>
+                        <th style="width:150px">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- DataTables preenche via AJAX -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            var table = $('#matriculasTable').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: {
+                    url: '@Url.Action("GetMatriculasDataTable", "Matricula")',
+                    type: 'POST',
+                    data: function(d) {
+                        console.log('Enviando:', d);
+                        return d;
+                    },
+                    dataSrc: function(json) {
+                        console.log('Recebido:', json);
+                        return json.data;
+                    },
+                    error: function (xhr, error, thrown) {
+                        console.error('Erro DataTables:', error);
+                        console.error('Response:', xhr.responseText);
+                        alert('Erro ao carregar dados: ' + error);
+                    }
+                },
+                columns: [
+                    { data: 'dataMatricula' },
+                    {
+                        data: 'nomeCompleto',
+                        render: function(data) {
+                            return '<strong>' + data + '</strong>';
+                        }
+                    },
+                    { data: 'email' },
+                    { data: 'celular' },
+                    { data: 'escolaOrigem' },
+                    { data: 'cidade' },
+                    { data: 'anoFormacao' },
+                    { data: 'eixo' },
+                    { data: 'curso' },
+                    { data: 'turno' },
+                    { data: 'modalidade' },
+                    { data: 'statusMatricula' },
+                    { data: 'tipoIngresso' },
+                    { data: 'instituicaoTransferencia' },
+                    { data: 'atendenteId' },
+                    {
+                        data: 'brinde',
+                        render: function(data) {
+                            if (data === 'Sim') {
+                                return '<span style="color: #10b981; font-weight: 600;"><i class="bi bi-check-circle-fill"></i> ' + data + '</span>';
+                            } else {
+                                return '<span style="color: #ef4444; font-weight: 600;"><i class="bi bi-x-circle-fill"></i> ' + data + '</span>';
+                            }
+                        }
+                    },
+                    { data: 'observacao' },
+                    { data: 'motivacao' },
+                    {
+                        data: 'matriculaId',
+                        orderable: false,
+                        searchable: false,
+                        render: function (data, type, row) {
+                            return `
+                                <a href="/Matricula/Edit/${data}" class="btn-action-table btn-edit-table" title="Editar">
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
+                                <a href="/Matricula/Details/${data}" class="btn-action-table btn-details-table" title="Detalhes">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                                <a href="/Matricula/Delete/${data}" class="btn-action-table btn-delete-table" title="Excluir">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                            `;
+                        }
+                    }
+                ],
+                scrollX: true,
+                responsive: false,
+                language: {
+                    url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/pt-BR.json',
+                    processing: '<i class="bi bi-arrow-repeat" style="font-size: 2rem; animation: spin 1s linear infinite;"></i> Carregando...'
+                },
+                pageLength: 25,
+                lengthMenu: [[10, 25, 50, 100], [10, 25, 50, 100]],
+                order: [[0, 'desc']],
+                initComplete: function () {
+                    // Torna o corpo da tabela visível
+                    $('#matriculasTable').removeClass('table-invisible');
+                    // Torna o cabeçalho fixo (criado pelo scrollX) visível
+                    $('.dataTables_scrollHead table').removeClass('table-invisible');
+                }
+            });
+
+            // Animação da tabela
+            $('.table-container').css({
+                'opacity': '0',
+                'transform': 'translateY(20px)'
+            });
+            setTimeout(function () {
+                $('.table-container').css({
+                    'transition': 'all 0.5s ease',
+                    'opacity': '1',
+                    'transform': 'translateY(0)'
+                });
+            }, 100);
+        });
+    </script>
+
+    <style>
+        @@keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+}

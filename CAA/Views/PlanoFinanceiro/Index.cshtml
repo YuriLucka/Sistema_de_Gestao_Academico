@@ -1,0 +1,450 @@
+﻿@model IEnumerable<CAA.Models.PlanoFinanceiro>
+
+@{
+    ViewData["Title"] = "Planos Financeiros";
+}
+
+<style>
+    :root {
+        --primary-green: #25D366;
+        --secondary-green: #128C7E;
+        --dark-green: #075E54;
+        --light-green: rgba(37, 211, 102, 0.1);
+    }
+
+    /* Page Header */
+    .plans-page-header {
+        background: linear-gradient(135deg, rgba(37, 211, 102, 0.05) 0%, rgba(18, 140, 126, 0.05) 100%);
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        border: 1px solid rgba(37, 211, 102, 0.2);
+        backdrop-filter: blur(10px);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .plans-header-content h1 {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: var(--secondary-green);
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+        .plans-header-content h1 i {
+            font-size: 2rem;
+        }
+
+    .plans-header-content p {
+        color: #6b7280;
+        margin: 0;
+        font-size: 0.95rem;
+    }
+
+    .btn-new-plan {
+        background: linear-gradient(135deg, var(--primary-green), var(--secondary-green));
+        color: white;
+        border: none;
+        border-radius: 12px;
+        padding: 0.875rem 1.75rem;
+        font-weight: 600;
+        font-size: 0.95rem;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        text-decoration: none;
+        box-shadow: 0 4px 15px rgba(37, 211, 102, 0.2);
+    }
+
+        .btn-new-plan:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(37, 211, 102, 0.35);
+            color: white;
+        }
+
+    /* Plans Grid */
+    .plans-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+        gap: 1.75rem;
+        margin-bottom: 2rem;
+    }
+
+    /* Plan Card */
+    .plan-card {
+        background: white;
+        border: 2px solid #f3f4f6;
+        border-radius: 20px;
+        overflow: hidden;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        display: flex;
+        flex-direction: column;
+    }
+
+        .plan-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--primary-green);
+            box-shadow: 0 20px 50px rgba(37, 211, 102, 0.15);
+        }
+
+    /* Plan Header */
+    .plan-card-header {
+        background: linear-gradient(135deg, var(--primary-green), var(--secondary-green));
+        padding: 2rem 1.5rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .plan-card-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 200px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+        }
+
+    .plan-card-header-content {
+        position: relative;
+        z-index: 1;
+    }
+
+    .plan-type-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: rgba(255, 255, 255, 0.25);
+        backdrop-filter: blur(10px);
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: white;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 1rem;
+    }
+
+    .plan-value {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: white;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin-bottom: 0.5rem;
+    }
+
+    .plan-value-label {
+        font-size: 0.9rem;
+        color: rgba(255, 255, 255, 0.9);
+    }
+
+    /* Plan Body */
+    .plan-card-body {
+        padding: 1.5rem;
+        flex-grow: 1;
+    }
+
+    .plan-shifts {
+        display: flex;
+        gap: 0.75rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .shift-badge {
+        flex: 1;
+        padding: 0.75rem;
+        border-radius: 12px;
+        text-align: center;
+        font-weight: 600;
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        transition: all 0.3s ease;
+    }
+
+        .shift-badge.active {
+            background: var(--light-green);
+            color: var(--secondary-green);
+            border: 2px solid var(--primary-green);
+        }
+
+        .shift-badge.inactive {
+            background: #f3f4f6;
+            color: #9ca3af;
+            border: 2px solid #e5e7eb;
+        }
+
+        .shift-badge i {
+            font-size: 1.1rem;
+        }
+
+    /* Plan Actions */
+    .plan-actions {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+        padding-top: 1.5rem;
+        border-top: 2px solid #f3f4f6;
+    }
+
+    .btn-plan-action {
+        padding: 0.75rem 1rem;
+        border-radius: 12px;
+        border: none;
+        font-size: 0.9rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    .btn-edit-plan {
+        background: rgba(59, 130, 246, 0.1);
+        color: #3b82f6;
+    }
+
+        .btn-edit-plan:hover {
+            background: #3b82f6;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+
+    .btn-details-plan {
+        background: rgba(14, 165, 233, 0.1);
+        color: #0ea5e9;
+    }
+
+        .btn-details-plan:hover {
+            background: #0ea5e9;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
+        }
+
+    .btn-delete-plan {
+        background: rgba(239, 68, 68, 0.1);
+        color: #ef4444;
+    }
+
+        .btn-delete-plan:hover {
+            background: #ef4444;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+        }
+
+    .btn-discounts-plan {
+        background: rgba(251, 191, 36, 0.1);
+        color: #f59e0b;
+        grid-column: 1 / -1;
+    }
+
+        .btn-discounts-plan:hover {
+            background: #f59e0b;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(251, 191, 36, 0.3);
+        }
+
+    /* Back Button */
+    .back-button-container {
+        margin-top: 2rem;
+    }
+
+    .btn-back {
+        background: #f3f4f6;
+        border: 2px solid #e5e7eb;
+        color: #6b7280;
+        border-radius: 12px;
+        padding: 0.875rem 1.75rem;
+        font-weight: 600;
+        font-size: 0.95rem;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        text-decoration: none;
+    }
+
+        .btn-back:hover {
+            background: #e5e7eb;
+            border-color: #d1d5db;
+            color: #374151;
+            transform: translateY(-2px);
+        }
+
+    /* Empty State */
+    .empty-state-plans {
+        text-align: center;
+        padding: 5rem 2rem;
+        background: white;
+        border: 2px solid #f3f4f6;
+        border-radius: 20px;
+        color: #6b7280;
+    }
+
+        .empty-state-plans i {
+            font-size: 5rem;
+            color: #d1d5db;
+            margin-bottom: 1.5rem;
+        }
+
+        .empty-state-plans h3 {
+            color: #374151;
+            margin-bottom: 0.75rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .empty-state-plans p {
+            color: #9ca3af;
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+    /* Responsive */
+    @@media (max-width: 768px) {
+        .plans-page-header
+
+    {
+        flex-direction: column;
+        align-items: stretch;
+        text-align: center;
+    }
+
+    .plans-header-content h1 {
+        justify-content: center;
+    }
+
+    .btn-new-plan {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .plans-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .plan-actions {
+        grid-template-columns: 1fr;
+    }
+
+    .btn-discounts-plan {
+        grid-column: 1;
+    }
+
+    }
+</style>
+
+<div class="container-fluid px-3">
+    <!-- Page Header -->
+    <div class="plans-page-header">
+        <div class="plans-header-content">
+            <h1>
+                <i class="bi bi-cash-stack"></i>
+                <span>Planos Financeiros</span>
+            </h1>
+            <p>Gerencie os planos de pagamento do curso</p>
+        </div>
+        <a asp-action="Create" asp-route-cursoId="@ViewBag.VbCursoId" class="btn-new-plan">
+            <i class="bi bi-plus-circle"></i>
+            <span>Criar Novo Plano</span>
+        </a>
+    </div>
+
+    <!-- Plans Grid -->
+    @if (Model != null && Model.Any())
+    {
+        <div class="plans-grid">
+            @foreach (var plano in Model)
+            {
+                <div class="plan-card">
+                    <!-- Plan Header -->
+                    <div class="plan-card-header">
+                        <div class="plan-card-header-content">
+                            <div class="plan-type-badge">
+                                <i class="bi bi-tag"></i>
+                                <span>@Html.DisplayFor(modelItem => plano.TipoPlanoFinanceiro)</span>
+                            </div>
+                            <div class="plan-value">
+                                @plano.Valor.ToString("C", new System.Globalization.CultureInfo("pt-BR"))
+                            </div>
+                            <div class="plan-value-label">Valor da Mensalidade</div>
+                        </div>
+                    </div>
+
+                    <!-- Plan Body -->
+                    <div class="plan-card-body">
+                        <!-- Shifts -->
+                        <div class="plan-shifts">
+                            <div class="shift-badge @(plano.Matutino ? "active" : "inactive")">
+                                <i class="bi bi-sunrise"></i>
+                                <span>Matutino</span>
+                            </div>
+                            <div class="shift-badge @(plano.Noturno ? "active" : "inactive")">
+                                <i class="bi bi-moon-stars"></i>
+                                <span>Noturno</span>
+                            </div>
+                        </div>
+
+                        <!-- Actions -->
+                        <div class="plan-actions">
+                            <a asp-action="Edit" asp-route-id="@plano.PlanoFinanceiroId" class="btn-plan-action btn-edit-plan">
+                                <i class="bi bi-pencil"></i>
+                                <span>Editar</span>
+                            </a>
+                            <a asp-action="Details" asp-route-id="@plano.PlanoFinanceiroId" class="btn-plan-action btn-details-plan">
+                                <i class="bi bi-info-circle"></i>
+                                <span>Detalhes</span>
+                            </a>
+                            <a asp-action="Delete" asp-route-id="@plano.PlanoFinanceiroId" class="btn-plan-action btn-delete-plan">
+                                <i class="bi bi-trash"></i>
+                                <span>Excluir</span>
+                            </a>
+                            <a asp-action="Index" asp-controller="Desconto" asp-route-planoFinanceiroId="@plano.PlanoFinanceiroId" class="btn-plan-action btn-discounts-plan">
+                                <i class="bi bi-percent"></i>
+                                <span>Gerenciar Descontos</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="empty-state-plans">
+            <i class="bi bi-cash-stack"></i>
+            <h3>Nenhum plano financeiro cadastrado</h3>
+            <p>Crie o primeiro plano financeiro para este curso</p>
+            <a asp-action="Create" asp-route-cursoId="@ViewBag.VbCursoId" class="btn-new-plan">
+                <i class="bi bi-plus-circle"></i>
+                <span>Criar Primeiro Plano</span>
+            </a>
+        </div>
+    }
+
+    <!-- Back Button -->
+    <div class="back-button-container">
+        <a asp-action="Index" asp-controller="Curso" class="btn-back">
+            <i class="bi bi-arrow-left-circle"></i>
+            <span>Voltar para Cursos</span>
+        </a>
+    </div>
+</div>

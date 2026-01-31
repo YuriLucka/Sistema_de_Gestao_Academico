@@ -1,0 +1,371 @@
+@{
+    ViewData["Title"] = "Sobre o Projeto";
+}
+
+<style>
+    /*
+           ESCOPO DE ISOLAMENTO
+           Todas as regras começam com .caa-about-wrapper para não vazar para o layout principal
+        */
+
+    /* Variáveis locais - só funcionam dentro desta div */
+    .caa-about-wrapper {
+        --caa-green-main: #25D366;
+        --caa-green-dark: #075E54;
+        --caa-green-light: #DCF8C6;
+        --caa-bg-light: #F0F2F5;
+        --caa-text-dark: #1F2937;
+        --caa-text-muted: #6B7280;
+        --caa-card-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        /* Reset básico local para garantir consistência */
+        font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        color: var(--caa-text-dark);
+        box-sizing: border-box;
+        width: 100%;
+    }
+
+        /* Container Interno */
+        .caa-about-wrapper .about-page-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        /* Tags Genéricas (Blindadas pelo wrapper) */
+        .caa-about-wrapper h1,
+        .caa-about-wrapper h2,
+        .caa-about-wrapper h3 {
+            color: var(--caa-green-dark);
+            margin-top: 0; /* Previne margens default do layout externo */
+        }
+
+        .caa-about-wrapper p {
+            line-height: 1.7;
+            margin-bottom: 1rem;
+            color: #374151;
+            text-align: left; /* Garante alinhamento à esquerda */
+        }
+
+        /* Hero Section */
+        .caa-about-wrapper .about-header {
+            text-align: center;
+            padding: 3rem 1rem;
+            background: white;
+            border-radius: 16px;
+            border-bottom: 4px solid var(--caa-green-main);
+            box-shadow: var(--caa-card-shadow);
+            margin-bottom: 2.5rem;
+        }
+
+        .caa-about-wrapper .about-logo-icon {
+            font-size: 3.5rem;
+            color: var(--caa-green-main);
+            margin-bottom: 1rem;
+            line-height: 1;
+        }
+
+        .caa-about-wrapper .about-title {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+
+        .caa-about-wrapper .about-subtitle {
+            font-size: 1.1rem;
+            color: var(--caa-text-muted);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0;
+        }
+
+        /* Grid System Próprio (não depende do bootstrap grid) */
+        .caa-about-wrapper .about-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 1.5rem;
+        }
+
+        /* Cards */
+        .caa-about-wrapper .info-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: var(--caa-card-shadow);
+            height: 100%;
+            border: 1px solid rgba(0,0,0,0.03);
+            transition: transform 0.2s ease, border-color 0.2s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+            .caa-about-wrapper .info-card:hover {
+                border-color: var(--caa-green-main);
+            }
+
+        .caa-about-wrapper .card-header-flex {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .caa-about-wrapper .card-icon {
+            width: 42px;
+            height: 42px;
+            background-color: var(--caa-green-light);
+            color: var(--caa-green-dark);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            flex-shrink: 0; /* Impede ícone de esmagar */
+        }
+
+        .caa-about-wrapper .card-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        /* Colunas da Grid */
+        .caa-about-wrapper .col-full {
+            grid-column: span 12;
+        }
+
+        .caa-about-wrapper .col-half {
+            grid-column: span 6;
+        }
+
+    /* Responsividade Isolada */
+    @@media (max-width: 992px) {
+        .caa-about-wrapper .col-half {
+            grid-column: span 12;
+        }
+
+        .caa-about-wrapper .about-grid {
+            gap: 1rem;
+        }
+
+        .caa-about-wrapper .info-card {
+            padding: 1.5rem;
+        }
+    }
+
+    /* Listas de Requisitos */
+    .caa-about-wrapper .req-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .caa-about-wrapper .req-item {
+        display: flex;
+        gap: 1rem;
+        padding: 0.75rem 0;
+        border-bottom: 1px dashed #eee;
+        align-items: flex-start;
+    }
+
+        .caa-about-wrapper .req-item:last-child {
+            border-bottom: none;
+        }
+
+    .caa-about-wrapper .req-code {
+        font-family: 'Consolas', monospace;
+        font-weight: 700;
+        color: var(--caa-green-dark);
+        background: var(--caa-green-light);
+        padding: 0.2rem 0.5rem;
+        border-radius: 6px;
+        font-size: 0.85rem;
+        height: fit-content;
+        white-space: nowrap;
+    }
+
+    .caa-about-wrapper .req-desc {
+        font-size: 0.95rem;
+    }
+
+    /* Team Section */
+    .caa-about-wrapper .team-wrapper {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        justify-content: center;
+        margin-top: 1.5rem;
+    }
+
+    .caa-about-wrapper .team-badge {
+        background: #f8f9fa;
+        border: 1px solid #e5e7eb;
+        padding: 0.5rem 1rem;
+        border-radius: 50px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: var(--caa-text-dark);
+        white-space: nowrap;
+    }
+
+    .caa-about-wrapper .advisor-box {
+        margin-top: 1.5rem;
+        padding: 1rem;
+        background: rgba(37, 211, 102, 0.05);
+        border-radius: 8px;
+        text-align: center;
+        font-weight: 600;
+        color: var(--caa-green-dark);
+    }
+
+    .caa-about-wrapper .content-note {
+        font-size: 0.85rem;
+        color: var(--caa-text-muted);
+        background: #f9fafb;
+        padding: 1rem;
+        border-radius: 8px;
+        margin-top: 1rem;
+        border-left: 3px solid #9ca3af;
+        text-align: center;
+    }
+
+    /* Helper para colunas de texto */
+    .caa-about-wrapper .text-columns-2 {
+        column-count: 2;
+        column-gap: 2rem;
+    }
+
+    @@media (max-width: 768px) {
+        .caa-about-wrapper .text-columns-2 {
+            column-count: 1;
+        }
+    }
+
+</style>
+
+<!-- WRAPPER DE ISOLAMENTO: Todo o conteúdo deve ficar aqui dentro -->
+<div class="caa-about-wrapper">
+
+    <div class="about-page-container">
+
+        <!-- Header / Hero -->
+        <div class="about-header">
+            <div class="about-logo-icon">
+                <i class="bi bi-mortarboard-fill"></i>
+            </div>
+            <h1 class="about-title">Sistema de Gestão Educacional - CAA</h1>
+            <p class="about-subtitle text-center">Centro Universitário Anhembi Morumbi Sorocaba – UNIAMO</p>
+            <div class="mt-3 small" style="color: var(--caa-text-muted);">
+                <span>Análise e Desenvolvimento de Sistemas</span> • <span>Sorocaba/SP - 2025</span>
+            </div>
+        </div>
+
+        <div class="about-grid">
+
+            <!-- Equipe -->
+            <div class="info-card col-full">
+                <div class="card-header-flex">
+                    <div class="card-icon"><i class="bi bi-people-fill"></i></div>
+                    <h2 class="card-title">Equipe de Desenvolvimento</h2>
+                </div>
+                <div style="text-align: center;">
+                    <p class="text-center">Projeto desenvolvido como exigência parcial para obtenção do título de Tecnólogo em Análise e Desenvolvimento de Sistemas.</p>
+                    <div class="team-wrapper">
+                        <span class="team-badge">Gabriel de Almeida Patelli</span>
+                        <span class="team-badge">Guilherme da Costa Azevedo</span>
+                        <span class="team-badge">João Vitor Leite de Castro</span>
+                        <span class="team-badge">Lucas Soares Machado</span>
+                        <span class="team-badge">Ramon da Silva Martins</span>
+                        <span class="team-badge">Yuri Lucka Carriel Rodrigues</span>
+                    </div>
+                    <div class="advisor-box">
+                        <i class="bi bi-person-video3 me-2"></i>Orientador: Prof. Anderson Reis de Campos
+                    </div>
+                </div>
+            </div>
+
+            <!-- Resumo/Introdução -->
+            <div class="info-card col-half">
+                <div class="card-header-flex">
+                    <div class="card-icon"><i class="bi bi-book-fill"></i></div>
+                    <h2 class="card-title">Introdução e Problema</h2>
+                </div>
+                <p>O setor de atendimento ao aluno (CAA) é responsável por prestar suporte direto às demandas acadêmicas e operacionais. Atualmente, muitos processos ocorrem de forma descentralizada, utilizando planilhas e procedimentos manuais [attached_file:1].</p>
+                <p><strong>O Problema:</strong> O sistema atual da instituição é voltado majoritariamente para a gestão acadêmica e financeira, não contemplando as necessidades específicas do atendimento. Isso gera falta de centralização, inconsistência nos registros, ausência de histórico estruturado e lentidão no acompanhamento das solicitações [attached_file:1].</p>
+            </div>
+
+            <!-- Objetivos e Justificativa -->
+            <div class="info-card col-half">
+                <div class="card-header-flex">
+                    <div class="card-icon"><i class="bi bi-bullseye"></i></div>
+                    <h2 class="card-title">Objetivos e Justificativa</h2>
+                </div>
+                <p><strong>Objetivo:</strong> Desenvolver um sistema que centralize informações e automatize processos, otimizando o registro de solicitações e facilitando o acesso a dados acadêmicos para apoiar a tomada de decisão estratégica [attached_file:1].</p>
+                <p><strong>Justificativa:</strong> A solução busca eficiência operacional substituindo controles manuais, garantindo segurança e conformidade no acesso aos dados, e melhorando a experiência do aluno com um atendimento mais ágil e transparente [attached_file:1].</p>
+            </div>
+
+            <!-- Metodologia e Desenvolvimento -->
+            <div class="info-card col-full">
+                <div class="card-header-flex">
+                    <div class="card-icon"><i class="bi bi-code-square"></i></div>
+                    <h2 class="card-title">Desenvolvimento Tecnológico</h2>
+                </div>
+                <div class="text-columns-2">
+                    <p>O desenvolvimento foi realizado utilizando o <strong>Visual Studio</strong> como IDE e a linguagem <strong>C#</strong> com o framework <strong>ASP.NET Core MVC</strong>. Esta escolha garante organização, escalabilidade e separação de camadas.</p>
+                    <p>Para o banco de dados, utilizou-se <strong>SQL Server</strong> com <strong>Entity Framework</strong> para mapeamento objeto-relacional. A segurança é gerida pelo <strong>Identity</strong> para autenticação e controle de papéis (roles).</p>
+                    <p>O Front-end utiliza <strong>HTML, CSS e JavaScript</strong>, complementados por <strong>Bootstrap</strong> e <strong>AdminLTE</strong> para uma interface responsiva, além de <strong>SweetAlert2</strong> para feedback visual e <strong>Chart.js</strong> para visualização de dados. O sistema também conta com recursos de comunicação em tempo real [attached_file:1].</p>
+                </div>
+            </div>
+
+            <!-- Requisitos Funcionais -->
+            <div class="info-card col-half">
+                <div class="card-header-flex">
+                    <div class="card-icon"><i class="bi bi-list-check"></i></div>
+                    <h2 class="card-title">Requisitos Funcionais</h2>
+                </div>
+                <ul class="req-list">
+                    <li class="req-item"><span class="req-code">RF01</span><span class="req-desc">Gerenciamento de Cursos</span></li>
+                    <li class="req-item"><span class="req-code">RF02</span><span class="req-desc">Gerenciamento de Colaboradores</span></li>
+                    <li class="req-item"><span class="req-code">RF03</span><span class="req-desc">Gerenciamento de Ficha Médica</span></li>
+                    <li class="req-item"><span class="req-code">RF04</span><span class="req-desc">Gerenciamento de Estágios</span></li>
+                    <li class="req-item"><span class="req-code">RF05</span><span class="req-desc">Controle de Matrículas</span></li>
+                    <li class="req-item"><span class="req-code">RF06</span><span class="req-desc">Central de Contatos</span></li>
+                    <li class="req-item"><span class="req-code">RF07</span><span class="req-desc">Links de Acesso Rápido</span></li>
+                    <li class="req-item"><span class="req-code">RF08</span><span class="req-desc">Documentos Institucionais</span></li>
+                    <li class="req-item"><span class="req-code">RF09</span><span class="req-desc">Comunicação por Recados</span></li>
+                    <li class="req-item"><span class="req-code">RF10</span><span class="req-desc">Login e Autenticação de Usuários</span></li>
+                    <li class="req-item"><span class="req-code">RF11</span><span class="req-desc">Histórico de Atendimentos e Procedimentos</span></li>
+                </ul>
+            </div>
+
+            <!-- Requisitos Não Funcionais -->
+            <div class="info-card col-half">
+                <div class="card-header-flex">
+                    <div class="card-icon"><i class="bi bi-shield-check"></i></div>
+                    <h2 class="card-title">Requisitos Não Funcionais</h2>
+                </div>
+                <ul class="req-list">
+                    <li class="req-item"><span class="req-code">RNF01</span><span class="req-desc">Resposta em até 3 segundos (condições normais)</span></li>
+                    <li class="req-item"><span class="req-code">RNF02</span><span class="req-desc">Arquitetura expansível</span></li>
+                    <li class="req-item"><span class="req-code">RNF03</span><span class="req-desc">Autenticação via Identity com controle de papéis</span></li>
+                    <li class="req-item"><span class="req-code">RNF04</span><span class="req-desc">Disponibilidade mínima de 99%</span></li>
+                    <li class="req-item"><span class="req-code">RNF05</span><span class="req-desc">Interface responsiva (Desktop, Tablet, Mobile)</span></li>
+                    <li class="req-item"><span class="req-code">RNF06</span><span class="req-desc">Código modular e documentado</span></li>
+                    <li class="req-item"><span class="req-code">RNF07</span><span class="req-desc">Compatível com SQL Server, .NET 9 e C# 13</span></li>
+                    <li class="req-item"><span class="req-code">RNF08</span><span class="req-desc">Logs de operações críticas e auditoria</span></li>
+                    <li class="req-item"><span class="req-code">RNF09</span><span class="req-desc">Feedback visual ao usuário</span></li>
+                    <li class="req-item"><span class="req-code">RNF10</span><span class="req-desc">Suporte à acessibilidade e HTML semântico</span></li>
+                    <li class="req-item"><span class="req-code">RNF11</span><span class="req-desc">Tratamento de exceções amigável</span></li>
+                </ul>
+            </div>
+
+        </div>
+
+        <div class="content-note">
+            <i class="bi bi-info-circle me-2"></i>
+            Para detalhes completos de cada requisito e diagramas do sistema, consulte a documentação oficial do TCC.
+        </div>
+    </div>
+</div>

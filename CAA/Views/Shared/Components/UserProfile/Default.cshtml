@@ -1,0 +1,172 @@
+@model CAA.ViewModels.UserProfileViewModel
+
+
+<style>
+    /* User Menu Container */
+    .user-menu .nav-link {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        color: var(--caa-green-dark);
+        font-weight: 600;
+        cursor: pointer;
+        padding: 0.375rem 0.75rem;
+        transition: color 0.3s ease;
+    }
+
+        .user-menu .nav-link:hover,
+        .user-menu .nav-link:focus {
+            color: var(--caa-green-main);
+            text-decoration: none;
+        }
+
+    /* User Image */
+    .user-menu .user-image {
+        width: 40px;
+        height: 40px;
+        object-fit: cover;
+        border: 2px solid var(--caa-green-light);
+        box-shadow: 0 2px 6px rgba(18, 140, 126, 0.3);
+        transition: border-color 0.3s ease, transform 0.3s ease;
+    }
+
+        .user-menu .user-image:hover {
+            border-color: var(--caa-green-main);
+            transform: scale(1.1);
+        }
+
+    /* Dropdown Menu */
+    .user-menu .dropdown-menu-lg {
+        min-width: 250px;
+        border-radius: 16px;
+        border: none;
+        box-shadow: 0 8px 24px rgba(18, 140, 126, 0.15);
+        overflow: hidden;
+        padding: 0;
+    }
+
+    /* User Header */
+    .user-header.bg-caa-green-gradient {
+        background: linear-gradient(135deg, var(--caa-green-main), var(--caa-green-dark));
+        color: white;
+        text-align: center;
+        padding: 1.5rem 1rem;
+    }
+
+        .user-header.bg-caa-green-gradient img {
+            width: 80px;
+            height: 80px;
+            border: 3px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            margin-bottom: 1rem;
+        }
+
+    .user-header p {
+        margin: 0.25rem 0;
+        font-weight: 600;
+    }
+
+    .user-header small {
+        font-weight: 400;
+        opacity: 0.8;
+    }
+
+    /* User Footer */
+    .user-footer {
+        display: flex;
+        justify-content: space-between;
+        padding: 1rem;
+        background: #f9fafb;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+
+        .user-footer a.btn {
+            flex: 1 1 auto;
+            min-width: 100px;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+    .btn-outline-caa {
+        color: var(--caa-green-dark);
+        border: 2px solid var(--caa-green-main);
+        background: transparent;
+    }
+
+        .btn-outline-caa:hover {
+            background: var(--caa-green-main);
+            color: white;
+            border-color: var(--caa-green-main);
+        }
+
+    .btn-outline-danger {
+        border: 2px solid #ef4444;
+        color: #ef4444;
+        background: transparent;
+    }
+
+        .btn-outline-danger:hover {
+            background: #ef4444;
+            color: white;
+            border-color: #ef4444;
+        }
+
+    /* Responsive Adjustments */
+    @@media (max-width: 576px) {
+        .user-menu .nav-link span
+
+    {
+        display: none;
+    }
+
+    /* Removido o flex-direction: column e width: 100% dos botões para manter lado a lado no mobile */
+    }
+</style>
+@if (Model != null)
+{
+    <li class="nav-item dropdown user-menu">
+        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+            <img src="@(Model.FotoPerfilBase64 ?? "/img/placeholderPerfil.png")"
+                 class="user-image rounded-circle shadow"
+                 alt="User Image" />
+            <span class="d-none d-md-inline">@Model.Nome @Model.Sobrenome</span>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
+            <!--início::Imagem do Usuário-->
+            <li class="user-header bg-caa-green-gradient">
+                <img src="@(Model.FotoPerfilBase64 ?? "/img/placeholderPerfil.png")"
+                     class="rounded-circle shadow"
+                     alt="User Image" />
+                <p class="mb-1">
+                    @Model.Nome @Model.Sobrenome
+                </p>
+                <p class="mb-1">
+                    @Model.Cargo
+                </p>
+                <p>
+                    <small>@Model.Departamento</small>
+                </p>
+            </li>
+            <li class="user-footer d-flex">
+                @if (User.Identity?.IsAuthenticated ?? false)
+                {
+                    <a asp-area="Identity" asp-page="/Account/Manage/Index" class="btn btn-outline-caa flex-grow-1 me-2">
+                        Perfil
+                    </a>
+                    <form class="d-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl='@Url.Action("Index", "Home", new { area = "" })' method="post">
+                        <button type="submit" class="btn btn-outline-danger" title="Sair">
+                            <i class="bi bi-power"></i>
+                        </button>
+                    </form>
+                }
+                else
+                {
+                    <a asp-area="Identity" asp-page="/Account/Login" class="btn btn-outline-primary w-100">Entrar</a>
+                }
+            </li>
+            <!--fim::Rodapé do Menu-->
+        </ul>
+    </li>
+}

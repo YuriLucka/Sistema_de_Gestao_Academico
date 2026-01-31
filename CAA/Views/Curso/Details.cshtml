@@ -1,0 +1,786 @@
+﻿<html lang="pt-br">
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewData["Title"]</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Adiciona Font Awesome para ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect width='48' height='48' rx='8' fill='%2300AD8E'/%3E%3Ctext x='24' y='32' text-anchor='middle' font-size='28' font-family='Arial, Helvetica, sans-serif' fill='white' font-weight='bold'%3EA%3C/text%3E%3C/svg%3E" />
+    <!-- Adiciona SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+    @using CAA.Helpers
+    @model CAA.Models.Curso
+    @using Microsoft.AspNetCore.Authorization
+    @using System.Security.Claims
+    @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+
+    @{
+        ViewData["Title"] = "Detalhes do Curso";
+        Layout = null;
+        bool isAdmin = HttpContextAccessor.HttpContext.User.IsInRole("Admin");
+    }
+
+    <style>
+        :root {
+            --caa-green-main: #00594e;
+            --caa-green-dark: #00594e;
+            --caa-green-darker: #00594e;
+            --caa-gray: #646363;
+            --caa-purple: #a42b81;
+            --caa-yellow: #fbb040;
+            --caa-btn-bg: var(--caa-green-darker);
+            --caa-btn-hover-bg: var(--caa-green-darker);
+            --caa-btn-text: #fff;
+            --caa-input-border: var(--caa-green-darker);
+            --caa-input-focus: var(--caa-purple);
+            --caa-link: var(--caa-purple);
+            --caa-link-hover: var(--caa-yellow);
+        }
+
+        body {
+            background: linear-gradient(120deg, #c2d9d6 0%, #b3c9d6 100%);
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            background: #fff;
+            border-radius: 16px 16px 0 0;
+            box-shadow: 0 2px 8px rgba(44,62,80,0.08);
+            padding: 24px 36px 12px 36px;
+            margin-bottom: -8px;
+        }
+
+        .header-logo {
+            height: 64px;
+            width: auto;
+        }
+
+        .header-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--caa-green-darker);
+            letter-spacing: 1px;
+            text-align: left;
+        }
+
+        .document-container {
+            max-width: 700px;
+            margin: 32px auto;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 6px 24px rgba(44,62,80,0.10);
+            padding: 0 36px 32px 36px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .divider {
+            border: none;
+            border-top: 2px solid var(--caa-green-main);
+            margin: 18px 0 24px 0;
+        }
+
+        .document-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--caa-green-darker);
+            letter-spacing: 1px;
+            text-align: center;
+        }
+
+        .main-info {
+            margin-bottom: 18px;
+            font-size: 1rem;
+            display: grid;
+            grid-template-columns: 180px 1fr;
+            gap: 8px 18px;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .main-info dt {
+                font-weight: 600;
+                color: var(--caa-green-darker);
+                text-align: right;
+            }
+
+            .main-info dd {
+                color: var(--caa-gray);
+                border-bottom: 1px solid var(--caa-green-main);
+                padding-bottom: 2px;
+                margin: 0;
+            }
+
+        .section {
+            margin-bottom: 24px;
+            background: #f8fbff;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(44,62,80,0.06);
+            padding: 10px 20px;
+            text-align: center;
+        }
+
+            .section h5 {
+                color: var(--caa-green-darker);
+                font-weight: 600;
+                margin-bottom: 10px;
+                margin-top: 10px;
+                font-size: 1.08rem;
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                justify-content: center;
+            }
+
+        .values-table {
+            width: 90%;
+            margin: 0 auto;
+            border-collapse: collapse;
+            font-size: 1rem;
+        }
+
+            .values-table th {
+                background: var(--caa-green-darker);
+                color: var(--caa-btn-text);
+                font-weight: 600;
+                padding: 8px 10px;
+                border-radius: 6px 6px 0 0;
+                font-size: 1rem;
+            }
+
+            .values-table td {
+                background: #fff;
+                color: var(--caa-gray);
+                padding: 8px 10px;
+                border-radius: 0 0 6px 6px;
+                font-size: 1rem;
+                border-bottom: 1px solid var(--caa-green-main);
+            }
+
+                .values-table td.valor-label {
+                    text-align: left;
+                }
+
+                .values-table td.valor-monetario {
+                    text-align: right;
+                }
+
+            .values-table tr:last-child td {
+                border-bottom: none;
+            }
+
+            .values-table .plan {
+                font-weight: 600;
+                color: var(--caa-green-darker);
+                background: #e0f7f4;
+                border-radius: 6px;
+            }
+
+        .info-row {
+            display: flex;
+            gap: 24px;
+            justify-content: center;
+            margin-bottom: 24px;
+        }
+
+            .info-row .section {
+                margin-bottom: 0;
+                flex: 1 1 0;
+                min-width: 220px;
+                max-width: 320px;
+                padding: 18px 10px;
+            }
+
+        .info-box {
+            background: linear-gradient(90deg, #e0f7f4 60%, #f8fbff 100%);
+            border-radius: 10px;
+            padding: 18px 20px;
+            box-shadow: 0 2px 8px rgba(44,62,80,0.06);
+            font-size: 1rem;
+            margin-bottom: 18px;
+            text-align: left;
+        }
+
+            .info-box strong {
+                color: var(--caa-green-darker);
+            }
+
+        .button-group {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-top: 24px;
+        }
+
+        .btn {
+            padding: 10px 28px;
+            font-size: 1rem;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.2s, box-shadow 0.2s;
+            box-shadow: 0 2px 8px rgba(44,62,80,0.08);
+        }
+
+        .btn-primary {
+            background: var(--caa-btn-bg);
+            color: var(--caa-btn-text);
+        }
+
+            .btn-primary:hover {
+                background: var(--caa-btn-hover-bg);
+                box-shadow: 0 4px 16px rgba(44,62,80,0.12);
+            }
+
+        .btn-secondary {
+            background: var(--caa-gray);
+            color: #fff;
+        }
+
+            .btn-secondary:hover {
+                background: var(--caa-green-dark);
+                box-shadow: 0 4px 16px rgba(44,62,80,0.10);
+            }
+
+        .footer {
+            margin-top: 10px;
+            padding: 16px 0 0 0;
+            text-align: center;
+            font-size: 0.95rem;
+            color: var(--caa-green-darker);
+            border-top: 2px solid var(--caa-green-darker);
+        }
+
+            .footer a {
+                color: var(--caa-link);
+                text-decoration: underline;
+            }
+
+                .footer a:hover {
+                    color: var(--caa-link-hover);
+                }
+
+        .planos-row {
+            display: flex;
+            gap: 24px;
+            justify-content: center;
+            margin-bottom: 18px;
+        }
+
+            .planos-row .values-table {
+                width: 320px;
+                min-width: 220px;
+                max-width: 100%;
+                margin-bottom: 0;
+            }
+
+        .meses-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 3px;
+            margin: 32px 0 0 0;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .mes-box {
+            width: 52px;
+            height: 40px;
+            background: #f8fbff;
+            border: 1px solid #b2dfdb;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 500;
+            color: #00796a;
+            font-size: 1rem;
+            box-shadow: none;
+            transition: background 0.2s, border 0.2s;
+            margin-bottom: 6px;
+            cursor: pointer;
+        }
+
+        .mes-break {
+            flex-basis: 100%;
+            height: 0;
+        }
+
+        @@media print {
+            body {
+                background: #fff;
+                margin: 0;
+                padding: 0;
+            }
+
+            .document-container {
+                max-width: 100%;
+                margin: 0;
+                box-shadow: none;
+                border: none;
+                padding: 8px 8px;
+                font-size: 0.95rem;
+            }
+
+            .header {
+                padding: 8px 8px 4px 8px !important;
+            }
+
+            .header-logo {
+                height: 40px !important;
+            }
+
+            .header-title {
+                font-size: 1.1rem !important;
+            }
+
+            .document-title {
+                font-size: 1.1rem;
+                margin-bottom: 8px;
+            }
+
+            .main-info, .section, .info-box {
+                width: 100% !important;
+                margin: 0 0 8px 0 !important;
+                padding: 4px 4px !important;
+                font-size: 0.90rem !important;
+            }
+
+            .info-row {
+                flex-direction: row !important;
+                gap: 8px !important;
+                margin-bottom: 8px !important;
+            }
+
+                .info-row .section {
+                    min-width: 0 !important;
+                    max-width: 100% !important;
+                    padding: 4px 4px !important;
+                }
+
+            .values-table th, .values-table td {
+                padding: 4px 4px !important;
+                font-size: 0.90rem !important;
+            }
+
+            .button-group {
+                display: none;
+            }
+
+            .footer {
+                font-size: 0.85rem !important;
+                padding: 4px 0 0 0 !important;
+            }
+
+            a {
+                color: var(--caa-gray) !important;
+                text-decoration: none !important;
+            }
+        }
+
+        .mes-box.selected {
+            background: var(--caa-green-darker);
+            color: #fff;
+            border: 2px solid var(--caa-green-darker);
+            box-shadow: 0 2px 8px rgba(44,62,80,0.12);
+        }
+
+        .atendente-info {
+            text-align: center;
+            margin: 10px 0 0 0;
+            color: var(--caa-green-darker);
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .selected-plano {
+            border: 2px dashed var(--caa-green-darker);
+            box-shadow: 0 2px 12px rgba(164,43,129,0.10);
+            background: #f3e6f3;
+        }
+
+        .floating-menu {
+            position: fixed;
+            top: 32px;
+            right: 32px;
+            z-index: 1000;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 12px rgba(44,62,80,0.18);
+            padding: 12px 18px;
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            gap: 12px;
+            min-width: 220px;
+        }
+
+            .floating-menu .btn-estendido {
+                background: var(--caa-green-darker);
+                color: #fff;
+            }
+
+                .floating-menu .btn-estendido:hover {
+                    background: var(--caa-green-dark);
+                }
+
+            .floating-menu .btn-normal {
+                background: var(--caa-green-main);
+                color: #fff;
+            }
+
+                .floating-menu .btn-normal:hover {
+                    background: var(--caa-green-dark);
+                }
+
+            .floating-menu .btn {
+                margin: 0;
+                font-weight: 600;
+                font-size: 1rem;
+                border-radius: 6px;
+                border: none;
+                box-shadow: 0 2px 8px rgba(44,62,80,0.08);
+                transition: background 0.2s, box-shadow 0.2s;
+                padding: 10px 18px;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+
+        @@media print {
+            .floating-menu {
+                display: none !important;
+            }
+        }
+
+        .floating-pdf-menu {
+            position: fixed;
+            top: 120px;
+            right: 32px;
+            z-index: 1100;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 12px rgba(44,62,80,0.18);
+            padding: 10px 14px;
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            gap: 10px;
+            min-width: 56px;
+        }
+
+        .floating-pdf-menu .pdf-btn {
+            background: var(--caa-green-darker);
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            cursor: pointer;
+            margin: 0 auto;
+            transition: background 0.2s;
+        }
+
+        .floating-pdf-menu .pdf-btn:hover {
+            background: var(--caa-purple);
+        }
+
+        .floating-pdf-menu input[type="file"] {
+            display: none;
+        }
+
+        @@media print {
+            .floating-pdf-menu {
+                display: none !important;
+            }
+        }
+    </style>
+
+    @* Exibe o botão Plano Estendido apenas se houver plano estendido *@
+    @if (Model.PlanosFinanceiros != null && Model.PlanosFinanceiros.Any(p => p.TipoPlanoFinanceiro.ToString().Contains("Estendido")))
+    {
+        <div class="floating-menu">
+            <button id="toggleEstendido" class="btn btn-estendido">
+                <i class="fa fa-filter"></i> Plano Estendido
+            </button>
+        </div>
+    }
+
+    <div class="document-container">
+        <div class="header">
+            <img src="~/img/marca_uam_campus_athon_horizontal.png" alt="Logo Universidade" class="header-logo" />
+            <div class="header-title">Anhembi Morumbi<br />Campus Sorocaba</div>
+        </div>
+        <hr class="divider" />
+        <div class="document-title"><i class="fa fa-graduation-cap"></i> Detalhes do Curso</div>
+        <dl class="main-info">
+            <dt>Nome do Curso:</dt>
+            <dd>@Model.Nome</dd>
+            <dt>@Html.DisplayNameFor(model => model.Titulacao)</dt>
+            <dd>@Html.DisplayFor(model => model.Titulacao)</dt>
+            <dt>@Html.DisplayNameFor(model => model.Eixo)</dt>
+            <dd>@Html.DisplayFor(model => model.Eixo.Nome)</dd>
+            @if (Model.Eixo?.CoordenadorEixo != null && Model.Eixo.CoordenadorEixo.Any())
+            {
+                var coordenador = Model.Eixo.CoordenadorEixo.FirstOrDefault()?.Coordenador;
+                if (coordenador != null)
+                {
+                    <dt>Coordenador:</dt>
+                    <dd>@coordenador.Nome</dd>
+                }
+            }
+        </dl>
+        <div class="section">
+            <h5><i class="fa fa-money-bill-wave"></i> Planos Financeiros e Descontos</h5>
+            @if (Model.PlanosFinanceiros == null || !Model.PlanosFinanceiros.Any())
+            {
+                <div style="color: var(--caa-green-dark); font-weight: 600; margin: 18px 0;">
+                    Nenhum plano financeiro cadastrado para este curso.
+                </div>
+            }
+            else
+            {
+                <div class="planos-row" style="justify-content: center;">
+                    @if (Model.PlanosFinanceiros != null && Model.PlanosFinanceiros.Any(p => p.Matutino))
+                    {
+                        <div style="flex:1; min-width:220px; max-width:320px;">
+                            <h6 style="color:var(--caa-green-dark);margin-bottom:8px; margin-top: 8px;">Matutino</h6>
+                            @foreach (var plano in Model.PlanosFinanceiros.OrderBy(x => x.TipoPlanoFinanceiro).Where(p => p.Matutino))
+                            {
+                                var tipoPlano = plano.TipoPlanoFinanceiro.ToString();
+                                var isEstendido = tipoPlano.Contains("Estendido");
+                                var isNormal = tipoPlano.Contains("Normal");
+                                <table class="values-table plano-financeiro @(isEstendido ? "estendido" : "") @(isNormal ? "normal" : "")">
+                                    <tr>
+                                        <th colspan="3" class="plan">
+                                            @plano.TipoPlanoFinanceiro.GetDisplayName()
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <td class="valor-label">Valor</td>
+                                        <td class="valor-monetario" colspan="2">R$ @plano.Valor.ToString("N2")</td>
+                                    </tr>
+                                    @if (plano.Descontos != null && plano.Descontos.Any())
+                                    {
+                                        decimal valorBase = plano.Valor;
+                                        @foreach (var desconto in plano.Descontos)
+                                        {
+                                            decimal valorDesconto = 0;
+                                            if (desconto.TipoDescontoValor == CAA.Models.TipoDescontoValor.Porcentagem)
+                                            {
+                                                valorDesconto = valorBase * (desconto.Valor / 100M);
+                                            }
+                                            else // Fixo
+                                            {
+                                                valorDesconto = desconto.Valor;
+                                            }
+                                            decimal valorFinal = valorBase - valorDesconto;
+                                            <tr>
+                                                <td class="valor-label">@(desconto.TipoDesconto != null ? desconto.TipoDesconto.Nome : "-")</td>
+                                                <td class="valor-monetario" colspan="2">R$ @valorFinal.ToString("N2")</td>
+                                            </tr>
+                                            valorBase = valorFinal;
+                                        }
+                                    }
+                                </table>
+                            }
+                        </div>
+                    }
+                    @if (Model.PlanosFinanceiros != null && Model.PlanosFinanceiros.Any(p => p.Noturno))
+                    {
+                        <div style="flex:1; min-width:220px; max-width:320px;">
+                            <h6 style="color:var(--caa-green-dark);margin-bottom:8px; margin-top: 8px;">Noturno</h6>
+                            @foreach (var plano in Model.PlanosFinanceiros.OrderBy(x => x.TipoPlanoFinanceiro).Where(p => p.Noturno))
+                            {
+                                var tipoPlano = plano.TipoPlanoFinanceiro.ToString();
+                                var isEstendido = tipoPlano.Contains("Estendido");
+                                var isNormal = tipoPlano.Contains("Normal");
+                                <table class="values-table plano-financeiro @(isEstendido ? "estendido" : "") @(isNormal ? "normal" : "")">
+                                    <tr>
+                                        <th colspan="3" class="plan">
+                                            @plano.TipoPlanoFinanceiro.GetDisplayName()
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <td class="valor-label">Valor</td>
+                                        <td class="valor-monetario" colspan="2">R$ @plano.Valor.ToString("N2")</td>
+                                    </tr>
+                                    @if (plano.Descontos != null && plano.Descontos.Any())
+                                    {
+                                        decimal valorBase = plano.Valor;
+                                        @foreach (var desconto in plano.Descontos)
+                                        {
+                                            decimal valorDesconto = 0;
+                                            if (desconto.TipoDescontoValor == CAA.Models.TipoDescontoValor.Porcentagem)
+                                            {
+                                                valorDesconto = valorBase * (desconto.Valor / 100M);
+                                            }
+                                            else // Fixo
+                                            {
+                                                valorDesconto = desconto.Valor;
+                                            }
+                                            decimal valorFinal = valorBase - valorDesconto;
+                                            <tr>
+                                                <td class="valor-label">@(desconto.TipoDesconto != null ? desconto.TipoDesconto.Nome : "-")</td>
+                                                <td class="valor-monetario" colspan="2">R$ @valorFinal.ToString("N2")</td>
+                                            </tr>
+                                            valorBase = valorFinal;
+                                        }
+                                    }
+                                </table>
+                            }
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+        <div class="info-row">
+            <div class="section">
+                <h5><i class="fa fa-clock"></i> Horários do Curso</h5>
+                <table class="values-table">
+                    @if (Model.PlanosFinanceiros != null && Model.PlanosFinanceiros.Any(p => p.Matutino))
+                    {
+                        <tr><td>Matutino</td><td></td></tr>
+                    }
+                    @if (Model.PlanosFinanceiros != null && Model.PlanosFinanceiros.Any(p => p.Noturno))
+                    {
+                        <tr><td>Noturno</td><td></td></tr>
+                    }
+                </table>
+            </div>
+            <div class="section">
+                <h5><i class="fa fa-calendar-alt"></i> Quantidade de Semestres</h5>
+                <table class="values-table">
+                    <tr><td>Semestres</td><td>@Model.QtdSemestres</td></tr>
+                </table>
+            </div>
+        </div>
+        <div class="section info-box">
+            <strong>Modalidade de Ensino:</strong> Presencial<br />
+            <strong>Modalidades de Ingresso:</strong>
+            @(ViewBag.TipoIngressos != null && ((IEnumerable<string>)ViewBag.TipoIngressos).Any()
+                ? string.Join(", ", ((IEnumerable<string>)ViewBag.TipoIngressos))
+                : "Nenhum tipo de ingresso cadastrado")<br />
+        </div>
+        @if (ViewBag.Atendente != null)
+        {
+            <div class="atendente-info">
+                <span style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+                    <i class="fa fa-user-circle" style="font-size: 1.1rem; color: var(--caa-green-dark);"></i>
+                    <strong>Atendente:</strong>
+                    <span>@ViewBag.Atendente</span>
+                    <span style="margin-left: 12px; color: var(--caa-gray); font-size: 0.95em;">
+                        <i class="fa fa-clock"></i> @TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("E. South America Standard Time")).ToString("dd/MM/yyyy HH:mm")
+                    </span>
+                </span>
+            </div>
+        }
+        <div class="footer">
+            <strong>Contato:</strong> Telefone: (15) 3042-5000 | Email: caa@anhembisorocaba.com.br<br />
+            Site: <a href="https://anhembisorocaba.com.br/" target="_blank">anhembisorocaba.com.br</a>
+        </div>
+        <div class="meses-grid">
+            <button type="button" class="mes-box">Jan</button>
+            <button type="button" class="mes-box">Fev</button>
+            <button type="button" class="mes-box">Mar</button>
+            <button type="button" class="mes-box">Abr</button>
+            <button type="button" class="mes-box">Mai</button>
+            <button type="button" class="mes-box">Jun</button>
+            <div class="mes-break"></div>
+            <button type="button" class="mes-box">Jul</button>
+            <button type="button" class="mes-box">Ago</button>
+            <button type="button" class="mes-box">Set</button>
+            <button type="button" class="mes-box">Out</button>
+            <button type="button" class="mes-box">Nov</button>
+            <button type="button" class="mes-box">Dez</button>
+        </div>
+        <script>
+            // Filtro Estendido
+            var btnEstendido = document.getElementById('toggleEstendido');
+            if (btnEstendido) {
+                btnEstendido.addEventListener('click', function() {
+                    document.querySelectorAll('.plano-financeiro.estendido').forEach(function(tbl) {
+                        tbl.style.display = (tbl.style.display === 'none') ? '' : 'none';
+                    });
+                });
+            }
+            document.querySelectorAll('.mes-box').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    btn.classList.toggle('selected');
+                });
+            });
+            document.querySelectorAll('.plano-financeiro').forEach(function(tbl) {
+                tbl.addEventListener('click', function() {
+                    tbl.classList.toggle('selected-plano');
+                });
+            });
+
+            // SweetAlert2 para remoção do PDF
+            document.addEventListener('DOMContentLoaded', function() {
+                var removeForm = document.getElementById('removePdfForm');
+                if (removeForm) {
+                    removeForm.addEventListener('submit', function(e) {
+                        e.preventDefault();
+                        Swal.fire({
+                            title: 'Remover o documento?',
+                            text: 'Esta ação não poderá ser desfeita!',
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'Sim, remover',
+                            cancelButtonText: 'Cancelar'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                removeForm.submit();
+                            }
+                        });
+                    });
+                }
+            });
+        </script>
+        <div class="button-group">
+            <button onclick="window.print()" class="btn btn-primary"><i class="fa fa-print"></i> Imprimir</button>
+            <button onclick="window.history.back()" class="btn btn-secondary"><i class="fa fa-arrow-left"></i> Voltar</button>
+        </div>
+    </div>
+    <div class="floating-pdf-menu">
+        @if (isAdmin)
+        {
+            <form id="uploadPdfForm" asp-action="UploadDocumento" asp-controller="Curso" asp-route-id="@Model.CursoId" method="post" enctype="multipart/form-data">
+                <label for="pdfUpload" title="Anexar PDF">
+                    <input type="file" id="pdfUpload" name="pdfFile" accept="application/pdf" onchange="document.getElementById('uploadPdfForm').submit();" />
+                    <span class="pdf-btn"><i class="fa fa-upload"></i></span>
+                </label>
+            </form>
+        }
+        @if (Model.Documento != null)
+        {
+            <a href="@Url.Action("DownloadDocumento", "Curso", new { id = Model.CursoId })" target="_blank" title="Visualizar PDF" class="pdf-btn"><i class="fa fa-file-pdf"></i></a>
+            @if (isAdmin)
+            {
+                <form id="removePdfForm" asp-action="RemoverDocumento" asp-controller="Curso" asp-route-id="@Model.CursoId" method="post" style="display:inline;">
+                    <button type="submit" class="pdf-btn" title="Remover PDF"><i class="fa fa-trash"></i></button>
+                </form>
+            }
+        }
+    </div>
+</body>
+</html>

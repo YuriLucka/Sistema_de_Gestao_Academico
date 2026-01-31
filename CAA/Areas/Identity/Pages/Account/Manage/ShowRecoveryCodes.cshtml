@@ -1,0 +1,80 @@
+﻿@page
+@model ShowRecoveryCodesModel
+@{
+    ViewData["Title"] = "Códigos de recuperação";
+    ViewData["ActivePage"] = "TwoFactorAuthentication";
+
+    // Lógica para dividir os códigos em linhas de 5, 4, 3 ou 2
+    int total = Model.RecoveryCodes.Length;
+    int[] layout;
+    if (total == 10)
+    {
+        layout = new[] { 5, 5 };
+    }
+    else if (total == 8)
+    {
+        layout = new[] { 4, 4 };
+    }
+    else if (total == 9)
+    {
+        layout = new[] { 3, 3, 3 };
+    }
+    else if (total == 7)
+    {
+        layout = new[] { 3, 2, 2 };
+    }
+    else if (total == 6)
+    {
+        layout = new[] { 3, 3 };
+    }
+    else if (total == 4)
+    {
+        layout = new[] { 2, 2 };
+    }
+    else if (total == 5)
+    {
+        layout = new[] { 3, 2 };
+    }
+    else if (total == 2)
+    {
+        layout = new[] { 2 };
+    }
+    else
+    {
+        // fallback: 2 em cada linha
+        int lines = (int)Math.Ceiling(total / 2.0);
+        layout = Enumerable.Repeat(2, lines).ToArray();
+        if (layout.Sum() > total)
+            layout[layout.Length - 1] = total - layout.Take(layout.Length - 1).Sum();
+    }
+    int codeIndex = 0;
+}
+
+<div class="card-body p-4">
+    <div class="row">
+        <div class="col-md-8 col-lg-7">
+            <h1 class="display-6 fw-bold text-caa text-center mb-4">@ViewData["Title"]</h1>
+            <partial name="_StatusMessage" for="StatusMessage" />
+            <div class="alert alert-warning text-center mb-4" role="alert">
+                <p class="mb-2">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                    <strong>Guarde estes códigos em um local seguro.</strong>
+                </p>
+                <p>
+                    Se você perder seu dispositivo e não tiver os códigos de recuperação, perderá o acesso à sua conta.
+                </p>
+            </div>
+            <div class="d-flex flex-column align-items-center gap-2 mb-3">
+                @foreach (var count in layout)
+                {
+                    <div class="d-flex justify-content-center gap-2">
+                        @for (int i = 0; i < count && codeIndex < total; i++, codeIndex++)
+                        {
+                            <code class="recovery-code px-2 py-1 bg-light border rounded">@Model.RecoveryCodes[codeIndex]</code>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

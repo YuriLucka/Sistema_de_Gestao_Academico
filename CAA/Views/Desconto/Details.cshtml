@@ -1,0 +1,462 @@
+﻿@model CAA.Models.Desconto
+@using CAA.Helpers
+
+@{
+    ViewData["Title"] = "Detalhes do Desconto";
+}
+
+<style>
+    :root {
+        --primary-green: #25D366;
+        --secondary-green: #128C7E;
+        --discount-purple: #8b5cf6;
+        --discount-purple-dark: #7c3aed;
+        --discount-purple-light: rgba(139, 92, 246, 0.1);
+    }
+
+    /* Page Container */
+    .form-page-container {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    /* Page Header */
+    .form-page-header {
+        background: linear-gradient(135deg, rgba(139, 92, 246, 0.05) 0%, rgba(124, 58, 237, 0.05) 100%);
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        border: 1px solid rgba(139, 92, 246, 0.2);
+        backdrop-filter: blur(10px);
+        text-align: center;
+    }
+
+        .form-page-header h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--discount-purple);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+        }
+
+            .form-page-header h1 i {
+                font-size: 2rem;
+            }
+
+        .form-page-header p {
+            color: #6b7280;
+            margin: 0;
+            font-size: 0.95rem;
+        }
+
+    /* Details Card */
+    .details-card {
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+        border: 2px solid #f3f4f6;
+        margin-bottom: 2rem;
+        transition: all 0.3s ease;
+    }
+
+        .details-card:hover {
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+            border-color: rgba(139, 92, 246, 0.3);
+        }
+
+    .details-card-header {
+        background: linear-gradient(135deg, var(--discount-purple), var(--discount-purple-dark));
+        padding: 2rem 2rem 1.5rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .details-card-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 300px;
+            height: 300px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+        }
+
+    .details-card-header-content {
+        position: relative;
+        z-index: 1;
+    }
+
+    .discount-type-badge-detail {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: rgba(255, 255, 255, 0.25);
+        backdrop-filter: blur(10px);
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: white;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 1rem;
+    }
+
+    .discount-value-detail {
+        font-size: 3rem;
+        font-weight: 700;
+        color: white;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+        .discount-value-detail i {
+            font-size: 2.5rem;
+        }
+
+    .discount-value-label-detail {
+        font-size: 1rem;
+        color: rgba(255, 255, 255, 0.95);
+        font-weight: 500;
+    }
+
+    .discount-name-detail {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: white;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin-top: 0.75rem;
+    }
+
+    .details-card-body {
+        padding: 2rem;
+    }
+
+    /* Details List */
+    .details-list {
+        display: grid;
+        gap: 1.5rem;
+    }
+
+    .detail-item {
+        display: grid;
+        grid-template-columns: 200px 1fr;
+        gap: 1.5rem;
+        align-items: center;
+        padding-bottom: 1.5rem;
+        border-bottom: 2px solid #f3f4f6;
+    }
+
+        .detail-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+    .detail-label {
+        font-weight: 600;
+        color: var(--discount-purple);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        text-align: right;
+        justify-content: flex-end;
+    }
+
+        .detail-label i {
+            font-size: 1.1rem;
+        }
+
+    .detail-value {
+        color: #374151;
+        font-size: 1rem;
+        font-weight: 500;
+        background: #f9fafb;
+        padding: 0.75rem 1rem;
+        border-radius: 10px;
+        border: 1px solid #e5e7eb;
+    }
+
+    /* Form Actions */
+    .form-actions-detail {
+        display: flex;
+        gap: 1rem;
+        padding: 2rem;
+        background: #f9fafb;
+        border-top: 2px solid #f3f4f6;
+        flex-wrap: wrap;
+    }
+
+    .btn-form-detail {
+        flex: 1;
+        min-width: 140px;
+        border-radius: 12px;
+        padding: 0.875rem 1.5rem;
+        font-size: 0.95rem;
+        font-weight: 600;
+        border: none;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+        .btn-form-detail i {
+            font-size: 1.1rem;
+        }
+
+    .btn-edit-detail {
+        background: linear-gradient(135deg, var(--discount-purple), var(--discount-purple-dark));
+        color: white;
+        box-shadow: 0 4px 15px rgba(139, 92, 246, 0.2);
+    }
+
+        .btn-edit-detail:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.35);
+            color: white;
+        }
+
+    .btn-back-detail {
+        background: #f3f4f6;
+        border: 2px solid #e5e7eb;
+        color: #6b7280;
+    }
+
+        .btn-back-detail:hover {
+            background: #e5e7eb;
+            border-color: #d1d5db;
+            color: #374151;
+            transform: translateY(-2px);
+        }
+
+    /* Info Box */
+    .info-box-detail {
+        background: linear-gradient(135deg, rgba(139, 92, 246, 0.05) 0%, rgba(124, 58, 237, 0.05) 100%);
+        border-left: 4px solid var(--discount-purple);
+        border-radius: 12px;
+        padding: 1.25rem 1.5rem;
+        margin-bottom: 2rem;
+        display: flex;
+        align-items: start;
+        gap: 1rem;
+    }
+
+        .info-box-detail i {
+            font-size: 1.5rem;
+            color: var(--discount-purple);
+            flex-shrink: 0;
+            margin-top: 0.125rem;
+        }
+
+    .info-box-detail-content p {
+        color: #6b21a8;
+        margin: 0;
+        line-height: 1.6;
+    }
+
+    /* Responsive */
+    @@media (max-width: 768px) {
+        .details-card-body
+
+    {
+        padding: 1.5rem;
+    }
+
+    .form-page-header {
+        padding: 1.5rem;
+    }
+
+        .form-page-header h1 {
+            font-size: 1.5rem;
+        }
+
+    .detail-item {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+    }
+
+    .detail-label {
+        text-align: left;
+        justify-content: flex-start;
+    }
+
+    .form-actions-detail {
+        flex-direction: column;
+        padding: 1.5rem;
+    }
+
+    .btn-form-detail {
+        width: 100%;
+    }
+
+    .discount-value-detail {
+        font-size: 2.25rem;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    }
+</style>
+
+<div class="form-page-container">
+    <!-- Page Header -->
+    <div class="form-page-header">
+        <h1>
+            <i class="bi bi-info-circle"></i>
+            Detalhes do Desconto
+        </h1>
+        <p>Visualize as informações completas do desconto</p>
+    </div>
+
+    <!-- Info Box -->
+    <div class="info-box-detail">
+        <i class="bi bi-lightbulb"></i>
+        <div class="info-box-detail-content">
+            <p>
+                <strong>Informação:</strong> Este desconto é aplicado ao plano financeiro selecionado.
+                @{
+                    if (Model.TipoDescontoValor == CAA.Models.TipoDescontoValor.Porcentagem)
+                    {
+                        <text>O desconto percentual é calculado sobre o valor da mensalidade.</text>
+                    }
+                    else
+                    {
+                        <text>O desconto de valor fixo é subtraído diretamente da mensalidade.</text>
+                    }
+                }
+            </p>
+        </div>
+    </div>
+
+    <!-- Details Card -->
+    <div class="details-card">
+        <!-- Header with Value -->
+        <div class="details-card-header">
+            <div class="details-card-header-content">
+                <div class="discount-type-badge-detail">
+                    <i class="bi bi-@(Model.TipoDescontoValor == CAA.Models.TipoDescontoValor.Porcentagem ? "percent" : "currency-dollar")"></i>
+                    <span>@Html.DisplayFor(model => model.TipoDescontoValor)</span>
+                </div>
+                <div class="discount-value-detail">
+                    @{
+                        string valorFormatado;
+                        if (Model.TipoDescontoValor == CAA.Models.TipoDescontoValor.ValorFixo)
+                        {
+                            valorFormatado = Model.Valor.ToString("C", new System.Globalization.CultureInfo("pt-BR"));
+                        }
+                        else if (Model.TipoDescontoValor == CAA.Models.TipoDescontoValor.Porcentagem)
+                        {
+                            valorFormatado = Model.Valor.ToString("0.##") + "%";
+                        }
+                        else
+                        {
+                            valorFormatado = Model.Valor.ToString();
+                        }
+                    }
+                    <i class="bi bi-@(Model.TipoDescontoValor == CAA.Models.TipoDescontoValor.Porcentagem ? "percent" : "cash-coin")"></i>
+                    <span>@valorFormatado</span>
+                </div>
+                <div class="discount-value-label-detail">Valor do Desconto</div>
+                <div class="discount-name-detail">
+                    @Html.DisplayFor(model => model.TipoDesconto.Nome)
+                </div>
+            </div>
+        </div>
+
+        <!-- Body with Details -->
+        <div class="details-card-body">
+            <div class="details-list">
+                <!-- Plano Financeiro -->
+                <div class="detail-item">
+                    <div class="detail-label">
+                        <i class="bi bi-cash-stack"></i>
+                        <span>@Html.DisplayNameFor(model => model.PlanoFinanceiro)</span>
+                    </div>
+                    <div class="detail-value">
+                        @Model.PlanoFinanceiro.TipoPlanoFinanceiro.GetDisplayName()
+                    </div>
+                </div>
+
+                <!-- Tipo de Desconto -->
+                <div class="detail-item">
+                    <div class="detail-label">
+                        <i class="bi bi-tag"></i>
+                        <span>@Html.DisplayNameFor(model => model.TipoDesconto)</span>
+                    </div>
+                    <div class="detail-value">
+                        @Html.DisplayFor(model => model.TipoDesconto.Nome)
+                    </div>
+                </div>
+
+                <!-- Formato do Desconto -->
+                <div class="detail-item">
+                    <div class="detail-label">
+                        <i class="bi bi-calculator"></i>
+                        <span>Formato do Desconto</span>
+                    </div>
+                    <div class="detail-value">
+                        @Html.DisplayFor(model => model.TipoDescontoValor)
+                    </div>
+                </div>
+
+                <!-- Valor Bruto -->
+                <div class="detail-item">
+                    <div class="detail-label">
+                        <i class="bi bi-123"></i>
+                        <span>Valor Bruto</span>
+                    </div>
+                    <div class="detail-value">
+                        @if (Model.TipoDescontoValor == CAA.Models.TipoDescontoValor.ValorFixo)
+                        {
+                            @Model.Valor.ToString("C", new System.Globalization.CultureInfo("pt-BR"))
+                        }
+                        else
+                        {
+                            @Model.Valor.ToString("0.##")
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer with Actions -->
+        <div class="form-actions-detail">
+            <a asp-action="Edit" asp-route-id="@Model?.DescontoId" class="btn-form-detail btn-edit-detail">
+                <i class="bi bi-pencil"></i>
+                <span>Editar Desconto</span>
+            </a>
+            <a asp-action="Index" asp-route-planoFinanceiroId="@ViewBag.VbPlanoFinanceiroId" class="btn-form-detail btn-back-detail">
+                <i class="bi bi-arrow-left-circle"></i>
+                <span>Voltar para a Lista</span>
+            </a>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Entry animation
+            const card = document.querySelector('.details-card');
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+
+            setTimeout(function() {
+                card.style.transition = 'all 0.5s ease';
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+            }, 100);
+        });
+    </script>
+}

@@ -1,0 +1,373 @@
+﻿@model CAA.Models.CoordenadorEixo
+
+@{
+    ViewData["Title"] = "Editar Vínculo";
+}
+
+<style>
+    :root {
+        --caa-green-main: #25D366;
+        --caa-green-dark: #128C7E;
+        --caa-green-light: rgba(37, 211, 102, 0.1);
+    }
+
+    /* Page Container */
+    .form-page-container {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    /* Page Header */
+    .form-page-header {
+        background: linear-gradient(135deg, rgba(37, 211, 102, 0.05) 0%, rgba(18, 140, 126, 0.05) 100%);
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        border: 1px solid rgba(37, 211, 102, 0.2);
+        backdrop-filter: blur(10px);
+        text-align: center;
+    }
+
+        .form-page-header h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--caa-green-dark);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+        }
+
+            .form-page-header h1 i {
+                font-size: 2rem;
+            }
+
+        .form-page-header p {
+            color: #6b7280;
+            margin: 0;
+            font-size: 0.95rem;
+        }
+
+    /* Form Card */
+    .form-card {
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+        border: 2px solid #f3f4f6;
+        transition: all 0.3s ease;
+    }
+
+        .form-card:hover {
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+            border-color: rgba(37, 211, 102, 0.3);
+        }
+
+    .form-card-body {
+        padding: 2.5rem;
+    }
+
+    /* Validation Summary */
+    .validation-summary {
+        background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(220, 38, 38, 0.1) 100%);
+        border-left: 4px solid #ef4444;
+        border-radius: 12px;
+        padding: 1rem 1.25rem;
+        margin-bottom: 1.5rem;
+        color: #dc2626;
+        font-size: 0.9rem;
+    }
+
+        .validation-summary ul {
+            margin: 0.5rem 0 0 0;
+            padding-left: 1.25rem;
+        }
+
+    /* Form Groups */
+    .form-group-modern {
+        margin-bottom: 1.75rem;
+        position: relative;
+    }
+
+        .form-group-modern:last-of-type {
+            margin-bottom: 2rem;
+        }
+
+    /* Labels */
+    .form-label-modern {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 0.75rem;
+        font-size: 0.95rem;
+        transition: color 0.3s ease;
+    }
+
+        .form-label-modern i {
+            color: var(--caa-green-main);
+            font-size: 1rem;
+        }
+
+    .form-group-modern:focus-within .form-label-modern {
+        color: var(--caa-green-dark);
+    }
+
+    /* Select Fields */
+    .form-select-modern {
+        border: 2px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 0.875rem 1.125rem;
+        transition: all 0.3s ease;
+        font-size: 0.95rem;
+        background: white;
+        width: 100%;
+        color: #1f2937;
+        cursor: pointer;
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%236b7280' viewBox='0 0 16 16'%3E%3Cpath d='M8 11.5l-5-5h10l-5 5z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 1rem center;
+        background-size: 16px;
+        padding-right: 3rem;
+    }
+
+        .form-select-modern:focus {
+            border-color: var(--caa-green-main);
+            box-shadow: 0 0 0 4px var(--caa-green-light);
+            outline: none;
+            background-color: #fafafa;
+        }
+
+    /* Validation Messages */
+    .field-validation-error {
+        color: #ef4444;
+        font-size: 0.85rem;
+        margin-top: 0.5rem;
+        display: block;
+        font-weight: 500;
+    }
+
+    /* Select with validation error */
+    .input-validation-error {
+        border-color: #ef4444 !important;
+        background-color: rgba(239, 68, 68, 0.05) !important;
+    }
+
+        .input-validation-error:focus {
+            box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1) !important;
+        }
+
+    /* Helper Text */
+    .form-helper-text {
+        font-size: 0.85rem;
+        color: #6b7280;
+        margin-top: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+    }
+
+        .form-helper-text i {
+            font-size: 0.9rem;
+            color: var(--caa-green-main);
+        }
+
+    /* Form Actions */
+    .form-actions {
+        display: flex;
+        gap: 1rem;
+        padding-top: 1.5rem;
+        border-top: 2px solid #f3f4f6;
+        flex-wrap: wrap;
+    }
+
+    .btn-form {
+        flex: 1;
+        min-width: 140px;
+        border-radius: 12px;
+        padding: 0.875rem 1.5rem;
+        font-size: 0.95rem;
+        font-weight: 600;
+        border: none;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+        .btn-form i {
+            font-size: 1.1rem;
+        }
+
+    .btn-submit-form {
+        background: linear-gradient(135deg, var(--caa-green-main), var(--caa-green-dark));
+        color: white;
+        box-shadow: 0 4px 15px rgba(37, 211, 102, 0.2);
+    }
+
+        .btn-submit-form:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(37, 211, 102, 0.35);
+            color: white;
+        }
+
+    .btn-cancel-form {
+        background: #f3f4f6;
+        border: 2px solid #e5e7eb;
+        color: #6b7280;
+    }
+
+        .btn-cancel-form:hover {
+            background: #e5e7eb;
+            border-color: #d1d5db;
+            color: #374151;
+            transform: translateY(-2px);
+        }
+
+    /* Responsive */
+    @@media (max-width: 768px) {
+        .form-card-body
+
+    {
+        padding: 1.5rem;
+    }
+
+    .form-page-header {
+        padding: 1.5rem;
+    }
+
+        .form-page-header h1 {
+            font-size: 1.5rem;
+        }
+
+    .form-actions {
+        flex-direction: column;
+    }
+
+    .btn-form {
+        width: 100%;
+    }
+
+    }
+</style>
+
+<div class="form-page-container">
+    <!-- Page Header -->
+    <div class="form-page-header">
+        <h1>
+            <i class="bi bi-pencil-square"></i>
+            Editar Vínculo
+        </h1>
+        <p>Atualize o vínculo entre coordenador e eixo</p>
+    </div>
+
+    <!-- Form Card -->
+    <div class="form-card">
+        <div class="form-card-body">
+            <form asp-action="Edit" method="post">
+                <!-- Validation Summary -->
+                <div asp-validation-summary="ModelOnly" class="validation-summary"></div>
+
+                <input type="hidden" asp-for="CoordenadorEixoId" />
+
+                <!-- Coordenador -->
+                <div class="form-group-modern">
+                    <label asp-for="CoordenadorId" class="form-label-modern">
+                        <i class="bi bi-person-badge"></i>
+                        <span>Coordenador</span>
+                    </label>
+                    <select asp-for="CoordenadorId"
+                            class="form-select-modern"
+                            asp-items="ViewBag.CoordenadorId">
+                        <option value="">--Selecione o coordenador--</option>
+                    </select>
+                    <span asp-validation-for="CoordenadorId" class="field-validation-error"></span>
+                    <div class="form-helper-text">
+                        <i class="bi bi-info-circle"></i>
+                        <span>Selecione o coordenador responsável</span>
+                    </div>
+                </div>
+
+                <!-- Eixo -->
+                <div class="form-group-modern">
+                    <label asp-for="EixoId" class="form-label-modern">
+                        <i class="bi bi-diagram-3"></i>
+                        <span>Eixo</span>
+                    </label>
+                    <select asp-for="EixoId"
+                            class="form-select-modern"
+                            asp-items="ViewBag.EixoId">
+                        <option value="">--Selecione o eixo--</option>
+                    </select>
+                    <span asp-validation-for="EixoId" class="field-validation-error"></span>
+                    <div class="form-helper-text">
+                        <i class="bi bi-info-circle"></i>
+                        <span>Selecione o eixo de formação</span>
+                    </div>
+                </div>
+
+                <!-- Form Actions -->
+                <div class="form-actions">
+                    <button type="submit" class="btn-form btn-submit-form">
+                        <i class="bi bi-check-circle"></i>
+                        Salvar Alterações
+                    </button>
+                    <a asp-action="Index" class="btn-form btn-cancel-form">
+                        <i class="bi bi-arrow-left-circle"></i>
+                        Voltar para a Lista
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add animation to form on load
+            const formCard = document.querySelector('.form-card');
+            formCard.style.opacity = '0';
+            formCard.style.transform = 'translateY(20px)';
+
+            setTimeout(function() {
+                formCard.style.transition = 'all 0.5s ease';
+                formCard.style.opacity = '1';
+                formCard.style.transform = 'translateY(0)';
+            }, 100);
+
+            // Focus first select
+            const firstSelect = document.querySelector('.form-select-modern');
+            if (firstSelect) {
+                firstSelect.focus();
+            }
+
+            // Visual feedback for filled selects
+            const selects = document.querySelectorAll('.form-select-modern');
+            selects.forEach(function(select) {
+                // Check on load
+                if (select.value) {
+                    select.style.backgroundColor = '#fafafa';
+                }
+
+                select.addEventListener('change', function() {
+                    if (this.value) {
+                        this.style.backgroundColor = '#fafafa';
+                    } else {
+                        this.style.backgroundColor = 'white';
+                    }
+                });
+            });
+        });
+    </script>
+}

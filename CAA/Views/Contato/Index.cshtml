@@ -1,0 +1,202 @@
+﻿@using CAA.Models
+@{
+    var internos = ViewBag.ContatosInternos as IEnumerable<ContatoInterno>;
+    var externos = ViewBag.ContatosExternos as IEnumerable<ContatoExterno>;
+    var professores = ViewBag.ContatosProfessores as IEnumerable<ContatoProfessor>;
+    ViewData["Title"] = "Contatos";
+}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+<style>
+    :root {
+        --primary-green: #25D366;
+        --secondary-green: #128C7E;
+        --dark-green: #075E54;
+        --light-green: rgba(37, 211, 102, 0.1);
+    }
+
+    body {
+        background: #f9fafb;
+    }
+
+    /* Header da página */
+    .contacts-page-header {
+        background: linear-gradient(135deg, rgba(37, 211, 102, 0.08) 0%, rgba(18, 140, 126, 0.08) 100%);
+        border-radius: 20px;
+        padding: 2.5rem;
+        margin-bottom: 2rem;
+        border: 2px solid rgba(37, 211, 102, 0.15);
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .contacts-page-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(37, 211, 102, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .contacts-page-header h1 {
+            font-size: 2.25rem;
+            font-weight: 700;
+            color: var(--secondary-green);
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+
+            .contacts-page-header h1 i {
+                font-size: 2.5rem;
+            }
+
+    /* Search input moderno */
+    .search-wrapper {
+        position: relative;
+        max-width: 700px;
+        margin: 0 auto 2.5rem;
+    }
+
+    .search-input {
+        border-radius: 20px;
+        border: 2px solid #e5e7eb;
+        font-size: 1.05rem;
+        padding: 1.125rem 1.25rem 1.125rem 4rem;
+        box-shadow: 0 4px 12px rgba(37, 211, 102, 0.08);
+        transition: all 0.3s ease;
+        width: 100%;
+        background: white;
+    }
+
+        .search-input:focus {
+            border-color: var(--primary-green);
+            outline: none;
+            box-shadow: 0 0 0 4px var(--light-green), 0 8px 24px rgba(37, 211, 102, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .search-input::placeholder {
+            color: #9ca3af;
+        }
+
+    .search-icon {
+        position: absolute;
+        left: 1.5rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #9ca3af;
+        font-size: 1.35rem;
+        pointer-events: none;
+        transition: all 0.3s ease;
+    }
+
+    .search-input:focus ~ .search-icon {
+        color: var(--primary-green);
+        transform: translateY(-50%) scale(1.15);
+    }
+
+    /* Responsive */
+    @@media (max-width: 768px) {
+        .contacts-page-header
+
+    {
+        padding: 1.75rem;
+    }
+
+    .contacts-page-header h1 {
+        font-size: 1.75rem;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .search-input {
+        font-size: 1rem;
+        padding: 1rem 1rem 1rem 3.5rem;
+    }
+
+    .search-icon {
+        left: 1.25rem;
+        font-size: 1.2rem;
+    }
+
+    }
+</style>
+
+<div class="container-fluid px-3">
+    <!-- Page Header -->
+    <div class="contacts-page-header">
+        <h1>
+            <i class="bi bi-people-fill"></i>
+            Central de Contatos
+        </h1>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="search-wrapper">
+        <input id="filtroGlobal"
+               type="text"
+               class="search-input"
+               placeholder="Buscar contatos por nome, email, telefone..."
+               autocomplete="off" />
+        <i class="bi bi-search search-icon"></i>
+    </div>
+
+    <!-- Lists Container -->
+    <div id="listasContatos">
+        @await Html.PartialAsync("_ListasContatos")
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        let timer;
+        window.listaAberta = window.listaAberta || "contatosInternos";
+
+        document.getElementById('filtroGlobal').addEventListener('input', function () {
+            clearTimeout(timer);
+            var filtro = this.value;
+            timer = setTimeout(function () {
+                fetch(`@Url.Action("Index", "Contato")?filtro=${encodeURIComponent(filtro)}&listaSelecionada=${window.listaAberta}`, {
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                })
+                .then(response => response.text())
+                .then(html => {
+                    document.getElementById('listasContatos').innerHTML = html;
+                    if (window.initAccordion) window.initAccordion();
+                });
+            }, 400);
+        });
+
+        // Animação de entrada
+        document.addEventListener('DOMContentLoaded', function() {
+            const header = document.querySelector('.contacts-page-header');
+            const search = document.querySelector('.search-wrapper');
+
+            header.style.opacity = '0';
+            header.style.transform = 'translateY(-20px)';
+            search.style.opacity = '0';
+            search.style.transform = 'translateY(20px)';
+
+            setTimeout(() => {
+                header.style.transition = 'all 0.6s ease';
+                header.style.opacity = '1';
+                header.style.transform = 'translateY(0)';
+            }, 100);
+
+            setTimeout(() => {
+                search.style.transition = 'all 0.6s ease';
+                search.style.opacity = '1';
+                search.style.transform = 'translateY(0)';
+            }, 250);
+        });
+    </script>
+}

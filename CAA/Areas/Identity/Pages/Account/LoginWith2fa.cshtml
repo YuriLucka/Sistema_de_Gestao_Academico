@@ -1,0 +1,102 @@
+﻿@page
+@model LoginWith2faModel
+@{
+    ViewData["Title"] = "Autenticação em dois fatores";
+    Layout = "/Views/Shared/_Layout.cshtml";
+}
+
+<div class="flex items-center justify-center min-h-[60vh] py-8 px-4">
+    <div class="w-full max-w-md">
+        <div class="mb-6 text-center">
+            <i data-lucide="shield" class="w-12 h-12 text-[#25D366] mb-4"></i>
+            <h1 class="text-2xl md:text-3xl font-bold text-gray-900 mb-2">@ViewData["Title"]</h1>
+            <p class="text-gray-600 text-base mb-4">Seu login está protegido com autenticação em dois fatores.<br>Digite o código do autenticador abaixo.</p>
+        </div>
+        <form method="post" asp-route-returnUrl="@Model.ReturnUrl">
+            <input asp-for="RememberMe" type="hidden" />
+            <div asp-validation-summary="ModelOnly" class="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded-lg animate-pulse" role="alert"></div>
+            <!-- Two Factor Code -->
+            <div class="mb-5">
+                <label asp-for="Input.TwoFactorCode" class="block text-sm font-semibold text-gray-700 mb-2">Código do autenticador</label>
+                <div class="relative flex items-center">
+                    <div class="absolute left-0 pl-4 flex items-center h-full pointer-events-none">
+                        <i data-lucide="key" class="w-5 h-5 text-gray-400"></i>
+                    </div>
+                    <input asp-for="Input.TwoFactorCode"
+                           class="input-focus w-full pl-12 pr-4 py-3.5 border-2 border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 text-base"
+                           autocomplete="off"
+                           aria-required="true"
+                           placeholder="Digite o código do autenticador" />
+                </div>
+                <span asp-validation-for="Input.TwoFactorCode" class="text-red-600 text-sm mt-1 block"></span>
+            </div>
+            <!-- Remember Machine -->
+            <div class="flex items-center mb-5">
+                <input class="checkbox-whatsapp w-5 h-5 border-2 border-gray-300 rounded focus:ring-2 focus:ring-[#25D366] focus:border-[#25D366] transition-all duration-200 cursor-pointer" asp-for="Input.RememberMachine" />
+                <label asp-for="Input.RememberMachine" class="ml-2 text-sm text-gray-700 cursor-pointer">
+                    @Html.DisplayNameFor(m => m.Input.RememberMachine)
+                </label>
+            </div>
+            <button type="submit" class="btn-primary w-full py-4 px-4 rounded-xl text-white font-semibold text-base mb-3 transition-all hover:shadow-lg flex items-center justify-center gap-2">
+                <i data-lucide="log-in" class="w-5 h-5"></i>
+                Entrar
+            </button>
+            <div class="text-center pt-2 flex flex-col gap-2">
+                <a id="recovery-code-login" asp-page="./LoginWithRecoveryCode" asp-route-returnUrl="@Model.ReturnUrl" class="text-gray-600 hover:text-green-600 text-sm font-medium flex items-center justify-center gap-2 transition-colors">
+                    <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+                    Entrar com um código de recuperação
+                </a>
+                <a asp-page="./Login" class="text-gray-600 hover:text-green-600 text-sm font-medium flex items-center justify-center gap-2 transition-colors">
+                    <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                    Voltar para o login
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>lucide.createIcons();</script>
+}
+
+<style>
+    .btn-primary {
+        background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+        transition: all 0.3s ease;
+    }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(37, 211, 102, 0.3);
+        }
+
+    .input-focus {
+        transition: all 0.3s ease;
+    }
+
+        .input-focus:focus {
+            border-color: #25D366;
+            box-shadow: 0 0 0 3px rgba(37, 211, 102, 0.1);
+            outline: none;
+        }
+
+    .checkbox-whatsapp {
+        accent-color: #25D366;
+        border-radius: 6px;
+        border: 2px solid #25D366;
+        box-shadow: 0 2px 8px rgba(37, 211, 102, 0.08);
+        transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+        .checkbox-whatsapp:focus {
+            outline: none;
+            border-color: #128C7E;
+            box-shadow: 0 0 0 2px #25D36644;
+        }
+
+        .checkbox-whatsapp:checked {
+            background-color: #25D366;
+            border-color: #128C7E;
+        }
+</style>

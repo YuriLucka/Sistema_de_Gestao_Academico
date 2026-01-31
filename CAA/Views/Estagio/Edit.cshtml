@@ -1,0 +1,561 @@
+﻿@model CAA.Models.Estagio
+
+@{
+    ViewData["Title"] = "Editar Estágio";
+}
+
+<style>
+    :root {
+        --primary-green: #25D366;
+        --secondary-green: #128C7E;
+        --dark-green: #075E54;
+        --light-green: rgba(37, 211, 102, 0.1);
+    }
+
+    /* Page Container */
+    .form-page-container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    /* Page Header */
+    .form-page-header {
+        background: linear-gradient(135deg, rgba(37, 211, 102, 0.05) 0%, rgba(18, 140, 126, 0.05) 100%);
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        border: 1px solid rgba(37, 211, 102, 0.2);
+        backdrop-filter: blur(10px);
+        text-align: center;
+    }
+
+        .form-page-header h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--secondary-green);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+        }
+
+            .form-page-header h1 i {
+                font-size: 2rem;
+            }
+
+        .form-page-header p {
+            color: #6b7280;
+            margin: 0;
+            font-size: 0.95rem;
+        }
+
+    /* Form Card */
+    .form-card {
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+        border: 2px solid #f3f4f6;
+        transition: all 0.3s ease;
+    }
+
+        .form-card:hover {
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+            border-color: rgba(37, 211, 102, 0.3);
+        }
+
+    .form-card-body {
+        padding: 2.5rem;
+    }
+
+    /* Validation Summary */
+    .validation-summary {
+        background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(220, 38, 38, 0.1) 100%);
+        border-left: 4px solid #ef4444;
+        border-radius: 12px;
+        padding: 1rem 1.25rem;
+        margin-bottom: 2rem;
+        color: #dc2626;
+        font-size: 0.9rem;
+    }
+
+        .validation-summary ul {
+            margin: 0.5rem 0 0 0;
+            padding-left: 1.25rem;
+        }
+
+    /* Section Headers */
+    .form-section-header {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin: 2rem 0 1.5rem 0;
+        padding-bottom: 0.75rem;
+        border-bottom: 2px solid #f3f4f6;
+    }
+
+        .form-section-header:first-child {
+            margin-top: 0;
+        }
+
+        .form-section-header i {
+            font-size: 1.5rem;
+            color: var(--primary-green);
+        }
+
+        .form-section-header h2 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--secondary-green);
+            margin: 0;
+        }
+
+    /* Two Column Layout */
+    .form-row-two-cols {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    /* Form Groups */
+    .form-group-modern {
+        margin-bottom: 1.75rem;
+        position: relative;
+    }
+
+    .form-group-modern-full {
+        grid-column: 1 / -1;
+    }
+
+    /* Labels */
+    .form-label-modern {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 0.75rem;
+        font-size: 0.95rem;
+        transition: color 0.3s ease;
+    }
+
+        .form-label-modern i {
+            color: var(--primary-green);
+            font-size: 1rem;
+        }
+
+    .form-group-modern:focus-within .form-label-modern {
+        color: var(--secondary-green);
+    }
+
+    /* Input Fields */
+    .form-control-modern {
+        border: 2px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 0.875rem 1.125rem;
+        transition: all 0.3s ease;
+        font-size: 0.95rem;
+        background: white;
+        width: 100%;
+        color: #1f2937;
+    }
+
+        .form-control-modern:focus {
+            border-color: var(--primary-green);
+            box-shadow: 0 0 0 4px var(--light-green);
+            outline: none;
+            background: #fafafa;
+        }
+
+        .form-control-modern::placeholder {
+            color: #9ca3af;
+        }
+
+    /* Select Fields */
+    .form-select-modern {
+        border: 2px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 0.875rem 1.125rem;
+        transition: all 0.3s ease;
+        font-size: 0.95rem;
+        background: white;
+        width: 100%;
+        color: #1f2937;
+        cursor: pointer;
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%236b7280' viewBox='0 0 16 16'%3E%3Cpath d='M8 11.5l-5-5h10l-5 5z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 1rem center;
+        background-size: 16px;
+        padding-right: 3rem;
+    }
+
+        .form-select-modern:focus {
+            border-color: var(--primary-green);
+            box-shadow: 0 0 0 4px var(--light-green);
+            outline: none;
+            background-color: #fafafa;
+        }
+
+    /* Validation Messages */
+    .field-validation-error {
+        color: #ef4444;
+        font-size: 0.85rem;
+        margin-top: 0.5rem;
+        display: block;
+        font-weight: 500;
+    }
+
+    .input-validation-error {
+        border-color: #ef4444 !important;
+        background-color: rgba(239, 68, 68, 0.05) !important;
+    }
+
+        .input-validation-error:focus {
+            box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1) !important;
+        }
+
+    /* Form Actions */
+    .form-actions {
+        display: flex;
+        gap: 1rem;
+        padding-top: 2rem;
+        margin-top: 2rem;
+        border-top: 2px solid #f3f4f6;
+        flex-wrap: wrap;
+    }
+
+    .btn-form {
+        flex: 1;
+        min-width: 180px;
+        border-radius: 12px;
+        padding: 0.875rem 1.5rem;
+        font-size: 0.95rem;
+        font-weight: 600;
+        border: none;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        text-decoration: none;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .btn-form::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s ease, height 0.6s ease;
+        }
+
+        .btn-form:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-form i,
+        .btn-form span {
+            position: relative;
+            z-index: 1;
+        }
+
+    .btn-submit-form {
+        background: linear-gradient(135deg, var(--primary-green) 0%, var(--secondary-green) 100%);
+        color: white;
+        box-shadow: 0 4px 15px rgba(37, 211, 102, 0.2);
+    }
+
+        .btn-submit-form:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(37, 211, 102, 0.35);
+            color: white;
+        }
+
+    .btn-cancel-form {
+        background: #f3f4f6;
+        border: 2px solid #e5e7eb;
+        color: #6b7280;
+    }
+
+        .btn-cancel-form:hover {
+            background: #e5e7eb;
+            border-color: #d1d5db;
+            color: #374151;
+            transform: translateY(-2px);
+        }
+
+    /* Helper Text */
+    .form-helper-text {
+        font-size: 0.85rem;
+        color: #6b7280;
+        margin-top: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+    }
+
+        .form-helper-text i {
+            font-size: 0.9rem;
+            color: var(--primary-green);
+        }
+
+    /* Responsive */
+    @@media (max-width: 992px) {
+        .form-row-two-cols
+
+    {
+        grid-template-columns: 1fr;
+    }
+
+    }
+
+    @@media (max-width: 768px) {
+        .form-card-body
+
+    {
+        padding: 1.5rem;
+    }
+
+    .form-page-header {
+        padding: 1.5rem;
+    }
+
+        .form-page-header h1 {
+            font-size: 1.5rem;
+        }
+
+    .form-actions {
+        flex-direction: column;
+    }
+
+    .btn-form {
+        width: 100%;
+    }
+
+    }
+</style>
+
+<div class="form-page-container">
+    <!-- Page Header -->
+    <div class="form-page-header">
+        <h1>
+            <i class="bi bi-pencil-square"></i>
+            Editar Estágio
+        </h1>
+        <p>Atualize as informações do estágio</p>
+    </div>
+
+    <!-- Form Card -->
+    <div class="form-card">
+        <div class="form-card-body">
+            <form asp-action="Edit" method="post">
+                <!-- Validation Summary -->
+                <div asp-validation-summary="ModelOnly" class="validation-summary"></div>
+
+                <input type="hidden" asp-for="EstagioId" />
+
+                <!-- Seção: Dados do Aluno -->
+                <div class="form-section-header">
+                    <i class="bi bi-person-badge"></i>
+                    <h2>Dados do Aluno</h2>
+                </div>
+
+                <div class="form-row-two-cols">
+                    <div class="form-group-modern">
+                        <label asp-for="RA" class="form-label-modern">
+                            <i class="bi bi-hash"></i>
+                            <span>RA (Registro Acadêmico)</span>
+                        </label>
+                        <input asp-for="RA" class="form-control-modern" placeholder="Digite o RA do aluno" />
+                        <span asp-validation-for="RA" class="field-validation-error"></span>
+                    </div>
+
+                    <div class="form-group-modern">
+                        <label asp-for="Nome" class="form-label-modern">
+                            <i class="bi bi-person"></i>
+                            <span>Nome do Aluno</span>
+                        </label>
+                        <input asp-for="Nome" class="form-control-modern" placeholder="Digite o nome completo" />
+                        <span asp-validation-for="Nome" class="field-validation-error"></span>
+                    </div>
+                </div>
+
+                <div class="form-row-two-cols">
+                    <div class="form-group-modern form-group-modern-full">
+                        <label asp-for="CursoId" class="form-label-modern">
+                            <i class="bi bi-mortarboard"></i>
+                            <span>Curso</span>
+                        </label>
+                        <select asp-for="CursoId" class="form-select-modern" asp-items="ViewBag.CursoId">
+                            <option value="">--Selecione o curso--</option>
+                        </select>
+                        <span asp-validation-for="CursoId" class="field-validation-error"></span>
+                    </div>
+                </div>
+
+                <!-- Seção: Dados do Estágio -->
+                <div class="form-section-header">
+                    <i class="bi bi-file-earmark-text"></i>
+                    <h2>Dados do Estágio</h2>
+                </div>
+
+                <div class="form-row-two-cols">
+                    <div class="form-group-modern">
+                        <label asp-for="TipoContratoEstagioId" class="form-label-modern">
+                            <i class="bi bi-file-text"></i>
+                            <span>Tipo de Contrato</span>
+                        </label>
+                        <select asp-for="TipoContratoEstagioId" class="form-select-modern" asp-items="ViewBag.TipoContratoEstagioId">
+                            <option value="">--Selecione o tipo--</option>
+                        </select>
+                        <span asp-validation-for="TipoContratoEstagioId" class="field-validation-error"></span>
+                    </div>
+
+                    <div class="form-group-modern">
+                        <label asp-for="EmpresaId" class="form-label-modern">
+                            <i class="bi bi-building"></i>
+                            <span>Empresa</span>
+                        </label>
+                        <select asp-for="EmpresaId" class="form-select-modern" asp-items="ViewBag.EmpresaId">
+                            <option value="">--Selecione a empresa--</option>
+                        </select>
+                        <span asp-validation-for="EmpresaId" class="field-validation-error"></span>
+                    </div>
+                </div>
+
+                <div class="form-row-two-cols">
+                    <div class="form-group-modern form-group-modern-full">
+                        <label asp-for="Integradora" class="form-label-modern">
+                            <i class="bi bi-diagram-3"></i>
+                            <span>Instituição Integradora</span>
+                        </label>
+                        <input asp-for="Integradora" class="form-control-modern" placeholder="Nome da instituição integradora (opcional)" />
+                        <span asp-validation-for="Integradora" class="field-validation-error"></span>
+                        <div class="form-helper-text">
+                            <i class="bi bi-info-circle"></i>
+                            <span>Preenchimento opcional</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Seção: Vigência -->
+                <div class="form-section-header">
+                    <i class="bi bi-calendar-range"></i>
+                    <h2>Vigência do Estágio</h2>
+                </div>
+
+                <div class="form-row-two-cols">
+                    <div class="form-group-modern">
+                        <label asp-for="VigenciaInicio" class="form-label-modern">
+                            <i class="bi bi-calendar-check"></i>
+                            <span>Data de Início</span>
+                        </label>
+                        <input asp-for="VigenciaInicio" type="date" class="form-control-modern" />
+                        <span asp-validation-for="VigenciaInicio" class="field-validation-error"></span>
+                    </div>
+
+                    <div class="form-group-modern">
+                        <label asp-for="VigenciaTermino" class="form-label-modern">
+                            <i class="bi bi-calendar-x"></i>
+                            <span>Data de Término</span>
+                        </label>
+                        <input asp-for="VigenciaTermino" type="date" class="form-control-modern" />
+                        <span asp-validation-for="VigenciaTermino" class="field-validation-error"></span>
+                    </div>
+                </div>
+
+                <!-- Seção: Seguro -->
+                <div class="form-section-header">
+                    <i class="bi bi-shield-check"></i>
+                    <h2>Informações do Seguro</h2>
+                </div>
+
+                <div class="form-row-two-cols">
+                    <div class="form-group-modern">
+                        <label asp-for="Apolice" class="form-label-modern">
+                            <i class="bi bi-file-earmark-lock"></i>
+                            <span>Número da Apólice</span>
+                        </label>
+                        <input asp-for="Apolice" class="form-control-modern" placeholder="Número da apólice de seguro (opcional)" />
+                        <span asp-validation-for="Apolice" class="field-validation-error"></span>
+                    </div>
+
+                    <div class="form-group-modern">
+                        <label asp-for="Seguradora" class="form-label-modern">
+                            <i class="bi bi-bank"></i>
+                            <span>Seguradora</span>
+                        </label>
+                        <input asp-for="Seguradora" class="form-control-modern" placeholder="Nome da seguradora (opcional)" />
+                        <span asp-validation-for="Seguradora" class="field-validation-error"></span>
+                    </div>
+                </div>
+
+                <!-- Form Actions -->
+                <div class="form-actions">
+                    <button type="submit" class="btn-form btn-submit-form">
+                        <i class="bi bi-check-circle"></i>
+                        <span>Salvar Alterações</span>
+                    </button>
+                    <a asp-action="Index" class="btn-form btn-cancel-form">
+                        <i class="bi bi-arrow-left-circle"></i>
+                        <span>Voltar para a Lista</span>
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Entry animation
+            const formCard = document.querySelector('.form-card');
+            formCard.style.opacity = '0';
+            formCard.style.transform = 'translateY(20px)';
+
+            setTimeout(function() {
+                formCard.style.transition = 'all 0.5s ease';
+                formCard.style.opacity = '1';
+                formCard.style.transform = 'translateY(0)';
+            }, 100);
+
+            // Focus first input
+            const firstInput = document.querySelector('.form-control-modern');
+            if (firstInput) {
+                firstInput.focus();
+            }
+
+            // Visual feedback for filled inputs
+            const inputs = document.querySelectorAll('.form-control-modern, .form-select-modern');
+            inputs.forEach(function(input) {
+                if (input.value) {
+                    input.style.backgroundColor = '#fafafa';
+                }
+
+                input.addEventListener('change', function() {
+                    if (this.value) {
+                        this.style.backgroundColor = '#fafafa';
+                    } else {
+                        this.style.backgroundColor = 'white';
+                    }
+                });
+            });
+        });
+    </script>
+}

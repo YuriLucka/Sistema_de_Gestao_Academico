@@ -1,0 +1,440 @@
+﻿@model CAA.Models.PlanoFinanceiro
+@using CAA.Helpers
+
+@{
+    ViewData["Title"] = "Detalhes do Plano Financeiro";
+}
+
+<style>
+    :root {
+        --primary-green: #25D366;
+        --secondary-green: #128C7E;
+        --dark-green: #075E54;
+        --light-green: rgba(37, 211, 102, 0.1);
+    }
+
+    /* Page Container */
+    .form-page-container {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    /* Page Header */
+    .form-page-header {
+        background: linear-gradient(135deg, rgba(37, 211, 102, 0.05) 0%, rgba(18, 140, 126, 0.05) 100%);
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        border: 1px solid rgba(37, 211, 102, 0.2);
+        backdrop-filter: blur(10px);
+        text-align: center;
+    }
+
+        .form-page-header h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--secondary-green);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+        }
+
+            .form-page-header h1 i {
+                font-size: 2rem;
+            }
+
+        .form-page-header p {
+            color: #6b7280;
+            margin: 0;
+            font-size: 0.95rem;
+        }
+
+    /* Details Card */
+    .details-card {
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+        border: 2px solid #f3f4f6;
+        margin-bottom: 2rem;
+        transition: all 0.3s ease;
+    }
+
+        .details-card:hover {
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+            border-color: rgba(37, 211, 102, 0.3);
+        }
+
+    .details-card-header {
+        background: linear-gradient(135deg, var(--primary-green), var(--secondary-green));
+        padding: 2rem 2rem 1.5rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .details-card-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 300px;
+            height: 300px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+        }
+
+    .details-card-header-content {
+        position: relative;
+        z-index: 1;
+    }
+
+    .plan-type-badge-detail {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: rgba(255, 255, 255, 0.25);
+        backdrop-filter: blur(10px);
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: white;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 1rem;
+    }
+
+    .plan-value-detail {
+        font-size: 3rem;
+        font-weight: 700;
+        color: white;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin-bottom: 0.5rem;
+    }
+
+    .plan-value-label-detail {
+        font-size: 1rem;
+        color: rgba(255, 255, 255, 0.95);
+        font-weight: 500;
+    }
+
+    .details-card-body {
+        padding: 2rem;
+    }
+
+    /* Details List */
+    .details-list {
+        display: grid;
+        gap: 1.5rem;
+    }
+
+    .detail-item {
+        display: grid;
+        grid-template-columns: 200px 1fr;
+        gap: 1.5rem;
+        align-items: center;
+        padding-bottom: 1.5rem;
+        border-bottom: 2px solid #f3f4f6;
+    }
+
+        .detail-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+    .detail-label {
+        font-weight: 600;
+        color: var(--secondary-green);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        text-align: right;
+        justify-content: flex-end;
+    }
+
+        .detail-label i {
+            font-size: 1.1rem;
+        }
+
+    .detail-value {
+        color: #374151;
+        font-size: 1rem;
+        font-weight: 500;
+        background: #f9fafb;
+        padding: 0.75rem 1rem;
+        border-radius: 10px;
+        border: 1px solid #e5e7eb;
+    }
+
+    /* Shifts Section */
+    .shifts-section {
+        display: flex;
+        gap: 1rem;
+    }
+
+    .shift-badge-detail {
+        flex: 1;
+        padding: 1rem;
+        border-radius: 12px;
+        text-align: center;
+        font-weight: 600;
+        font-size: 0.95rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+        transition: all 0.3s ease;
+    }
+
+        .shift-badge-detail.active {
+            background: var(--light-green);
+            color: var(--secondary-green);
+            border: 2px solid var(--primary-green);
+        }
+
+        .shift-badge-detail.inactive {
+            background: #f3f4f6;
+            color: #9ca3af;
+            border: 2px solid #e5e7eb;
+        }
+
+        .shift-badge-detail i {
+            font-size: 1.5rem;
+        }
+
+    /* Form Actions */
+    .form-actions-detail {
+        display: flex;
+        gap: 1rem;
+        padding: 2rem;
+        background: #f9fafb;
+        border-top: 2px solid #f3f4f6;
+        flex-wrap: wrap;
+    }
+
+    .btn-form-detail {
+        flex: 1;
+        min-width: 140px;
+        border-radius: 12px;
+        padding: 0.875rem 1.5rem;
+        font-size: 0.95rem;
+        font-weight: 600;
+        border: none;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+        .btn-form-detail i {
+            font-size: 1.1rem;
+        }
+
+    .btn-edit-detail {
+        background: linear-gradient(135deg, var(--primary-green) 0%, var(--secondary-green) 100%);
+        color: white;
+        box-shadow: 0 4px 15px rgba(37, 211, 102, 0.2);
+    }
+
+        .btn-edit-detail:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(37, 211, 102, 0.35);
+            color: white;
+        }
+
+    .btn-back-detail {
+        background: #f3f4f6;
+        border: 2px solid #e5e7eb;
+        color: #6b7280;
+    }
+
+        .btn-back-detail:hover {
+            background: #e5e7eb;
+            border-color: #d1d5db;
+            color: #374151;
+            transform: translateY(-2px);
+        }
+
+    /* Info Box */
+    .info-box-detail {
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(37, 99, 235, 0.05) 100%);
+        border-left: 4px solid #3b82f6;
+        border-radius: 12px;
+        padding: 1.25rem 1.5rem;
+        margin-bottom: 2rem;
+        display: flex;
+        align-items: start;
+        gap: 1rem;
+    }
+
+        .info-box-detail i {
+            font-size: 1.5rem;
+            color: #3b82f6;
+            flex-shrink: 0;
+            margin-top: 0.125rem;
+        }
+
+    .info-box-detail-content {
+        flex: 1;
+    }
+
+        .info-box-detail-content p {
+            color: #1e40af;
+            margin: 0;
+            line-height: 1.6;
+        }
+
+    /* Responsive */
+    @@media (max-width: 768px) {
+        .details-card-body
+
+    {
+        padding: 1.5rem;
+    }
+
+    .form-page-header {
+        padding: 1.5rem;
+    }
+
+        .form-page-header h1 {
+            font-size: 1.5rem;
+        }
+
+    .detail-item {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+    }
+
+    .detail-label {
+        text-align: left;
+        justify-content: flex-start;
+    }
+
+    .form-actions-detail {
+        flex-direction: column;
+        padding: 1.5rem;
+    }
+
+    .btn-form-detail {
+        width: 100%;
+    }
+
+    .shifts-section {
+        flex-direction: column;
+    }
+
+    .plan-value-detail {
+        font-size: 2.25rem;
+    }
+
+    }
+</style>
+
+<div class="form-page-container">
+    <!-- Page Header -->
+    <div class="form-page-header">
+        <h1>
+            <i class="bi bi-info-circle"></i>
+            Detalhes do Plano Financeiro
+        </h1>
+        <p>Visualize as informações completas do plano</p>
+    </div>
+
+    <!-- Info Box -->
+    <div class="info-box-detail">
+        <i class="bi bi-lightbulb"></i>
+        <div class="info-box-detail-content">
+            <p>
+                <strong>Plano de Pagamento:</strong> Este plano financeiro define o valor da mensalidade e os turnos disponíveis para o curso.
+                Você pode editar essas informações ou gerenciar os descontos associados.
+            </p>
+        </div>
+    </div>
+
+    <!-- Details Card -->
+    <div class="details-card">
+        <!-- Header with Value -->
+        <div class="details-card-header">
+            <div class="details-card-header-content">
+                <div class="plan-type-badge-detail">
+                    <i class="bi bi-tag"></i>
+                    <span>@Html.DisplayFor(model => model.TipoPlanoFinanceiro)</span>
+                </div>
+                <div class="plan-value-detail">
+                    @Model.Valor.ToString("C", new System.Globalization.CultureInfo("pt-BR"))
+                </div>
+                <div class="plan-value-label-detail">Valor Mensal da Mensalidade</div>
+            </div>
+        </div>
+
+        <!-- Body with Details -->
+        <div class="details-card-body">
+            <div class="details-list">
+                <!-- Curso -->
+                <div class="detail-item">
+                    <div class="detail-label">
+                        <i class="bi bi-book"></i>
+                        <span>@Html.DisplayNameFor(model => model.Curso)</span>
+                    </div>
+                    <div class="detail-value">
+                        @Html.DisplayFor(model => model.Curso.Nome)
+                    </div>
+                </div>
+
+                <!-- Turnos -->
+                <div class="detail-item">
+                    <div class="detail-label">
+                        <i class="bi bi-clock-history"></i>
+                        <span>Turnos Disponíveis</span>
+                    </div>
+                    <div class="detail-value" style="padding: 0; background: transparent; border: none;">
+                        <div class="shifts-section">
+                            <div class="shift-badge-detail @(Model.Matutino ? "active" : "inactive")">
+                                <i class="bi bi-sunrise"></i>
+                                <span>Matutino</span>
+                            </div>
+                            <div class="shift-badge-detail @(Model.Noturno ? "active" : "inactive")">
+                                <i class="bi bi-moon-stars"></i>
+                                <span>Noturno</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer with Actions -->
+        <div class="form-actions-detail">
+            <a asp-action="Edit" asp-route-id="@Model?.PlanoFinanceiroId" class="btn-form-detail btn-edit-detail">
+                <i class="bi bi-pencil"></i>
+                <span>Editar Plano</span>
+            </a>
+            <a asp-action="Index" asp-route-cursoId="@ViewBag.VbCursoId" class="btn-form-detail btn-back-detail">
+                <i class="bi bi-arrow-left-circle"></i>
+                <span>Voltar para a Lista</span>
+            </a>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Entry animation
+            const card = document.querySelector('.details-card');
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+
+            setTimeout(function() {
+                card.style.transition = 'all 0.5s ease';
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+            }, 100);
+        });
+    </script>
+}

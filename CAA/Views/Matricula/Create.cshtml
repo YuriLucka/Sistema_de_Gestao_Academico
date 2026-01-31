@@ -1,0 +1,703 @@
+﻿@model CAA.Models.Matricula
+
+@{
+    ViewData["Title"] = "Nova Matrícula";
+}
+
+<style>
+    :root {
+        --primary-green: #25D366;
+        --secondary-green: #128C7E;
+        --dark-green: #075E54;
+        --light-green: rgba(37, 211, 102, 0.1);
+    }
+
+    /* Page Container */
+    .form-page-container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    /* Page Header */
+    .form-page-header {
+        background: linear-gradient(135deg, rgba(37, 211, 102, 0.05) 0%, rgba(18, 140, 126, 0.05) 100%);
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        border: 1px solid rgba(37, 211, 102, 0.2);
+        backdrop-filter: blur(10px);
+        text-align: center;
+    }
+
+        .form-page-header h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--secondary-green);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+        }
+
+            .form-page-header h1 i {
+                font-size: 2rem;
+            }
+
+        .form-page-header p {
+            color: #6b7280;
+            margin: 0;
+            font-size: 0.95rem;
+        }
+
+    /* Form Card */
+    .form-card {
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+        border: 2px solid #f3f4f6;
+        transition: all 0.3s ease;
+    }
+
+        .form-card:hover {
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+            border-color: rgba(37, 211, 102, 0.3);
+        }
+
+    .form-card-body {
+        padding: 2.5rem;
+    }
+
+    /* Validation Summary */
+    .validation-summary {
+        background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(220, 38, 38, 0.1) 100%);
+        border-left: 4px solid #ef4444;
+        border-radius: 12px;
+        padding: 1rem 1.25rem;
+        margin-bottom: 2rem;
+        color: #dc2626;
+        font-size: 0.9rem;
+    }
+
+        .validation-summary ul {
+            margin: 0.5rem 0 0 0;
+            padding-left: 1.25rem;
+        }
+
+    /* Section Headers */
+    .form-section-header {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin: 2rem 0 1.5rem 0;
+        padding-bottom: 0.75rem;
+        border-bottom: 2px solid #f3f4f6;
+    }
+
+        .form-section-header:first-child {
+            margin-top: 0;
+        }
+
+        .form-section-header i {
+            font-size: 1.5rem;
+            color: var(--primary-green);
+        }
+
+        .form-section-header h2 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--secondary-green);
+            margin: 0;
+        }
+
+    /* Two Column Layout */
+    .form-row-two-cols {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    /* Form Groups */
+    .form-group-modern {
+        margin-bottom: 1.75rem;
+        position: relative;
+    }
+
+    .form-group-modern-full {
+        grid-column: 1 / -1;
+    }
+
+    /* Labels */
+    .form-label-modern {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 0.75rem;
+        font-size: 0.95rem;
+        transition: color 0.3s ease;
+    }
+
+        .form-label-modern i {
+            color: var(--primary-green);
+            font-size: 1rem;
+        }
+
+    .form-group-modern:focus-within .form-label-modern {
+        color: var(--secondary-green);
+    }
+
+    /* Input Fields */
+    .form-control-modern {
+        border: 2px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 0.875rem 1.125rem;
+        transition: all 0.3s ease;
+        font-size: 0.95rem;
+        background: white;
+        width: 100%;
+        color: #1f2937;
+    }
+
+        .form-control-modern:focus {
+            border-color: var(--primary-green);
+            box-shadow: 0 0 0 4px var(--light-green);
+            outline: none;
+            background: #fafafa;
+        }
+
+        .form-control-modern::placeholder {
+            color: #9ca3af;
+        }
+
+    /* Select Fields */
+    .form-select-modern {
+        border: 2px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 0.875rem 1.125rem;
+        transition: all 0.3s ease;
+        font-size: 0.95rem;
+        background: white;
+        width: 100%;
+        color: #1f2937;
+        cursor: pointer;
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%236b7280' viewBox='0 0 16 16'%3E%3Cpath d='M8 11.5l-5-5h10l-5 5z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 1rem center;
+        background-size: 16px;
+        padding-right: 3rem;
+    }
+
+        .form-select-modern:focus {
+            border-color: var(--primary-green);
+            box-shadow: 0 0 0 4px var(--light-green);
+            outline: none;
+            background-color: #fafafa;
+        }
+
+    /* Checkbox Styling */
+    .form-check-modern {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 1rem;
+        background: var(--light-green);
+        border: 2px solid #e5e7eb;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+        .form-check-modern:hover {
+            border-color: var(--primary-green);
+            background: rgba(37, 211, 102, 0.15);
+        }
+
+    .form-check-input-modern {
+        width: 24px;
+        height: 24px;
+        cursor: pointer;
+        accent-color: var(--primary-green);
+        border-radius: 6px;
+        border: 2px solid #d1d5db;
+        transition: all 0.3s ease;
+    }
+
+        .form-check-input-modern:checked {
+            background-color: var(--primary-green);
+            border-color: var(--primary-green);
+        }
+
+    .form-check-label-modern {
+        flex: 1;
+        cursor: pointer;
+        font-size: 0.95rem;
+        color: #374151;
+        font-weight: 600;
+        user-select: none;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+        .form-check-label-modern i {
+            color: var(--primary-green);
+            font-size: 1.1rem;
+        }
+
+    /* Validation Messages */
+    .field-validation-error {
+        color: #ef4444;
+        font-size: 0.85rem;
+        margin-top: 0.5rem;
+        display: block;
+        font-weight: 500;
+    }
+
+    .input-validation-error {
+        border-color: #ef4444 !important;
+        background-color: rgba(239, 68, 68, 0.05) !important;
+    }
+
+        .input-validation-error:focus {
+            box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1) !important;
+        }
+
+    /* Form Actions */
+    .form-actions {
+        display: flex;
+        gap: 1rem;
+        padding-top: 2rem;
+        margin-top: 2rem;
+        border-top: 2px solid #f3f4f6;
+        flex-wrap: wrap;
+    }
+
+    .btn-form {
+        flex: 1;
+        min-width: 180px;
+        border-radius: 12px;
+        padding: 0.875rem 1.5rem;
+        font-size: 0.95rem;
+        font-weight: 600;
+        border: none;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        text-decoration: none;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .btn-form::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s ease, height 0.6s ease;
+        }
+
+        .btn-form:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-form i,
+        .btn-form span {
+            position: relative;
+            z-index: 1;
+        }
+
+    .btn-submit-form {
+        background: linear-gradient(135deg, var(--primary-green) 0%, var(--secondary-green) 100%);
+        color: white;
+        box-shadow: 0 4px 15px rgba(37, 211, 102, 0.2);
+    }
+
+        .btn-submit-form:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(37, 211, 102, 0.35);
+            color: white;
+        }
+
+    .btn-cancel-form {
+        background: #f3f4f6;
+        border: 2px solid #e5e7eb;
+        color: #6b7280;
+    }
+
+        .btn-cancel-form:hover {
+            background: #e5e7eb;
+            border-color: #d1d5db;
+            color: #374151;
+            transform: translateY(-2px);
+        }
+
+    /* Helper Text */
+    .form-helper-text {
+        font-size: 0.85rem;
+        color: #6b7280;
+        margin-top: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+    }
+
+        .form-helper-text i {
+            font-size: 0.9rem;
+            color: var(--primary-green);
+        }
+
+    /* Responsive */
+    @@media (max-width: 992px) {
+        .form-row-two-cols {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @@media (max-width: 768px) {
+        .form-card-body {
+            padding: 1.5rem;
+        }
+
+        .form-page-header {
+            padding: 1.5rem;
+        }
+
+            .form-page-header h1 {
+                font-size: 1.5rem;
+            }
+
+        .form-actions {
+            flex-direction: column;
+        }
+
+        .btn-form {
+            width: 100%;
+        }
+    }
+</style>
+
+<!-- O resto do HTML permanece igual -->
+
+
+<div class="form-page-container">
+    <!-- Page Header -->
+    <div class="form-page-header">
+        <h1>
+            <i class="bi bi-person-plus-fill"></i>
+            Nova Matrícula
+        </h1>
+        <p>Preencha os dados para criar uma nova matrícula</p>
+    </div>
+
+    <!-- Form Card -->
+    <div class="form-card">
+        <div class="form-card-body">
+            <form asp-action="Create" method="post">
+                <!-- Validation Summary -->
+                <div asp-validation-summary="ModelOnly" class="validation-summary"></div>
+
+                <!-- Seção: Dados Pessoais -->
+                <div class="form-section-header">
+                    <i class="bi bi-person-badge"></i>
+                    <h2>Dados Pessoais</h2>
+                </div>
+
+                <div class="form-row-two-cols">
+                    <div class="form-group-modern">
+                        <label asp-for="NomeCompleto" class="form-label-modern">
+                            <i class="bi bi-person"></i>
+                            <span>Nome Completo</span>
+                        </label>
+                        <input asp-for="NomeCompleto" class="form-control-modern" placeholder="Digite o nome completo" />
+                        <span asp-validation-for="NomeCompleto" class="field-validation-error"></span>
+                    </div>
+
+                    <div class="form-group-modern">
+                        <label asp-for="DataMatricula" class="form-label-modern">
+                            <i class="bi bi-calendar-event"></i>
+                            <span>Data da Matrícula</span>
+                        </label>
+                        <input asp-for="DataMatricula" type="date" class="form-control-modern" />
+                        <span asp-validation-for="DataMatricula" class="field-validation-error"></span>
+                    </div>
+                </div>
+
+                <div class="form-row-two-cols">
+                    <div class="form-group-modern">
+                        <label asp-for="Email" class="form-label-modern">
+                            <i class="bi bi-envelope"></i>
+                            <span>E-mail</span>
+                        </label>
+                        <input asp-for="Email" type="email" class="form-control-modern" placeholder="exemplo@email.com" />
+                        <span asp-validation-for="Email" class="field-validation-error"></span>
+                    </div>
+
+                    <div class="form-group-modern">
+                        <label asp-for="Celular" class="form-label-modern">
+                            <i class="bi bi-phone"></i>
+                            <span>Celular</span>
+                        </label>
+                        <input asp-for="Celular" class="form-control-modern" placeholder="(00) 00000-0000" />
+                        <span asp-validation-for="Celular" class="field-validation-error"></span>
+                    </div>
+                </div>
+
+                <!-- Seção: Formação Anterior -->
+                <div class="form-section-header">
+                    <i class="bi bi-mortarboard"></i>
+                    <h2>Formação Anterior</h2>
+                </div>
+
+                <div class="form-row-two-cols">
+                    <div class="form-group-modern">
+                        <label asp-for="EscolaOrigem" class="form-label-modern">
+                            <i class="bi bi-building"></i>
+                            <span>Escola de Origem</span>
+                        </label>
+                        <input asp-for="EscolaOrigem" class="form-control-modern" placeholder="Nome da escola" />
+                        <span asp-validation-for="EscolaOrigem" class="field-validation-error"></span>
+                    </div>
+
+                    <div class="form-group-modern">
+                        <label asp-for="AnoFormacao" class="form-label-modern">
+                            <i class="bi bi-calendar-check"></i>
+                            <span>Ano de Formação</span>
+                        </label>
+                        <input asp-for="AnoFormacao" type="number" class="form-control-modern" placeholder="2024" />
+                        <span asp-validation-for="AnoFormacao" class="field-validation-error"></span>
+                    </div>
+                </div>
+
+                <div class="form-row-two-cols">
+                    <div class="form-group-modern">
+                        <label asp-for="Cidade" class="form-label-modern">
+                            <i class="bi bi-geo-alt"></i>
+                            <span>Cidade</span>
+                        </label>
+                        <input asp-for="Cidade" class="form-control-modern" placeholder="Nome da cidade" />
+                        <span asp-validation-for="Cidade" class="field-validation-error"></span>
+                    </div>
+
+                    <div class="form-group-modern">
+                        <label asp-for="InstituicaoTransferencia" class="form-label-modern">
+                            <i class="bi bi-arrow-left-right"></i>
+                            <span>Instituição de Transferência</span>
+                        </label>
+                        <input asp-for="InstituicaoTransferencia" class="form-control-modern" placeholder="Se houver transferência" />
+                        <span asp-validation-for="InstituicaoTransferencia" class="field-validation-error"></span>
+                    </div>
+                </div>
+
+                <!-- Seção: Dados do Curso -->
+                <div class="form-section-header">
+                    <i class="bi bi-book"></i>
+                    <h2>Dados do Curso</h2>
+                </div>
+
+                <div class="form-row-two-cols">
+                    <div class="form-group-modern">
+                        <label asp-for="EixoId" class="form-label-modern">
+                            <i class="bi bi-diagram-3"></i>
+                            <span>Eixo de Formação</span>
+                        </label>
+                        <select asp-for="EixoId" class="form-select-modern" asp-items="ViewBag.EixoId">
+                            <option value="">--Selecione o eixo--</option>
+                        </select>
+                        <span asp-validation-for="EixoId" class="field-validation-error"></span>
+                    </div>
+
+                    <div class="form-group-modern">
+                        <label asp-for="CursoId" class="form-label-modern">
+                            <i class="bi bi-journal-bookmark"></i>
+                            <span>Curso</span>
+                        </label>
+                        <select asp-for="CursoId" class="form-select-modern" asp-items="ViewBag.CursoId">
+                            <option value="">--Selecione o curso--</option>
+                        </select>
+                        <span asp-validation-for="CursoId" class="field-validation-error"></span>
+                    </div>
+                </div>
+
+                <div class="form-row-two-cols">
+                    <div class="form-group-modern">
+                        <label asp-for="Turno" class="form-label-modern">
+                            <i class="bi bi-clock"></i>
+                            <span>Turno</span>
+                        </label>
+                        <select asp-for="Turno" class="form-select-modern" asp-items="Html.GetEnumSelectList<Periodo>()">
+                            <option value="">--Selecione o turno--</option>
+                        </select>
+                        <span asp-validation-for="Turno" class="field-validation-error"></span>
+                    </div>
+
+                    <div class="form-group-modern">
+                        <label asp-for="Modalidade" class="form-label-modern">
+                            <i class="bi bi-laptop"></i>
+                            <span>Modalidade</span>
+                        </label>
+                        <select asp-for="Modalidade" class="form-select-modern" asp-items="Html.GetEnumSelectList<Titulacao>()">
+                            <option value="">--Selecione a modalidade--</option>
+                        </select>
+                        <span asp-validation-for="Modalidade" class="field-validation-error"></span>
+                    </div>
+                </div>
+
+                <!-- Seção: Informações da Matrícula -->
+                <div class="form-section-header">
+                    <i class="bi bi-file-earmark-check"></i>
+                    <h2>Informações da Matrícula</h2>
+                </div>
+
+                <div class="form-row-two-cols">
+                    <div class="form-group-modern">
+                        <label asp-for="StatusMatriculaId" class="form-label-modern">
+                            <i class="bi bi-shield-check"></i>
+                            <span>Status da Matrícula</span>
+                        </label>
+                        <select asp-for="StatusMatriculaId" class="form-select-modern" asp-items="ViewBag.StatusMatriculaId">
+                            <option value="">--Selecione o status--</option>
+                        </select>
+                        <span asp-validation-for="StatusMatriculaId" class="field-validation-error"></span>
+                    </div>
+
+                    <div class="form-group-modern">
+                        <label asp-for="TipoIngressoId" class="form-label-modern">
+                            <i class="bi bi-door-open"></i>
+                            <span>Tipo de Ingresso</span>
+                        </label>
+                        <select asp-for="TipoIngressoId" class="form-select-modern" asp-items="ViewBag.TipoIngressoId">
+                            <option value="">--Selecione o tipo--</option>
+                        </select>
+                        <span asp-validation-for="TipoIngressoId" class="field-validation-error"></span>
+                    </div>
+                </div>
+
+                <div class="form-row-two-cols">
+                    <div class="form-group-modern">
+                        <label asp-for="UsuarioId" class="form-label-modern">
+                            <i class="bi bi-person-check"></i>
+                            <span>Atendente</span>
+                        </label>
+                        <select asp-for="UsuarioId" class="form-select-modern" asp-items="ViewBag.UsuarioId">
+                            <option value="">--Selecione o atendente--</option>
+                        </select>
+                        <span asp-validation-for="UsuarioId" class="field-validation-error"></span>
+                    </div>
+
+                    <div class="form-group-modern">
+                        <div class="form-check-modern">
+                            <input class="form-check-input-modern" type="checkbox" asp-for="Brinde" />
+                            <label class="form-check-label-modern" asp-for="Brinde">
+                                <i class="bi bi-gift"></i>
+                                <span>Brinde entregue ao aluno</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Seção: Observações -->
+                <div class="form-section-header">
+                    <i class="bi bi-chat-left-text"></i>
+                    <h2>Observações Adicionais</h2>
+                </div>
+
+                <div class="form-row-two-cols">
+                    <div class="form-group-modern">
+                        <label asp-for="Observacao" class="form-label-modern">
+                            <i class="bi bi-pencil-square"></i>
+                            <span>Observações</span>
+                        </label>
+                        <textarea asp-for="Observacao" class="form-control-modern" rows="4" placeholder="Observações gerais sobre a matrícula"></textarea>
+                        <span asp-validation-for="Observacao" class="field-validation-error"></span>
+                    </div>
+
+                    <div class="form-group-modern">
+                        <label asp-for="Motivacao" class="form-label-modern">
+                            <i class="bi bi-lightbulb"></i>
+                            <span>Motivação</span>
+                        </label>
+                        <textarea asp-for="Motivacao" class="form-control-modern" rows="4" placeholder="Motivação do aluno para o curso"></textarea>
+                        <span asp-validation-for="Motivacao" class="field-validation-error"></span>
+                    </div>
+                </div>
+
+                <!-- Form Actions -->
+                <div class="form-actions">
+                    <button type="submit" class="btn-form btn-submit-form">
+                        <i class="bi bi-check-circle"></i>
+                        <span>Criar Matrícula</span>
+                    </button>
+                    <a asp-action="Index" class="btn-form btn-cancel-form">
+                        <i class="bi bi-arrow-left-circle"></i>
+                        <span>Voltar para a Lista</span>
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Entry animation
+            const formCard = document.querySelector('.form-card');
+            formCard.style.opacity = '0';
+            formCard.style.transform = 'translateY(20px)';
+
+            setTimeout(function() {
+                formCard.style.transition = 'all 0.5s ease';
+                formCard.style.opacity = '1';
+                formCard.style.transform = 'translateY(0)';
+            }, 100);
+
+            // Focus first input
+            const firstInput = document.querySelector('.form-control-modern');
+            if (firstInput) {
+                firstInput.focus();
+            }
+
+            // Visual feedback for filled inputs
+            const inputs = document.querySelectorAll('.form-control-modern, .form-select-modern');
+            inputs.forEach(function(input) {
+                if (input.value) {
+                    input.style.backgroundColor = '#fafafa';
+                }
+
+                input.addEventListener('change', function() {
+                    if (this.value) {
+                        this.style.backgroundColor = '#fafafa';
+                    } else {
+                        this.style.backgroundColor = 'white';
+                    }
+                });
+            });
+
+            // Set default date to today
+            const dateInput = document.querySelector('input[type="date"]');
+            if (dateInput && !dateInput.value) {
+                const today = new Date().toISOString().split('T')[0];
+                dateInput.value = today;
+                dateInput.style.backgroundColor = '#fafafa';
+            }
+        });
+    </script>
+}

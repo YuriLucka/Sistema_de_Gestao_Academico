@@ -1,0 +1,35 @@
+﻿@page
+@model ResendEmailConfirmationModel
+@{
+    ViewData["Title"] = "Reenviar confirmação de e-mail";
+    Layout = "/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-end">
+        <div class="col-md-6 col-lg-5">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <h1 class="display-6 fw-bold  text-center mb-4">@ViewData["Title"]</h1>
+                    <h2 class="h5 text-center mb-4">Digite seu e-mail para reenviar a confirmação</h2>
+                    <form method="post">
+                        <div asp-validation-summary="All" class="text-danger mb-3" role="alert"></div>
+                        <div class="form-floating mb-3">
+                            <input asp-for="Input.Email" class="form-control " aria-required="true" placeholder="nome@exemplo.com" />
+                            <label asp-for="Input.Email" class="form-label">E-mail</label>
+                            <span asp-validation-for="Input.Email" class="text-danger"></span>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 mb-3">Reenviar</button>
+                        <div class="d-flex justify-content-center">
+                            <a asp-page="./Login" class="btn btn-link  p-0 text-decoration-none">Voltar ao login</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

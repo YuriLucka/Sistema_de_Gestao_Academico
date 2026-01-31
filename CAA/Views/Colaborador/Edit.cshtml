@@ -1,0 +1,352 @@
+@model CAA.ViewModels.ColaboradorEditViewModel
+
+@{
+    ViewData["Title"] = "Editar Colaborador";
+}
+
+<div class="container py-4">
+    @if (Model.IsBlocked)
+    {
+        <div class="row justify-content-center mt-4 mb-4">
+            <div class="col-lg-8 col-md-10">
+                <form asp-action="Unblock" method="post">
+                    <input type="hidden" name="id" value="@Model.Id" />
+                    <button type="submit" class="btn btn-warning w-100 py-2 fw-bold">
+                        <i class="bi bi-unlock"></i> Desbloquear Acesso
+                    </button>
+                </form>
+            </div>
+        </div>
+    }
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10">
+            <div class="card shadow-lg border-0 rounded-4 @(Model.IsBlocked ? "card-blocked" : (Model.Ativo ? "" : "card-inativo"))">
+                <div class="card-body p-4">
+                    <h2 class="mb-4 text-center fw-bold text-caa">Editar Colaborador</h2>
+                    <form asp-action="Edit" method="post" enctype="multipart/form-data">
+                        <input type="hidden" asp-for="Id" />
+                        <div class="d-flex flex-column align-items-center mb-4">
+                            <label asp-for="FotoPerfil" class="form-label">Foto de Perfil</label>
+                            <div class="mb-2">
+                                <img id="imgPreview" src="@(ViewBag.FotoPerfilUrl ?? "/img/placeholderPerfil.png")" class="rounded-circle border shadow-sm" style="width: 120px; height: 120px; object-fit: cover;" alt="Pré-visualização da foto" />
+                            </div>
+                            <div class="input-group custom-file-group w-100 mb-2" style="max-width: 300px;">
+                                <input asp-for="FotoPerfil" class="form-control d-none" type="file" accept="image/*" id="fotoPerfilInput" onchange="previewImage(event)" />
+                                <button type="button" class="btn btn-caa w-100 d-flex align-items-center justify-content-center gap-2" onclick="document.getElementById('fotoPerfilInput').click();">
+                                    <i class="bi bi-upload"></i> <span id="fileLabel">Selecionar imagem</span>
+                                </button>
+                            </div>
+                            <span asp-validation-for="FotoPerfil" class="text-danger"></span>
+                        </div>
+                        <!-- Switch de Ativo/Inativo -->
+                        <div class="mb-4 d-flex justify-content-center-start">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" asp-for="Ativo" id="ativoSwitch">
+                                <label class="form-check-label fw-bold" for="ativoSwitch">
+                                    @(Model.Ativo ? "Usuário Ativo" : "Usuário Inativo")
+                                </label>
+                            </div>
+                        </div>
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-2"></div>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label asp-for="Nome" class="form-label">Nome</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-person"></i></span>
+                                    <input asp-for="Nome" class="form-control" />
+                                </div>
+                                <span asp-validation-for="Nome" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="Sobrenome" class="form-label">Sobrenome</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-person"></i></span>
+                                    <input asp-for="Sobrenome" class="form-control" />
+                                </div>
+                                <span asp-validation-for="Sobrenome" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="Email" class="form-label">E-mail</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                                    <input asp-for="Email" class="form-control" readonly />
+                                </div>
+                                <span asp-validation-for="Email" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="Departamento" class="form-label">Departamento</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-building"></i></span>
+                                    <input asp-for="Departamento" class="form-control" />
+                                </div>
+                                <span asp-validation-for="Departamento" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="Cargo" class="form-label">Cargo</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-briefcase"></i></span>
+                                    <input asp-for="Cargo" class="form-control" />
+                                </div>
+                                <span asp-validation-for="Cargo" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="DataNascimento" class="form-label">Data de Nascimento</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-calendar-date"></i></span>
+                                    <input asp-for="DataNascimento" class="form-control" type="date" />
+                                </div>
+                                <span asp-validation-for="DataNascimento" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="row g-3">
+                            <!-- Timeline de Permissões -->
+                            <div class="col-12 mb-3 mt-5">
+                                <!-- margem superior maior -->
+                                <label class="form-label fw-bold fs-5 mb-4">
+                                    Permissões
+                                    <span tabindex="0" data-bs-toggle="tooltip" title="Após alterar permissões, faça logout e login para aplicar as mudanças.">
+                                        <i class="bi bi-question-circle-fill text-secondary" style="cursor:pointer;"></i>
+                                    </span>
+                                </label>
+                                <div class="timeline">
+                                    <!-- Administração -->
+                                    <div class="timeline-item mb-5">
+                                        <div class="timeline-event card border-0 mb-3">
+                                            <div class="card-header fw-bold text-caa border-bottom">
+                                                <i class="bi bi-key me-2"></i>Administração
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="d-flex flex-column gap-2">
+                                                    @foreach (var role in Model.AllRoles.OrderBy(x => x.Value).Where(r => r.Value == "Admin" || r.Value == "Colaboradores" || r.Value == "Parametros"))
+                                                    {
+                                                        var isAdmin = role.Value == "Admin";
+                                                        <div class="form-check">
+                                                            <input class="form-check-input @(isAdmin ? "admin-checkbox" : "")" type="checkbox" name="SelectedRoles" value="@role.Value" id="role_@role.Value" @(Model.SelectedRoles.Contains(role.Value) ? "checked" : "") />
+                                                            <label class="form-check-label @(isAdmin ? "admin-label" : "")" for="role_@role.Value">@role.Text</label>
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Atendimento -->
+                                    <div class="timeline-item mb-5">
+                                        <div class="timeline-event card border-0 mb-3">
+                                            <div class="card-header fw-bold text-caa border-bottom">
+                                                <i class="bi bi-people me-2"></i>Atendimento
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="d-flex flex-column gap-2">
+                                                    @foreach (var role in Model.AllRoles.OrderBy(x => x.Value).Where(r => r.Value == "Recados" || r.Value == "Fichas Médicas" || r.Value == "Central de Contatos"))
+                                                    {
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="SelectedRoles" value="@role.Value" id="role_@role.Value" @(Model.SelectedRoles.Contains(role.Value) ? "checked" : "") />
+                                                            <label class="form-check-label" for="role_@role.Value">@role.Text</label>
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Acadêmico -->
+                                    <div class="timeline-item mb-5">
+                                        <div class="timeline-event card border-0 mb-3">
+                                            <div class="card-header fw-bold text-caa border-bottom">
+                                                <i class="bi bi-journal-bookmark me-2"></i>Acadêmico
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="d-flex flex-column gap-2">
+                                                    @foreach (var role in Model.AllRoles.Where(r => r.Value == "Cursos" || r.Value == "Matrículas" || r.Value == "Estágios" || r.Value == "Documentos Institucionais"))
+                                                    {
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="SelectedRoles" value="@role.Value" id="role_@role.Value" @(Model.SelectedRoles.Contains(role.Value) ? "checked" : "") />
+                                                            <label class="form-check-label" for="role_@role.Value">@role.Text</label>
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Links Úteis -->
+                                    <div class="timeline-item mb-3">
+                                        <div class="timeline-event card border-0 mb-3">
+                                            <div class="card-header fw-bold text-caa border-bottom">
+                                                <i class="bi bi-link-45deg me-2"></i>Links Úteis
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="d-flex flex-column gap-2">
+                                                    @foreach (var role in Model.AllRoles.Where(r => r.Value == "Links Úteis"))
+                                                    {
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="checkbox" name="SelectedRoles" value="@role.Value" id="role_@role.Value" @(Model.SelectedRoles.Contains(role.Value) ? "checked" : "") />
+                                                            <label class="form-check-label" for="role_@role.Value">@role.Text</label>
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Fim Timeline -->
+                        </div>
+                        <div class="col-12 d-flex flex-column flex-md-row gap-2 mt-3">
+                            <button type="submit" class="btn btn-caa flex-fill py-2 fw-bold">Salvar Alterações</button>
+                            <a asp-action="Index" class="btn btn-secondary flex-fill py-2">Cancelar</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Botão de exclusão de perfil -->
+    <div class="row justify-content-center mt-4 mb-5">
+        <div class="col-lg-8 col-md-10">
+            <form id="deleteProfileForm" asp-action="Delete" method="post">
+                <input type="hidden" name="id" value="@Model.Id" />
+                <button type="submit" class="btn btn-danger w-100 py-2 fw-bold">
+                    <i class="bi bi-trash"></i> Excluir Perfil
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const deleteForm = document.getElementById('deleteProfileForm');
+        if (deleteForm) {
+            deleteForm.addEventListener('submit', function (e) {
+                e.preventDefault();
+                const userEmail = '@Model.Email';
+                Swal.fire({
+                    title: 'Tem certeza?',
+                    html: `<div style='margin-bottom:10px;'>Para confirmar, digite o e-mail abaixo:</div><div class='mb-2'><strong>${userEmail}</strong></div><input id='swal-input-email' class='swal2-input' placeholder='Digite o e-mail' autocomplete='off'>`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: 'Sim, excluir',
+                    cancelButtonText: 'Cancelar',
+                    reverseButtons: true,
+                    preConfirm: () => {
+                        const input = Swal.getPopup().querySelector('#swal-input-email').value;
+                        if (!input) {
+                            Swal.showValidationMessage('Você precisa digitar o e-mail para confirmar.');
+                        } else if (input !== userEmail) {
+                            Swal.showValidationMessage('O e-mail digitado não confere.');
+                        }
+                        return input;
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed && result.value === userEmail) {
+                        deleteForm.submit();
+                    }
+                });
+            });
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const ativoSwitch = document.getElementById('ativoSwitch');
+        const ativoLabel = document.querySelector('label[for="ativoSwitch"]');
+        if (ativoSwitch && ativoLabel) {
+            ativoSwitch.addEventListener('change', function () {
+                ativoLabel.textContent = ativoSwitch.checked ? 'Usuário Ativo' : 'Usuário Inativo';
+            });
+        }
+    });
+
+
+    document.addEventListener('DOMContentLoaded', function () {
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle=\"tooltip\"]'));
+        tooltipTriggerList.forEach(function (tooltipTriggerEl) {
+            new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+    });
+</script>
+
+<style>
+    .timeline {
+        position: relative;
+        margin-left: 0;
+        padding-left: 0;
+    }
+
+    .timeline-item {
+        position: relative;
+        margin-bottom: 2rem;
+    }
+
+    .timeline-point {
+        display: none;
+    }
+
+    .timeline-event {
+        margin-left: 0;
+    }
+
+    .card-blocked {
+        border: 2px solid #ffc107 !important;
+    }
+    .card-inativo {
+        border: 2px solid #dc3545 !important;
+    }
+
+    :root {
+        --caa-red-main: #dc3545;
+        --caa-red-dark: #b02a37;
+        --caa-red-light: rgba(220,53,69,0.1);
+    }
+
+    .admin-checkbox {
+        width: 1.2em;
+        height: 1.2em;
+        border-radius: 0.25em;
+        border: 2px solid var(--caa-red-main) !important;
+        background-color: #fff !important;
+        accent-color: var(--caa-red-main);
+        transition: border-color 0.2s, box-shadow 0.2s;
+        box-shadow: 0 0 0 2px var(--caa-red-light);
+        position: relative;
+        z-index: 1;
+    }
+
+        .admin-checkbox:checked {
+            background-color: var(--caa-red-main) !important;
+            border-color: var(--caa-red-main) !important;
+            box-shadow: 0 0 0 0.2rem var(--caa-red-light);
+        }
+
+        .admin-checkbox:focus {
+            box-shadow: 0 0 0 0.2rem var(--caa-red-dark);
+            border-color: var(--caa-red-dark) !important;
+        }
+
+        .admin-checkbox:active {
+            filter: brightness(0.95);
+        }
+
+    .admin-label {
+        color: var(--caa-red-main) !important;
+        font-weight: bold;
+        background: var(--caa-red-light);
+        padding: 0.2em 0.6em;
+        border-radius: 0.3em;
+        transition: background 0.2s, color 0.2s;
+        margin-left: 0.3em;
+    }
+
+    .admin-checkbox:checked + .admin-label {
+        background: var(--caa-red-main);
+        color: #fff !important;
+    }
+
+    .admin-label:hover, .admin-label:focus {
+        background: var(--caa-red-dark);
+        color: #fff !important;
+        cursor: pointer;
+    }
+</style>

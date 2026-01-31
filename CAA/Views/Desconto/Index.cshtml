@@ -1,0 +1,451 @@
+﻿@model IEnumerable<CAA.Models.Desconto>
+
+@{
+    ViewData["Title"] = "Descontos";
+}
+
+<style>
+    :root {
+        --primary-green: #25D366;
+        --secondary-green: #128C7E;
+        --dark-green: #075E54;
+        --light-green: rgba(37, 211, 102, 0.1);
+        --discount-purple: #8b5cf6;
+        --discount-purple-light: rgba(139, 92, 246, 0.1);
+    }
+
+    /* Page Header */
+    .discounts-page-header {
+        background: linear-gradient(135deg, rgba(139, 92, 246, 0.05) 0%, rgba(124, 58, 237, 0.05) 100%);
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        border: 1px solid rgba(139, 92, 246, 0.2);
+        backdrop-filter: blur(10px);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .discounts-header-content h1 {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: var(--discount-purple);
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+        .discounts-header-content h1 i {
+            font-size: 2rem;
+        }
+
+    .discounts-header-content p {
+        color: #6b7280;
+        margin: 0;
+        font-size: 0.95rem;
+    }
+
+    .btn-new-discount {
+        background: linear-gradient(135deg, var(--discount-purple), #7c3aed);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        padding: 0.875rem 1.75rem;
+        font-weight: 600;
+        font-size: 0.95rem;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        text-decoration: none;
+        box-shadow: 0 4px 15px rgba(139, 92, 246, 0.2);
+    }
+
+        .btn-new-discount:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(139, 92, 246, 0.35);
+            color: white;
+        }
+
+    /* Discounts Grid */
+    .discounts-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    /* Discount Card */
+    .discount-card {
+        background: white;
+        border: 2px solid #f3f4f6;
+        border-radius: 18px;
+        overflow: hidden;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        display: flex;
+        flex-direction: column;
+    }
+
+        .discount-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--discount-purple);
+            box-shadow: 0 20px 50px rgba(139, 92, 246, 0.15);
+        }
+
+    /* Discount Header */
+    .discount-card-header {
+        background: linear-gradient(135deg, var(--discount-purple), #7c3aed);
+        padding: 1.75rem 1.5rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .discount-card-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 200px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+        }
+
+    .discount-card-header-content {
+        position: relative;
+        z-index: 1;
+    }
+
+    .discount-type-name {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: white;
+        margin-bottom: 0.75rem;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .discount-value-display {
+        display: flex;
+        align-items: baseline;
+        gap: 0.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .discount-value-main {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: white;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .discount-value-type-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        background: rgba(255, 255, 255, 0.25);
+        backdrop-filter: blur(10px);
+        padding: 0.4rem 0.85rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: white;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    /* Discount Body */
+    .discount-card-body {
+        padding: 1.5rem;
+        flex-grow: 1;
+    }
+
+    .discount-info-item {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.75rem;
+        background: var(--discount-purple-light);
+        border-radius: 10px;
+        margin-bottom: 1rem;
+    }
+
+        .discount-info-item i {
+            font-size: 1.2rem;
+            color: var(--discount-purple);
+        }
+
+    .discount-info-text {
+        flex: 1;
+        color: #374151;
+        font-weight: 500;
+    }
+
+    /* Discount Actions */
+    .discount-actions {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.5rem;
+        padding-top: 1.5rem;
+        border-top: 2px solid #f3f4f6;
+    }
+
+    .btn-discount-action {
+        padding: 0.65rem 0.75rem;
+        border-radius: 10px;
+        border: none;
+        font-size: 0.85rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.35rem;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    .btn-edit-discount {
+        background: rgba(59, 130, 246, 0.1);
+        color: #3b82f6;
+    }
+
+        .btn-edit-discount:hover {
+            background: #3b82f6;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+
+    .btn-details-discount {
+        background: rgba(14, 165, 233, 0.1);
+        color: #0ea5e9;
+    }
+
+        .btn-details-discount:hover {
+            background: #0ea5e9;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
+        }
+
+    .btn-delete-discount {
+        background: rgba(239, 68, 68, 0.1);
+        color: #ef4444;
+    }
+
+        .btn-delete-discount:hover {
+            background: #ef4444;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+        }
+
+    /* Back Button */
+    .back-button-container {
+        margin-top: 2rem;
+    }
+
+    .btn-back {
+        background: #f3f4f6;
+        border: 2px solid #e5e7eb;
+        color: #6b7280;
+        border-radius: 12px;
+        padding: 0.875rem 1.75rem;
+        font-weight: 600;
+        font-size: 0.95rem;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        text-decoration: none;
+    }
+
+        .btn-back:hover {
+            background: #e5e7eb;
+            border-color: #d1d5db;
+            color: #374151;
+            transform: translateY(-2px);
+        }
+
+    /* Empty State */
+    .empty-state-discounts {
+        text-align: center;
+        padding: 5rem 2rem;
+        background: white;
+        border: 2px solid #f3f4f6;
+        border-radius: 20px;
+        color: #6b7280;
+    }
+
+        .empty-state-discounts i {
+            font-size: 5rem;
+            color: #d1d5db;
+            margin-bottom: 1.5rem;
+        }
+
+        .empty-state-discounts h3 {
+            color: #374151;
+            margin-bottom: 0.75rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .empty-state-discounts p {
+            color: #9ca3af;
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+    /* Responsive */
+    @@media (max-width: 768px) {
+        .discounts-page-header
+
+    {
+        flex-direction: column;
+        align-items: stretch;
+        text-align: center;
+    }
+
+    .discounts-header-content h1 {
+        justify-content: center;
+    }
+
+    .btn-new-discount {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .discounts-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .discount-actions {
+        grid-template-columns: 1fr;
+    }
+
+    }
+</style>
+
+<div class="container-fluid px-3">
+    <!-- Page Header -->
+    <div class="discounts-page-header">
+        <div class="discounts-header-content">
+            <h1>
+                <i class="bi bi-percent"></i>
+                <span>Descontos</span>
+            </h1>
+            <p>Gerencie os descontos aplicados ao plano financeiro</p>
+        </div>
+        <a asp-action="Create" asp-route-planoFinanceiroId="@ViewBag.VbPlanoFinanceiroId" class="btn-new-discount">
+            <i class="bi bi-plus-circle"></i>
+            <span>Criar Novo Desconto</span>
+        </a>
+    </div>
+
+    <!-- Discounts Grid -->
+    @if (Model != null && Model.Any())
+    {
+        <div class="discounts-grid">
+            @foreach (var desconto in Model)
+            {
+                string valorFormatado;
+                string valorDisplay;
+                string tipoDesconto;
+
+                if (desconto.TipoDescontoValor == CAA.Models.TipoDescontoValor.ValorFixo)
+                {
+                    valorFormatado = desconto.Valor.ToString("C", new System.Globalization.CultureInfo("pt-BR"));
+                    valorDisplay = valorFormatado;
+                    tipoDesconto = "Valor Fixo";
+                }
+                else if (desconto.TipoDescontoValor == CAA.Models.TipoDescontoValor.Porcentagem)
+                {
+                    valorFormatado = (desconto.Valor / 100).ToString("P", new System.Globalization.CultureInfo("pt-BR"));
+                    valorDisplay = desconto.Valor.ToString("0.##") + "%";
+                    tipoDesconto = "Porcentagem";
+                }
+                else
+                {
+                    valorFormatado = desconto.Valor.ToString();
+                    valorDisplay = valorFormatado;
+                    tipoDesconto = "Indefinido";
+                }
+
+                <div class="discount-card">
+                    <!-- Discount Header -->
+                    <div class="discount-card-header">
+                        <div class="discount-card-header-content">
+                            <div class="discount-type-name">
+                                @Html.DisplayFor(modelItem => desconto.TipoDesconto.Nome)
+                            </div>
+                            <div class="discount-value-display">
+                                <div class="discount-value-main">@valorDisplay</div>
+                            </div>
+                            <div class="discount-value-type-badge">
+                                <i class="bi bi-@(desconto.TipoDescontoValor == CAA.Models.TipoDescontoValor.Porcentagem ? "percent" : "currency-dollar")"></i>
+                                <span>@tipoDesconto</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Discount Body -->
+                    <div class="discount-card-body">
+                        <div class="discount-info-item">
+                            <i class="bi bi-tag"></i>
+                            <div class="discount-info-text">
+                                <strong>Tipo:</strong> @Html.DisplayFor(modelItem => desconto.TipoDesconto.Nome)
+                            </div>
+                        </div>
+
+                        <div class="discount-info-item">
+                            <i class="bi bi-@(desconto.TipoDescontoValor == CAA.Models.TipoDescontoValor.Porcentagem ? "percent" : "currency-dollar")"></i>
+                            <div class="discount-info-text">
+                                <strong>Formato:</strong> @Html.DisplayFor(modelItem => desconto.TipoDescontoValor)
+                            </div>
+                        </div>
+
+                        <!-- Actions -->
+                        <div class="discount-actions">
+                            <a asp-action="Edit" asp-route-id="@desconto.DescontoId" class="btn-discount-action btn-edit-discount" title="Editar">
+                                <i class="bi bi-pencil"></i>
+                                <span>Editar</span>
+                            </a>
+                            <a asp-action="Details" asp-route-id="@desconto.DescontoId" class="btn-discount-action btn-details-discount" title="Detalhes">
+                                <i class="bi bi-info-circle"></i>
+                                <span>Ver</span>
+                            </a>
+                            <a asp-action="Delete" asp-route-id="@desconto.DescontoId" class="btn-discount-action btn-delete-discount" title="Excluir">
+                                <i class="bi bi-trash"></i>
+                                <span>Excluir</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="empty-state-discounts">
+            <i class="bi bi-percent"></i>
+            <h3>Nenhum desconto cadastrado</h3>
+            <p>Crie o primeiro desconto para este plano financeiro</p>
+            <a asp-action="Create" asp-route-planoFinanceiroId="@ViewBag.VbPlanoFinanceiroId" class="btn-new-discount">
+                <i class="bi bi-plus-circle"></i>
+                <span>Criar Primeiro Desconto</span>
+            </a>
+        </div>
+    }
+
+    <!-- Back Button -->
+    <div class="back-button-container">
+        <a asp-action="Index" asp-controller="PlanoFinanceiro" asp-route-cursoId="@ViewBag.VbCursoId" class="btn-back">
+            <i class="bi bi-arrow-left-circle"></i>
+            <span>Voltar para Planos</span>
+        </a>
+    </div>
+</div>

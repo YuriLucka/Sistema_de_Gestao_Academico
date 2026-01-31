@@ -1,0 +1,482 @@
+﻿@model CAA.Models.Estagio
+
+@{
+    ViewData["Title"] = "Detalhes do Estágio";
+}
+
+<style>
+    :root {
+        --primary-green: #25D366;
+        --secondary-green: #128C7E;
+        --dark-green: #075E54;
+        --light-green: rgba(37, 211, 102, 0.1);
+    }
+
+    /* Page Container */
+    .form-page-container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    /* Page Header */
+    .form-page-header {
+        background: linear-gradient(135deg, rgba(37, 211, 102, 0.05) 0%, rgba(18, 140, 126, 0.05) 100%);
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        border: 1px solid rgba(37, 211, 102, 0.2);
+        backdrop-filter: blur(10px);
+        text-align: center;
+    }
+
+        .form-page-header h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--secondary-green);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+        }
+
+            .form-page-header h1 i {
+                font-size: 2rem;
+            }
+
+        .form-page-header p {
+            color: #6b7280;
+            margin: 0;
+            font-size: 0.95rem;
+        }
+
+    /* Details Card */
+    .details-card {
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+        border: 2px solid #f3f4f6;
+        margin-bottom: 2rem;
+        transition: all 0.3s ease;
+    }
+
+        .details-card:hover {
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+            border-color: rgba(37, 211, 102, 0.3);
+        }
+
+    /* Section Headers */
+    .details-section-header {
+        background: linear-gradient(135deg, var(--light-green) 0%, rgba(18, 140, 126, 0.05) 100%);
+        border-bottom: 2px solid #f3f4f6;
+        padding: 1.25rem 2rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+        .details-section-header i {
+            font-size: 1.5rem;
+            color: var(--secondary-green);
+        }
+
+        .details-section-header h2 {
+            color: var(--secondary-green);
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin: 0;
+        }
+
+    .details-section-body {
+        padding: 2rem;
+    }
+
+    /* Details Grid - Two Columns */
+    .details-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+    }
+
+    .detail-item {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        padding: 1rem;
+        background: #f9fafb;
+        border-radius: 12px;
+        border: 1px solid #e5e7eb;
+        transition: all 0.3s ease;
+    }
+
+        .detail-item:hover {
+            background: var(--light-green);
+            border-color: var(--primary-green);
+            transform: translateY(-2px);
+        }
+
+    .detail-item-full {
+        grid-column: 1 / -1;
+    }
+
+    .detail-label {
+        font-weight: 600;
+        color: var(--secondary-green);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+        .detail-label i {
+            font-size: 1rem;
+        }
+
+    .detail-value {
+        color: #374151;
+        font-size: 1rem;
+        font-weight: 500;
+        padding: 0.5rem 0;
+    }
+
+    .detail-value-empty {
+        color: #9ca3af;
+        font-style: italic;
+    }
+
+    /* Info Box */
+    .info-box {
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(37, 99, 235, 0.1) 100%);
+        border-left: 4px solid #3b82f6;
+        border-radius: 12px;
+        padding: 1.25rem 1.5rem;
+        margin-bottom: 2rem;
+        display: flex;
+        align-items: start;
+        gap: 1rem;
+    }
+
+        .info-box i {
+            font-size: 1.5rem;
+            color: #2563eb;
+            flex-shrink: 0;
+            margin-top: 0.125rem;
+        }
+
+    .info-box-content {
+        flex: 1;
+    }
+
+        .info-box-content p {
+            color: #1e40af;
+            margin: 0;
+            line-height: 1.6;
+            font-weight: 500;
+        }
+
+    /* Action Buttons */
+    .details-actions {
+        display: flex;
+        gap: 1rem;
+        padding: 2rem;
+        background: #f9fafb;
+        border-top: 2px solid #f3f4f6;
+        flex-wrap: wrap;
+    }
+
+    .btn-details-action {
+        flex: 1;
+        min-width: 180px;
+        border-radius: 12px;
+        padding: 0.875rem 1.5rem;
+        font-size: 0.95rem;
+        font-weight: 600;
+        border: none;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        text-decoration: none;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .btn-details-action::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s ease, height 0.6s ease;
+        }
+
+        .btn-details-action:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-details-action i,
+        .btn-details-action span {
+            position: relative;
+            z-index: 1;
+        }
+
+    .btn-edit-action {
+        background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+        color: white;
+        box-shadow: 0 4px 15px rgba(251, 191, 36, 0.2);
+    }
+
+        .btn-edit-action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(251, 191, 36, 0.35);
+            color: white;
+        }
+
+    .btn-back-action {
+        background: linear-gradient(135deg, var(--primary-green) 0%, var(--secondary-green) 100%);
+        color: white;
+        box-shadow: 0 4px 15px rgba(37, 211, 102, 0.2);
+    }
+
+        .btn-back-action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(37, 211, 102, 0.35);
+            color: white;
+        }
+
+    /* Responsive */
+    @@media (max-width: 992px) {
+        .details-grid
+
+    {
+        grid-template-columns: 1fr;
+    }
+
+    }
+
+    @@media (max-width: 768px) {
+        .details-section-body
+
+    {
+        padding: 1.5rem;
+    }
+
+    .form-page-header {
+        padding: 1.5rem;
+    }
+
+        .form-page-header h1 {
+            font-size: 1.5rem;
+        }
+
+    .details-actions {
+        flex-direction: column;
+        padding: 1.5rem;
+    }
+
+    .btn-details-action {
+        width: 100%;
+    }
+
+    }
+</style>
+
+<div class="form-page-container">
+    <!-- Page Header -->
+    <div class="form-page-header">
+        <h1>
+            <i class="bi bi-briefcase-fill"></i>
+            Detalhes do Estágio
+        </h1>
+        <p>Visualize todas as informações do estágio</p>
+    </div>
+
+    <!-- Info Box -->
+    <div class="info-box">
+        <i class="bi bi-info-circle-fill"></i>
+        <div class="info-box-content">
+            <p>
+                Todas as informações do estágio estão listadas abaixo.
+                Para fazer alterações, clique no botão "Editar" ao final da página.
+            </p>
+        </div>
+    </div>
+
+    <!-- Details Card -->
+    <div class="details-card">
+        <!-- Seção: Dados do Aluno -->
+        <div class="details-section-header">
+            <i class="bi bi-person-badge"></i>
+            <h2>Dados do Aluno</h2>
+        </div>
+        <div class="details-section-body">
+            <div class="details-grid">
+                <div class="detail-item">
+                    <div class="detail-label">
+                        <i class="bi bi-hash"></i>
+                        <span>@Html.DisplayNameFor(model => model.RA)</span>
+                    </div>
+                    <div class="detail-value">
+                        @Html.DisplayFor(model => model.RA)
+                    </div>
+                </div>
+
+                <div class="detail-item">
+                    <div class="detail-label">
+                        <i class="bi bi-person"></i>
+                        <span>@Html.DisplayNameFor(model => model.Nome)</span>
+                    </div>
+                    <div class="detail-value">
+                        @Html.DisplayFor(model => model.Nome)
+                    </div>
+                </div>
+
+                <div class="detail-item detail-item-full">
+                    <div class="detail-label">
+                        <i class="bi bi-mortarboard"></i>
+                        <span>@Html.DisplayNameFor(model => model.Curso)</span>
+                    </div>
+                    <div class="detail-value">
+                        @Html.DisplayFor(model => model.Curso.Nome)
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Seção: Dados do Estágio -->
+        <div class="details-section-header">
+            <i class="bi bi-file-earmark-text"></i>
+            <h2>Dados do Estágio</h2>
+        </div>
+        <div class="details-section-body">
+            <div class="details-grid">
+                <div class="detail-item">
+                    <div class="detail-label">
+                        <i class="bi bi-file-text"></i>
+                        <span>@Html.DisplayNameFor(model => model.TipoContratoEstagio)</span>
+                    </div>
+                    <div class="detail-value">
+                        @Html.DisplayFor(model => model.TipoContratoEstagio.Nome)
+                    </div>
+                </div>
+
+                <div class="detail-item">
+                    <div class="detail-label">
+                        <i class="bi bi-building"></i>
+                        <span>@Html.DisplayNameFor(model => model.Empresa)</span>
+                    </div>
+                    <div class="detail-value">
+                        @Html.DisplayFor(model => model.Empresa.CNPJ)
+                    </div>
+                </div>
+
+                <div class="detail-item detail-item-full">
+                    <div class="detail-label">
+                        <i class="bi bi-diagram-3"></i>
+                        <span>@Html.DisplayNameFor(model => model.Integradora)</span>
+                    </div>
+                    <div class="detail-value @(string.IsNullOrEmpty(Model.Integradora) ? "detail-value-empty" : "")">
+                        @(string.IsNullOrEmpty(Model.Integradora) ? "Não informado" : Html.DisplayFor(model => model.Integradora))
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Seção: Vigência -->
+        <div class="details-section-header">
+            <i class="bi bi-calendar-range"></i>
+            <h2>Vigência do Estágio</h2>
+        </div>
+        <div class="details-section-body">
+            <div class="details-grid">
+                <div class="detail-item">
+                    <div class="detail-label">
+                        <i class="bi bi-calendar-check"></i>
+                        <span>@Html.DisplayNameFor(model => model.VigenciaInicio)</span>
+                    </div>
+                    <div class="detail-value">
+                        @Html.DisplayFor(model => model.VigenciaInicio)
+                    </div>
+                </div>
+
+                <div class="detail-item">
+                    <div class="detail-label">
+                        <i class="bi bi-calendar-x"></i>
+                        <span>@Html.DisplayNameFor(model => model.VigenciaTermino)</span>
+                    </div>
+                    <div class="detail-value">
+                        @Html.DisplayFor(model => model.VigenciaTermino)
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Seção: Seguro -->
+        <div class="details-section-header">
+            <i class="bi bi-shield-check"></i>
+            <h2>Informações do Seguro</h2>
+        </div>
+        <div class="details-section-body">
+            <div class="details-grid">
+                <div class="detail-item">
+                    <div class="detail-label">
+                        <i class="bi bi-file-earmark-lock"></i>
+                        <span>@Html.DisplayNameFor(model => model.Apolice)</span>
+                    </div>
+                    <div class="detail-value @(string.IsNullOrEmpty(Model.Apolice) ? "detail-value-empty" : "")">
+                        @(string.IsNullOrEmpty(Model.Apolice) ? "Não informado" : Html.DisplayFor(model => model.Apolice))
+                    </div>
+                </div>
+
+                <div class="detail-item">
+                    <div class="detail-label">
+                        <i class="bi bi-bank"></i>
+                        <span>@Html.DisplayNameFor(model => model.Seguradora)</span>
+                    </div>
+                    <div class="detail-value @(string.IsNullOrEmpty(Model.Seguradora) ? "detail-value-empty" : "")">
+                        @(string.IsNullOrEmpty(Model.Seguradora) ? "Não informado" : Html.DisplayFor(model => model.Seguradora))
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="details-actions">
+            <a asp-action="Edit" asp-route-id="@Model?.EstagioId" class="btn-details-action btn-edit-action">
+                <i class="bi bi-pencil-square"></i>
+                <span>Editar Estágio</span>
+            </a>
+            <a asp-action="Index" class="btn-details-action btn-back-action">
+                <i class="bi bi-arrow-left-circle"></i>
+                <span>Voltar para a Lista</span>
+            </a>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Entry animation
+            const card = document.querySelector('.details-card');
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+
+            setTimeout(function() {
+                card.style.transition = 'all 0.5s ease';
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+            }, 100);
+        });
+    </script>
+}

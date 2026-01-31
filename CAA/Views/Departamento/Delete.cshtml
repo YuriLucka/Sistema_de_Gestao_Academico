@@ -1,0 +1,468 @@
+﻿@model CAA.Models.Departamento
+
+@{
+    ViewData["Title"] = "Excluir Departamento";
+}
+
+<style>
+    :root {
+        --caa-green-main: #25D366;
+        --caa-green-dark: #128C7E;
+        --caa-green-light: rgba(37, 211, 102, 0.1);
+        --danger-red: #ef4444;
+        --danger-light: rgba(239, 68, 68, 0.1);
+    }
+
+    /* Page Container */
+    .form-page-container {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    /* Page Header - Warning Style */
+    .form-page-header-danger {
+        background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(220, 38, 38, 0.1) 100%);
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        border: 2px solid rgba(239, 68, 68, 0.3);
+        backdrop-filter: blur(10px);
+        text-align: center;
+    }
+
+        .form-page-header-danger h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #dc2626;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+        }
+
+            .form-page-header-danger h1 i {
+                font-size: 2rem;
+                animation: pulse 2s ease-in-out infinite;
+            }
+
+    @@keyframes pulse {
+        0%, 100%
+
+    {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.1);
+    }
+
+    }
+
+    .form-page-header-danger p {
+        color: #991b1b;
+        margin: 0;
+        font-size: 0.95rem;
+        font-weight: 500;
+    }
+
+    /* Warning Alert */
+    .warning-alert {
+        background: linear-gradient(135deg, rgba(251, 191, 36, 0.15) 0%, rgba(245, 158, 11, 0.15) 100%);
+        border-left: 4px solid #f59e0b;
+        border-radius: 12px;
+        padding: 1.25rem 1.5rem;
+        margin-bottom: 2rem;
+        display: flex;
+        align-items: start;
+        gap: 1rem;
+    }
+
+        .warning-alert i {
+            font-size: 1.5rem;
+            color: #d97706;
+            flex-shrink: 0;
+            margin-top: 0.125rem;
+        }
+
+    .warning-alert-content {
+        flex: 1;
+    }
+
+        .warning-alert-content h3 {
+            color: #92400e;
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .warning-alert-content p {
+            color: #78350f;
+            margin: 0;
+            line-height: 1.6;
+        }
+
+    /* Details Card */
+    .details-card {
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+        border: 2px solid #f3f4f6;
+        margin-bottom: 2rem;
+    }
+
+    .details-card-header {
+        background: linear-gradient(135deg, var(--caa-green-main), var(--caa-green-dark));
+        padding: 2rem;
+        position: relative;
+        overflow: hidden;
+        text-align: center;
+    }
+
+        .details-card-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 300px;
+            height: 300px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+        }
+
+    .details-card-header-content {
+        position: relative;
+        z-index: 1;
+    }
+
+    .departamento-icon-large {
+        width: 80px;
+        height: 80px;
+        background: rgba(255, 255, 255, 0.25);
+        backdrop-filter: blur(10px);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1rem;
+    }
+
+        .departamento-icon-large i {
+            font-size: 2.5rem;
+            color: white;
+        }
+
+    .departamento-name-large {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: white;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin: 0;
+    }
+
+    .details-card-body {
+        padding: 2rem;
+    }
+
+    /* Detail Item */
+    .detail-item {
+        display: grid;
+        grid-template-columns: 200px 1fr;
+        gap: 1.5rem;
+        align-items: center;
+        padding: 1.5rem;
+        background: #f9fafb;
+        border-radius: 12px;
+        border: 1px solid #e5e7eb;
+    }
+
+    .detail-label {
+        font-weight: 600;
+        color: var(--caa-green-dark);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        text-align: right;
+        justify-content: flex-end;
+    }
+
+        .detail-label i {
+            font-size: 1.1rem;
+        }
+
+    .detail-value {
+        color: #374151;
+        font-size: 1.1rem;
+        font-weight: 600;
+    }
+
+    /* Confirmation Box */
+    .confirmation-box {
+        background: white;
+        border: 2px solid rgba(239, 68, 68, 0.3);
+        border-radius: 16px;
+        padding: 1.5rem;
+        margin: 2rem;
+    }
+
+    .confirmation-checkbox {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        cursor: pointer;
+    }
+
+        .confirmation-checkbox input[type="checkbox"] {
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            accent-color: var(--danger-red);
+            border-radius: 6px;
+        }
+
+        .confirmation-checkbox label {
+            flex: 1;
+            cursor: pointer;
+            font-size: 1rem;
+            color: #374151;
+            font-weight: 500;
+            user-select: none;
+        }
+
+    /* Form Actions */
+    .form-actions-danger {
+        display: flex;
+        gap: 1rem;
+        padding: 2rem;
+        background: #f9fafb;
+        border-top: 2px solid #f3f4f6;
+        flex-wrap: wrap;
+    }
+
+    .btn-form-danger {
+        flex: 1;
+        min-width: 140px;
+        border-radius: 12px;
+        padding: 0.875rem 1.5rem;
+        font-size: 0.95rem;
+        font-weight: 600;
+        border: none;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+        .btn-form-danger i {
+            font-size: 1.1rem;
+        }
+
+    .btn-delete-confirm {
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        color: white;
+        box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+    }
+
+        .btn-delete-confirm:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(239, 68, 68, 0.4);
+            color: white;
+        }
+
+    .btn-cancel-danger {
+        background: white;
+        border: 2px solid #e5e7eb;
+        color: #6b7280;
+    }
+
+        .btn-cancel-danger:hover {
+            background: #f3f4f6;
+            border-color: #d1d5db;
+            color: #374151;
+            transform: translateY(-2px);
+        }
+
+    /* Responsive */
+    @@media (max-width: 768px) {
+        .details-card-body
+
+    {
+        padding: 1.5rem;
+    }
+
+    .form-page-header-danger {
+        padding: 1.5rem;
+    }
+
+        .form-page-header-danger h1 {
+            font-size: 1.5rem;
+        }
+
+    .detail-item {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+    }
+
+    .detail-label {
+        text-align: left;
+        justify-content: flex-start;
+    }
+
+    .form-actions-danger {
+        flex-direction: column;
+        padding: 1.5rem;
+    }
+
+    .btn-form-danger {
+        width: 100%;
+    }
+
+    }
+</style>
+
+<div class="form-page-container">
+    <!-- Page Header - Warning -->
+    <div class="form-page-header-danger">
+        <h1>
+            <i class="bi bi-exclamation-triangle"></i>
+            Excluir Departamento
+        </h1>
+        <p>Atenção! Esta ação é irreversível</p>
+    </div>
+
+    <!-- Warning Alert -->
+    <div class="warning-alert">
+        <i class="bi bi-shield-exclamation"></i>
+        <div class="warning-alert-content">
+            <h3>Confirmação de Exclusão Necessária</h3>
+            <p>
+                Você está prestes a excluir permanentemente este departamento.
+                Todos os cargos e vínculos de estágio relacionados a este departamento serão afetados.
+                Por favor, revise as informações abaixo antes de confirmar.
+            </p>
+        </div>
+    </div>
+
+    <!-- Details Card -->
+    <div class="details-card">
+        <!-- Header with Departamento Info -->
+        <div class="details-card-header">
+            <div class="details-card-header-content">
+                <div class="departamento-icon-large">
+                    <i class="bi bi-people-fill"></i>
+                </div>
+                <h2 class="departamento-name-large">
+                    @Html.DisplayFor(model => model.Nome)
+                </h2>
+            </div>
+        </div>
+
+        <!-- Body with Details -->
+        <div class="details-card-body">
+            <div class="detail-item">
+                <div class="detail-label">
+                    <i class="bi bi-people"></i>
+                    <span>@Html.DisplayNameFor(model => model.Nome)</span>
+                </div>
+                <div class="detail-value">
+                    @Html.DisplayFor(model => model.Nome)
+                </div>
+            </div>
+        </div>
+
+        <!-- Form Actions -->
+        <form asp-action="Delete" method="post" id="deleteForm">
+            <input type="hidden" asp-for="DepartamentoId" />
+
+            <!-- Confirmation Checkbox -->
+            <div class="confirmation-box">
+                <div class="confirmation-checkbox">
+                    <input type="checkbox" id="confirmDelete" />
+                    <label for="confirmDelete">
+                        Confirmo que li as informações acima e desejo excluir permanentemente este departamento
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-actions-danger">
+                <button type="submit" class="btn-form-danger btn-delete-confirm" id="deleteButton" disabled>
+                    <i class="bi bi-trash"></i>
+                    Confirmar Exclusão
+                </button>
+                <a asp-action="Index" class="btn-form-danger btn-cancel-danger">
+                    <i class="bi bi-arrow-left-circle"></i>
+                    Cancelar e Voltar
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Checkbox confirmation
+            const checkbox = document.getElementById('confirmDelete');
+            const deleteButton = document.getElementById('deleteButton');
+            const deleteForm = document.getElementById('deleteForm');
+
+            checkbox.addEventListener('change', function() {
+                deleteButton.disabled = !this.checked;
+                if (this.checked) {
+                    deleteButton.style.opacity = '1';
+                    deleteButton.style.cursor = 'pointer';
+                } else {
+                    deleteButton.style.opacity = '0.5';
+                    deleteButton.style.cursor = 'not-allowed';
+                }
+            });
+
+            // Initial state
+            deleteButton.style.opacity = '0.5';
+            deleteButton.style.cursor = 'not-allowed';
+
+            // SweetAlert confirmation on submit
+            deleteForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                Swal.fire({
+                    title: 'Última Confirmação',
+                    html: '<p style="font-size: 1rem; margin-bottom: 1rem;">Tem <strong>absoluta certeza</strong> que deseja excluir este departamento?</p><p style="color: #dc2626; font-weight: 600;">Todos os cargos e vínculos serão perdidos!</p>',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#ef4444',
+                    cancelButtonColor: '#6b7280',
+                    confirmButtonText: '<i class="bi bi-trash me-1"></i> Sim, excluir definitivamente',
+                    cancelButtonText: '<i class="bi bi-x-circle me-1"></i> Não, cancelar',
+                    reverseButtons: true,
+                    customClass: {
+                        confirmButton: 'btn btn-danger px-4 py-2',
+                        cancelButton: 'btn btn-secondary px-4 py-2'
+                    },
+                    buttonsStyling: false,
+                    focusCancel: true
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        deleteForm.submit();
+                    }
+                });
+            });
+
+            // Entry animation
+            const card = document.querySelector('.details-card');
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+
+            setTimeout(function() {
+                card.style.transition = 'all 0.5s ease';
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+            }, 100);
+        });
+    </script>
+}

@@ -1,0 +1,378 @@
+@model CAA.Models.ParametroGeral
+
+@{
+    ViewData["Title"] = "Parâmetros Gerais";
+}
+
+<style>
+    :root {
+        --caa-green-main: #25D366;
+        --caa-green-dark: #128C7E;
+        --caa-green-light: rgba(37, 211, 102, 0.1);
+    }
+
+    /* Page Container */
+    .config-page-container {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    /* Page Header */
+    .config-page-header {
+        background: linear-gradient(135deg, rgba(37, 211, 102, 0.05) 0%, rgba(18, 140, 126, 0.05) 100%);
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        border: 1px solid rgba(37, 211, 102, 0.2);
+        backdrop-filter: blur(10px);
+        text-align: center;
+    }
+
+        .config-page-header h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--caa-green-dark);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+        }
+
+            .config-page-header h1 i {
+                font-size: 2rem;
+            }
+
+        .config-page-header p {
+            color: #6b7280;
+            margin: 0;
+            font-size: 0.95rem;
+        }
+
+    /* Info Box */
+    .info-box-config {
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(37, 99, 235, 0.05) 100%);
+        border-left: 4px solid #3b82f6;
+        border-radius: 12px;
+        padding: 1.25rem 1.5rem;
+        margin-bottom: 2rem;
+        display: flex;
+        align-items: start;
+        gap: 1rem;
+    }
+
+        .info-box-config i {
+            font-size: 1.5rem;
+            color: #3b82f6;
+            flex-shrink: 0;
+            margin-top: 0.125rem;
+        }
+
+    .info-box-config-content p {
+        color: #1e40af;
+        margin: 0;
+        line-height: 1.6;
+    }
+
+    /* Config Card */
+    .config-card {
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+        border: 2px solid #f3f4f6;
+        transition: all 0.3s ease;
+    }
+
+        .config-card:hover {
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+            border-color: rgba(37, 211, 102, 0.3);
+        }
+
+    .config-card-header {
+        background: linear-gradient(135deg, var(--caa-green-main), var(--caa-green-dark));
+        padding: 1.5rem 2rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .config-icon {
+        width: 50px;
+        height: 50px;
+        background: rgba(255, 255, 255, 0.25);
+        backdrop-filter: blur(10px);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+        .config-icon i {
+            font-size: 1.5rem;
+            color: white;
+        }
+
+    .config-title {
+        color: white;
+        font-size: 1.25rem;
+        font-weight: 700;
+        margin: 0;
+    }
+
+    .config-card-body {
+        padding: 2.5rem;
+    }
+
+    /* Form Groups */
+    .form-group-modern {
+        margin-bottom: 2rem;
+        position: relative;
+    }
+
+    /* Labels */
+    .form-label-modern {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 0.75rem;
+        font-size: 0.95rem;
+        transition: color 0.3s ease;
+    }
+
+        .form-label-modern i {
+            color: var(--caa-green-main);
+            font-size: 1rem;
+        }
+
+    .form-group-modern:focus-within .form-label-modern {
+        color: var(--caa-green-dark);
+    }
+
+    /* Input Fields */
+    .form-control-modern {
+        border: 2px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 0.875rem 1.125rem;
+        transition: all 0.3s ease;
+        font-size: 0.95rem;
+        background: white;
+        width: 100%;
+        color: #1f2937;
+    }
+
+        .form-control-modern:focus {
+            border-color: var(--caa-green-main);
+            box-shadow: 0 0 0 4px var(--caa-green-light);
+            outline: none;
+            background: #fafafa;
+        }
+
+        .form-control-modern::placeholder {
+            color: #9ca3af;
+        }
+
+    /* Validation Messages */
+    .field-validation-error {
+        color: #ef4444;
+        font-size: 0.85rem;
+        margin-top: 0.5rem;
+        display: block;
+        font-weight: 500;
+    }
+
+    /* Input with validation error */
+    .input-validation-error {
+        border-color: #ef4444 !important;
+        background-color: rgba(239, 68, 68, 0.05) !important;
+    }
+
+        .input-validation-error:focus {
+            box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1) !important;
+        }
+
+    /* Helper Text */
+    .form-helper-text {
+        font-size: 0.85rem;
+        color: #6b7280;
+        margin-top: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+    }
+
+        .form-helper-text i {
+            font-size: 0.9rem;
+            color: var(--caa-green-main);
+        }
+
+    /* Submit Button */
+    .btn-save-config {
+        width: 100%;
+        background: linear-gradient(135deg, var(--caa-green-main), var(--caa-green-dark));
+        color: white;
+        border: none;
+        border-radius: 12px;
+        padding: 1rem 2rem;
+        font-size: 1rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        cursor: pointer;
+        box-shadow: 0 4px 15px rgba(37, 211, 102, 0.2);
+        margin-top: 1.5rem;
+    }
+
+        .btn-save-config i {
+            font-size: 1.2rem;
+        }
+
+        .btn-save-config:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(37, 211, 102, 0.35);
+        }
+
+    /* Responsive */
+    @@media (max-width: 768px) {
+        .config-card-body
+
+    {
+        padding: 1.5rem;
+    }
+
+    .config-page-header {
+        padding: 1.5rem;
+    }
+
+        .config-page-header h1 {
+            font-size: 1.5rem;
+        }
+
+    }
+</style>
+
+<div class="config-page-container">
+    <!-- Page Header -->
+    <div class="config-page-header">
+        <h1>
+            <i class="bi bi-gear-fill"></i>
+            Parâmetros Gerais
+        </h1>
+        <p>Configure os parâmetros gerais do sistema</p>
+    </div>
+
+    <!-- Info Box -->
+    <div class="info-box-config">
+        <i class="bi bi-info-circle-fill"></i>
+        <div class="info-box-config-content">
+            <p>
+                <strong>Configurações do Sistema:</strong> Defina parâmetros globais que serão utilizados
+                em todo o sistema, como senhas de acesso e outras configurações gerais.
+            </p>
+        </div>
+    </div>
+
+    <!-- Config Card -->
+    <div class="config-card">
+        <!-- Card Header -->
+        <div class="config-card-header">
+            <div class="config-icon">
+                <i class="bi bi-shield-lock-fill"></i>
+            </div>
+            <h2 class="config-title">Configurações de Segurança</h2>
+        </div>
+
+        <!-- Card Body -->
+        <div class="config-card-body">
+            <form asp-action="Config" method="post">
+
+                <!-- Senha Ficha Médica -->
+                <div class="form-group-modern">
+                    <label asp-for="SenhaFichaMedica" class="form-label-modern">
+                        <i class="bi bi-key-fill"></i>
+                        <span>Senha Ficha Médica</span>
+                    </label>
+                    <input asp-for="SenhaFichaMedica"
+                           type="text"
+                           class="form-control-modern"
+                           placeholder="Digite a senha" />
+                    <span asp-validation-for="SenhaFichaMedica" class="field-validation-error"></span>
+                    <div class="form-helper-text">
+                        <i class="bi bi-info-circle"></i>
+                        <span>Senha para acesso às fichas médicas dos alunos</span>
+                    </div>
+                </div>
+
+                <!-- Adicione outros campos aqui conforme novas propriedades -->
+                <!-- Exemplo de campo adicional (comentado):
+                <div class="form-group-modern">
+                    <label asp-for="OutroParametro" class="form-label-modern">
+                        <i class="bi bi-sliders"></i>
+                        <span>Outro Parâmetro</span>
+                    </label>
+                    <input asp-for="OutroParametro"
+                           class="form-control-modern"
+                           placeholder="Digite o valor" />
+                    <span asp-validation-for="OutroParametro" class="field-validation-error"></span>
+                </div>
+                -->
+                <!-- Submit Button -->
+                <button type="submit" class="btn-save-config">
+                    <i class="bi bi-check-circle-fill"></i>
+                    <span>Salvar Configurações</span>
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add animation to card on load
+            const configCard = document.querySelector('.config-card');
+            configCard.style.opacity = '0';
+            configCard.style.transform = 'translateY(20px)';
+
+            setTimeout(function() {
+                configCard.style.transition = 'all 0.5s ease';
+                configCard.style.opacity = '1';
+                configCard.style.transform = 'translateY(0)';
+            }, 100);
+
+            // Visual feedback for filled inputs
+            const inputs = document.querySelectorAll('.form-control-modern');
+            inputs.forEach(function(input) {
+                // Check on load
+                if (input.value) {
+                    input.style.backgroundColor = '#fafafa';
+                }
+
+                input.addEventListener('input', function() {
+                    if (this.value) {
+                        this.style.backgroundColor = '#fafafa';
+                    } else {
+                        this.style.backgroundColor = 'white';
+                    }
+                });
+            });
+
+            // Button loading state on submit
+            const form = document.querySelector('form');
+            const button = document.querySelector('.btn-save-config');
+
+            form.addEventListener('submit', function() {
+                button.disabled = true;
+                button.innerHTML = '<i class="bi bi-hourglass-split"></i> Salvando...';
+                button.style.opacity = '0.7';
+            });
+        });
+    </script>
+}
