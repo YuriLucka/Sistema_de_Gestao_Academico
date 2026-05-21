@@ -34,6 +34,7 @@ namespace CAA.Data
             await FichaMedicaSeeder.SeedAsync(serviceProvider);
             await ContatoInternoSeeder.SeedAsync(serviceProvider);
             await ContatoExternoSeeder.SeedAsync(serviceProvider);
+            await ProuniCampoSeeder.SeedAsync(serviceProvider);
             // Adicione outros seeders aqui conforme necessário
         }
     }
