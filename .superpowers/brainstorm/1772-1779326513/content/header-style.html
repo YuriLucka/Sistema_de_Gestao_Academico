@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Estilo do Header</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:#111;color:#fff;padding:32px 24px}
+h1{font-size:1.4rem;font-weight:600;color:#e5e7eb;margin-bottom:6px}
+.subtitle{color:#6b7280;font-size:.9rem;margin-bottom:32px}
+
+.cards{display:flex;flex-direction:column;gap:20px}
+
+.card{border:2px solid #2a2a2a;border-radius:16px;overflow:hidden;cursor:pointer;transition:all .25s;background:#1a1a1a}
+.card:hover{border-color:rgba(37,211,102,.35);transform:translateY(-2px)}
+.card.selected{border-color:#25D366;box-shadow:0 0 0 4px rgba(37,211,102,.12)}
+
+/* Shared sidebar stub */
+.preview{display:flex;height:220px;overflow:hidden}
+.sidebar-stub{width:160px;background:linear-gradient(180deg,#050f0a 0%,#071a14 60%,#050f0a 100%);display:flex;flex-direction:column;padding:14px 0;flex-shrink:0;border-right:1px solid rgba(37,211,102,.15)}
+.sb-logo{display:flex;align-items:center;gap:8px;padding:0 14px 14px;border-bottom:1px solid rgba(37,211,102,.12);margin-bottom:8px}
+.sb-logo .ico{width:26px;height:26px;background:linear-gradient(135deg,#25D366,#128C7E);border-radius:6px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.72rem;flex-shrink:0}
+.sb-logo .txt{font-size:.68rem;font-weight:700;color:#e5e7eb;line-height:1.2}
+.sb-nav{display:flex;align-items:center;gap:7px;padding:7px 14px;font-size:.72rem;font-weight:500;color:rgba(255,255,255,.45)}
+.sb-nav i{font-size:.85rem}
+.sb-nav.active{color:#fff;background:rgba(37,211,102,.14);border-left:3px solid #25D366;padding-left:11px}
+
+.main{flex:1;display:flex;flex-direction:column}
+.content-area{flex:1;background:#f4f6f8;padding:14px;display:flex;flex-direction:column;gap:8px}
+.mock-card{background:#fff;border-radius:8px;padding:10px 12px;border:1px solid #e5e7eb}
+.mock-card .m{font-size:1rem;font-weight:700;color:#1a2332}
+.mock-card .l{font-size:.62rem;color:#9ca3af}
+
+/* ── Header A — Clean White ── */
+.header-a{height:52px;background:#fff;border-bottom:1px solid #e5e7eb;display:flex;align-items:center;padding:0 16px;gap:12px}
+.hbtn{width:34px;height:34px;border-radius:8px;border:1px solid #e5e7eb;background:#f9fafb;display:flex;align-items:center;justify-content:center;color:#6b7280;font-size:.9rem}
+.hpage{font-size:.85rem;font-weight:600;color:#1a2332;flex:1}
+.hbadge{background:rgba(37,211,102,.12);color:#128C7E;font-size:.62rem;font-weight:600;padding:2px 7px;border-radius:20px}
+.havatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#25D366,#128C7E);flex-shrink:0}
+.hname{font-size:.72rem;font-weight:600;color:#374151}
+
+/* ── Header B — Accent Line ── */
+.header-b{height:52px;background:#fff;border-bottom:2px solid transparent;border-image:linear-gradient(90deg,#25D366,#128C7E) 1;display:flex;align-items:center;padding:0 16px;gap:12px;box-shadow:0 2px 8px rgba(37,211,102,.1)}
+.hpage-b{font-size:.85rem;font-weight:600;color:#1a2332;flex:1}
+.hchip{background:linear-gradient(135deg,rgba(37,211,102,.12),rgba(18,140,126,.12));border:1px solid rgba(37,211,102,.25);color:#128C7E;font-size:.62rem;font-weight:600;padding:3px 8px;border-radius:20px}
+.havatar-b{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#25D366,#128C7E);flex-shrink:0;box-shadow:0 2px 6px rgba(37,211,102,.25)}
+
+/* ── Header C — Tinted ── */
+.header-c{height:52px;background:linear-gradient(135deg,#f0fdf7 0%,#f8fffe 100%);border-bottom:1px solid rgba(37,211,102,.2);display:flex;align-items:center;padding:0 16px;gap:12px}
+.hbtn-c{width:34px;height:34px;border-radius:8px;border:1px solid rgba(37,211,102,.2);background:rgba(37,211,102,.06);display:flex;align-items:center;justify-content:center;color:#128C7E;font-size:.9rem}
+.hpage-c{font-size:.85rem;font-weight:600;color:#064e3b;flex:1}
+.hbreadcrumb{font-size:.65rem;color:#128C7E;display:flex;align-items:center;gap:4px}
+.havatar-c{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#25D366,#128C7E);flex-shrink:0}
+
+.card-label{padding:14px 16px;border-top:1px solid #242424;display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
+.card-label-text h3{font-size:.9rem;font-weight:600;color:#e5e7eb;margin-bottom:3px}
+.card-label-text p{font-size:.78rem;color:#6b7280;line-height:1.5}
+.badge{font-size:.62rem;font-weight:600;padding:2px 8px;border-radius:20px;white-space:nowrap}
+.badge-rec{background:rgba(37,211,102,.15);color:#25D366;border:1px solid rgba(37,211,102,.3)}
+.badge-alt{background:rgba(99,102,241,.15);color:#818cf8;border:1px solid rgba(99,102,241,.3)}
+.select-btn{padding:7px 16px;background:rgba(37,211,102,.1);border:1px solid rgba(37,211,102,.25);border-radius:8px;color:#25D366;font-size:.78rem;font-weight:600;cursor:pointer;white-space:nowrap;font-family:inherit;transition:all .2s;flex-shrink:0}
+.select-btn:hover,.card.selected .select-btn{background:#25D366;color:#050f0a}
+
+.hint{text-align:center;color:#4b5563;font-size:.78rem;margin-top:20px}
+</style>
+</head>
+<body>
+<h1>Como deve ser o header?</h1>
+<p class="subtitle">Sidebar já definida como dark expandida — agora escolhe o estilo da barra superior</p>
+
+<div class="cards">
+
+  <!-- A: Clean White -->
+  <div class="card" id="card-a" onclick="sel('a')">
+    <div class="preview">
+      <div class="sidebar-stub">
+        <div class="sb-logo"><div class="ico">A</div><div class="txt">CAA<br>Acadêmico</div></div>
+        <div class="sb-nav"><i class="bi bi-house-door"></i> Home</div>
+        <div class="sb-nav active"><i class="bi bi-people"></i> Atendimento</div>
+        <div class="sb-nav"><i class="bi bi-journal-bookmark"></i> Acadêmico</div>
+        <div class="sb-nav"><i class="bi bi-mortarboard"></i> ProUni</div>
+      </div>
+      <div class="main">
+        <div class="header-a">
+          <div class="hbtn"><i class="bi bi-list"></i></div>
+          <span class="hpage">Atendimento</span>
+          <span class="hbadge">Admin</span>
+          <span class="hname">Yuri L.</span>
+          <div class="havatar"></div>
+        </div>
+        <div class="content-area">
+          <div class="mock-card"><div class="m">142</div><div class="l">Matrículas</div></div>
+          <div class="mock-card"><div class="m">28</div><div class="l">Estágios</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="card-label">
+      <div class="card-label-text">
+        <h3>A — Clean White</h3>
+        <p>Header branco puro, borda cinza suave. Visual neutro e profissional. Foco total no conteúdo.</p>
+      </div>
+      <button class="select-btn">Selecionar A</button>
+    </div>
+  </div>
+
+  <!-- B: Accent Line -->
+  <div class="card" id="card-b" onclick="sel('b')">
+    <div class="preview">
+      <div class="sidebar-stub">
+        <div class="sb-logo"><div class="ico">A</div><div class="txt">CAA<br>Acadêmico</div></div>
+        <div class="sb-nav"><i class="bi bi-house-door"></i> Home</div>
+        <div class="sb-nav active"><i class="bi bi-people"></i> Atendimento</div>
+        <div class="sb-nav"><i class="bi bi-journal-bookmark"></i> Acadêmico</div>
+        <div class="sb-nav"><i class="bi bi-mortarboard"></i> ProUni</div>
+      </div>
+      <div class="main">
+        <div class="header-b">
+          <div class="hbtn"><i class="bi bi-list"></i></div>
+          <span class="hpage-b">Atendimento</span>
+          <span class="hchip">Admin</span>
+          <span style="font-size:.72rem;font-weight:600;color:#374151">Yuri L.</span>
+          <div class="havatar-b"></div>
+        </div>
+        <div class="content-area">
+          <div class="mock-card"><div class="m">142</div><div class="l">Matrículas</div></div>
+          <div class="mock-card"><div class="m">28</div><div class="l">Estágios</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="card-label">
+      <div class="card-label-text">
+        <span class="badge badge-rec">Recomendado</span>
+        <h3>B — Accent Line + Sombra Verde</h3>
+        <p>Header branco com borda inferior em gradiente verde e leve sombra colorida. Liga visualmente com a sidebar.</p>
+      </div>
+      <button class="select-btn">Selecionar B</button>
+    </div>
+  </div>
+
+  <!-- C: Tinted Green -->
+  <div class="card" id="card-c" onclick="sel('c')">
+    <div class="preview">
+      <div class="sidebar-stub">
+        <div class="sb-logo"><div class="ico">A</div><div class="txt">CAA<br>Acadêmico</div></div>
+        <div class="sb-nav"><i class="bi bi-house-door"></i> Home</div>
+        <div class="sb-nav active"><i class="bi bi-people"></i> Atendimento</div>
+        <div class="sb-nav"><i class="bi bi-journal-bookmark"></i> Acadêmico</div>
+        <div class="sb-nav"><i class="bi bi-mortarboard"></i> ProUni</div>
+      </div>
+      <div class="main">
+        <div class="header-c">
+          <div class="hbtn-c"><i class="bi bi-list"></i></div>
+          <div style="flex:1">
+            <div class="hpage-c">Atendimento</div>
+            <div class="hbreadcrumb"><i class="bi bi-house-door" style="font-size:.6rem"></i> Home <i class="bi bi-chevron-right" style="font-size:.55rem"></i> Atendimento</div>
+          </div>
+          <div class="havatar-c"></div>
+        </div>
+        <div class="content-area">
+          <div class="mock-card"><div class="m">142</div><div class="l">Matrículas</div></div>
+          <div class="mock-card"><div class="m">28</div><div class="l">Estágios</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="card-label">
+      <div class="card-label-text">
+        <h3>C — Tinted Green + Breadcrumb</h3>
+        <p>Header com fundo ligeiramente esverdeado e breadcrumb de navegação. Mais colorido, identidade verde forte.</p>
+      </div>
+      <button class="select-btn">Selecionar C</button>
+    </div>
+  </div>
+
+</div>
+<p class="hint">Clique para selecionar · Pode responder no terminal também</p>
+
+<script>
+function sel(id){
+  document.querySelectorAll('.card').forEach(c=>c.classList.remove('selected'));
+  document.getElementById('card-'+id).classList.add('selected');
+  if(window.__companion_select) window.__companion_select(id,'Opção '+id.toUpperCase());
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Estilos de Sidebar — CAA</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:#111;color:#fff;padding:32px 24px;min-height:100vh}
+h1{font-size:1.4rem;font-weight:600;color:#e5e7eb;margin-bottom:6px}
+.subtitle{color:#6b7280;font-size:.9rem;margin-bottom:32px}
+
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+@media(max-width:900px){.cards{grid-template-columns:1fr}}
+
+.card{border:2px solid transparent;border-radius:16px;overflow:hidden;cursor:pointer;transition:all .25s;background:#1a1a1a}
+.card:hover{transform:translateY(-4px);border-color:rgba(37,211,102,.4)}
+.card.selected{border-color:#25D366;box-shadow:0 0 0 4px rgba(37,211,102,.15)}
+
+.card-preview{height:280px;display:flex;overflow:hidden;position:relative}
+
+/* ── OPÇÃO A — Dark Solid ── */
+.sidebar-a{width:80px;background:linear-gradient(180deg,#0a1a17 0%,#064e3b 100%);display:flex;flex-direction:column;align-items:center;padding:16px 0;gap:4px;flex-shrink:0}
+.sidebar-a .logo-a{width:36px;height:36px;background:linear-gradient(135deg,#25D366,#128C7E);border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.9rem;margin-bottom:16px}
+.sidebar-a .nav-a{width:48px;height:40px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;color:rgba(255,255,255,.5);transition:all .2s}
+.sidebar-a .nav-a.active{background:rgba(37,211,102,.2);color:#25D366}
+.sidebar-a .nav-a:nth-child(3){background:rgba(37,211,102,.2);color:#25D366}
+.main-a{flex:1;background:#f8fafb;display:flex;flex-direction:column}
+.header-a{height:48px;background:#fff;border-bottom:1px solid #e5e7eb;display:flex;align-items:center;padding:0 16px;gap:8px}
+.header-a .title-a{font-size:.8rem;font-weight:600;color:#1a2332;flex:1}
+.header-a .avatar-a{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#25D366,#128C7E)}
+.content-a{flex:1;padding:14px;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:auto auto;gap:8px}
+.card-a{background:#fff;border-radius:8px;padding:10px;border:1px solid #e5e7eb}
+.card-a .metric{font-size:1.2rem;font-weight:700;color:#1a2332}
+.card-a .lbl{font-size:.65rem;color:#9ca3af}
+.card-a:first-child{grid-column:span 2;height:60px}
+
+/* ── OPÇÃO B — Dark Expanded ── */
+.sidebar-b{width:140px;background:linear-gradient(180deg,#050f0a 0%,#071a14 60%,#050f0a 100%);display:flex;flex-direction:column;padding:14px 0;flex-shrink:0;position:relative}
+.sidebar-b::after{content:'';position:absolute;right:0;top:0;bottom:0;width:1px;background:linear-gradient(to bottom,transparent,rgba(37,211,102,.3),transparent)}
+.sidebar-b .logo-b{display:flex;align-items:center;gap:8px;padding:0 12px 16px;border-bottom:1px solid rgba(37,211,102,.15)}
+.sidebar-b .logo-b .ico{width:28px;height:28px;background:linear-gradient(135deg,#25D366,#128C7E);border-radius:6px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.75rem;flex-shrink:0}
+.sidebar-b .logo-b .txt{font-size:.7rem;font-weight:700;color:#e5e7eb;line-height:1.2}
+.sidebar-b .section-lbl{font-size:.55rem;font-weight:600;text-transform:uppercase;color:rgba(255,255,255,.3);padding:10px 12px 4px;letter-spacing:.08em}
+.sidebar-b .nav-b{display:flex;align-items:center;gap:6px;padding:7px 12px;font-size:.72rem;font-weight:500;color:rgba(255,255,255,.55);border-radius:0;transition:all .2s;position:relative}
+.sidebar-b .nav-b i{font-size:.9rem;flex-shrink:0}
+.sidebar-b .nav-b.active{color:#fff;background:rgba(37,211,102,.15)}
+.sidebar-b .nav-b.active::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:#25D366;border-radius:0 2px 2px 0}
+.main-b{flex:1;background:#f4f6f8;display:flex;flex-direction:column}
+.header-b{height:44px;background:#fff;border-bottom:1px solid #e5e7eb;display:flex;align-items:center;padding:0 14px;gap:8px}
+.header-b .title-b{font-size:.78rem;font-weight:600;color:#1a2332;flex:1}
+.header-b .badge-b{background:rgba(37,211,102,.12);color:#128C7E;font-size:.6rem;font-weight:600;padding:2px 6px;border-radius:20px}
+.header-b .avatar-b{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#25D366,#128C7E)}
+.content-b{flex:1;padding:12px;display:flex;flex-direction:column;gap:7px}
+.card-b{background:#fff;border-radius:8px;padding:10px 12px;border:1px solid #e5e7eb;border-left:3px solid #25D366}
+.card-b .metric{font-size:1.1rem;font-weight:700;color:#1a2332}
+.card-b .lbl{font-size:.62rem;color:#9ca3af}
+
+/* ── OPÇÃO C — Glass Dark ── */
+.sidebar-c{width:140px;background:rgba(5,15,10,.95);backdrop-filter:blur(20px);display:flex;flex-direction:column;padding:14px 0;flex-shrink:0;position:relative;border-right:1px solid rgba(37,211,102,.2)}
+.sidebar-c .glow{position:absolute;top:0;right:0;bottom:0;width:60%;background:radial-gradient(ellipse at right,rgba(37,211,102,.07),transparent 70%);pointer-events:none}
+.sidebar-c .logo-c{display:flex;align-items:center;gap:8px;padding:0 12px 14px;border-bottom:1px solid rgba(37,211,102,.12)}
+.sidebar-c .logo-c .ico{width:28px;height:28px;background:linear-gradient(135deg,#25D366,#128C7E);border-radius:6px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.75rem;flex-shrink:0;box-shadow:0 0 12px rgba(37,211,102,.35)}
+.sidebar-c .logo-c .txt{font-size:.7rem;font-weight:700;color:#e5e7eb;line-height:1.2}
+.sidebar-c .section-lbl{font-size:.55rem;font-weight:600;text-transform:uppercase;color:rgba(37,211,102,.4);padding:10px 12px 4px;letter-spacing:.1em}
+.sidebar-c .nav-c{display:flex;align-items:center;gap:6px;padding:7px 12px;font-size:.72rem;font-weight:500;color:rgba(255,255,255,.5);transition:all .2s;position:relative;z-index:1}
+.sidebar-c .nav-c i{font-size:.9rem;flex-shrink:0}
+.sidebar-c .nav-c.active{color:#25D366;background:rgba(37,211,102,.12);border-right:2px solid #25D366}
+.sidebar-c .nav-c:hover{color:rgba(255,255,255,.8)}
+.main-c{flex:1;background:#0d1a15;display:flex;flex-direction:column}
+.header-c{height:44px;background:rgba(10,26,20,.9);border-bottom:1px solid rgba(37,211,102,.12);display:flex;align-items:center;padding:0 14px;gap:8px;backdrop-filter:blur(10px)}
+.header-c .title-c{font-size:.78rem;font-weight:600;color:#e5e7eb;flex:1}
+.header-c .avatar-c{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#25D366,#128C7E);box-shadow:0 0 8px rgba(37,211,102,.3)}
+.content-c{flex:1;padding:12px;display:flex;flex-direction:column;gap:7px}
+.card-c{background:rgba(255,255,255,.04);border-radius:8px;padding:10px 12px;border:1px solid rgba(37,211,102,.12)}
+.card-c .metric{font-size:1.1rem;font-weight:700;color:#e5e7eb}
+.card-c .lbl{font-size:.62rem;color:rgba(255,255,255,.4)}
+
+/* Cards selection */
+.card-label{background:#1a1a1a;padding:16px;border-top:1px solid #2a2a2a}
+.card-label h3{font-size:.95rem;font-weight:600;color:#e5e7eb;margin-bottom:4px}
+.card-label p{font-size:.8rem;color:#6b7280;line-height:1.5}
+.badge{display:inline-block;font-size:.65rem;font-weight:600;padding:2px 8px;border-radius:20px;margin-bottom:6px}
+.badge-rec{background:rgba(37,211,102,.15);color:#25D366;border:1px solid rgba(37,211,102,.3)}
+.badge-alt{background:rgba(99,102,241,.15);color:#818cf8;border:1px solid rgba(99,102,241,.3)}
+
+.select-btn{margin-top:12px;display:block;width:100%;padding:9px;background:rgba(37,211,102,.1);border:1px solid rgba(37,211,102,.25);border-radius:8px;color:#25D366;font-size:.8rem;font-weight:600;text-align:center;cursor:pointer;transition:all .2s;font-family:inherit}
+.select-btn:hover,.card.selected .select-btn{background:#25D366;color:#050f0a}
+
+.hint{text-align:center;color:#4b5563;font-size:.78rem;margin-top:20px}
+</style>
+</head>
+<body>
+<h1>Qual estilo de layout combina mais com o sistema?</h1>
+<p class="subtitle">Escolha o que mais agrada visualmente — podemos ajustar detalhes depois</p>
+
+<div class="cards">
+
+  <!-- A: Icônico -->
+  <div class="card" id="card-a" onclick="select('a')">
+    <div class="card-preview">
+      <div class="sidebar-a">
+        <div class="logo-a">A</div>
+        <div class="nav-a"><i class="bi bi-house-door"></i></div>
+        <div class="nav-a active"><i class="bi bi-people"></i></div>
+        <div class="nav-a"><i class="bi bi-journal-bookmark"></i></div>
+        <div class="nav-a"><i class="bi bi-mortarboard"></i></div>
+        <div class="nav-a"><i class="bi bi-link-45deg"></i></div>
+      </div>
+      <div class="main-a">
+        <div class="header-a">
+          <i class="bi bi-list" style="color:#6b7280;font-size:.9rem"></i>
+          <span class="title-a">Atendimento</span>
+          <div class="avatar-a"></div>
+        </div>
+        <div class="content-a">
+          <div class="card-a" style="grid-column:span 2;display:flex;align-items:center;gap:8px">
+            <i class="bi bi-people" style="color:#25D366;font-size:1rem"></i>
+            <span style="font-size:.7rem;font-weight:600;color:#1a2332">Contatos</span>
+          </div>
+          <div class="card-a"><div class="metric">142</div><div class="lbl">Matrículas</div></div>
+          <div class="card-a"><div class="metric">28</div><div class="lbl">Estágios</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="card-label">
+      <span class="badge badge-alt">Compacto</span>
+      <h3>A — Sidebar Icônico</h3>
+      <p>Sidebar estreita com apenas ícones. Mais espaço para o conteúdo. Tooltips revelam os nomes.</p>
+      <button class="select-btn">Selecionar A</button>
+    </div>
+  </div>
+
+  <!-- B: Expandido Claro -->
+  <div class="card" id="card-b" onclick="select('b')">
+    <div class="card-preview">
+      <div class="sidebar-b">
+        <div class="logo-b"><div class="ico">A</div><div class="txt">CAA<br/>Acadêmico</div></div>
+        <div class="section-lbl">Menu</div>
+        <div class="nav-b"><i class="bi bi-house-door"></i> Home</div>
+        <div class="nav-b active"><i class="bi bi-people"></i> Atendimento</div>
+        <div class="nav-b"><i class="bi bi-journal-bookmark"></i> Acadêmico</div>
+        <div class="nav-b"><i class="bi bi-mortarboard"></i> ProUni</div>
+        <div class="nav-b"><i class="bi bi-link-45deg"></i> Links</div>
+      </div>
+      <div class="main-b">
+        <div class="header-b">
+          <span class="title-b">Atendimento</span>
+          <span class="badge-b">Admin</span>
+          <div class="avatar-b"></div>
+        </div>
+        <div class="content-b">
+          <div class="card-b"><div class="metric">142</div><div class="lbl">Matrículas ativas</div></div>
+          <div class="card-b"><div class="metric">28</div><div class="lbl">Estágios vigentes</div></div>
+          <div class="card-b"><div class="metric">7</div><div class="lbl">ProUni pendentes</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="card-label">
+      <span class="badge badge-rec">Recomendado</span>
+      <h3>B — Sidebar Expandida + Header Claro</h3>
+      <p>Dark sidebar com texto, header branco. Melhor legibilidade. Consistente com o design do login.</p>
+      <button class="select-btn">Selecionar B</button>
+    </div>
+  </div>
+
+  <!-- C: Full Dark -->
+  <div class="card" id="card-c" onclick="select('c')">
+    <div class="card-preview">
+      <div class="sidebar-c">
+        <div class="glow"></div>
+        <div class="logo-c"><div class="ico">A</div><div class="txt">CAA<br/>Acadêmico</div></div>
+        <div class="section-lbl">Menu</div>
+        <div class="nav-c"><i class="bi bi-house-door"></i> Home</div>
+        <div class="nav-c active"><i class="bi bi-people"></i> Atendimento</div>
+        <div class="nav-c"><i class="bi bi-journal-bookmark"></i> Acadêmico</div>
+        <div class="nav-c"><i class="bi bi-mortarboard"></i> ProUni</div>
+        <div class="nav-c"><i class="bi bi-link-45deg"></i> Links</div>
+      </div>
+      <div class="main-c">
+        <div class="header-c">
+          <span class="title-c">Atendimento</span>
+          <div class="avatar-c"></div>
+        </div>
+        <div class="content-c">
+          <div class="card-c"><div class="metric">142</div><div class="lbl">Matrículas ativas</div></div>
+          <div class="card-c"><div class="metric">28</div><div class="lbl">Estágios vigentes</div></div>
+          <div class="card-c"><div class="metric">7</div><div class="lbl">ProUni pendentes</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="card-label">
+      <span class="badge badge-alt">Full Dark</span>
+      <h3>C — Full Dark + Glassmorphism</h3>
+      <p>Tudo escuro, mesma identidade do login. Conteúdo também dark. Para quem prefere tema escuro total.</p>
+      <button class="select-btn">Selecionar C</button>
+    </div>
+  </div>
+
+</div>
+
+<p class="hint">Clique para selecionar · Pode me dizer no terminal também</p>
+
+<script>
+function select(id) {
+  document.querySelectorAll('.card').forEach(c => c.classList.remove('selected'));
+  document.getElementById('card-' + id).classList.add('selected');
+  if (window.__companion_select) window.__companion_select(id, 'Opção ' + id.toUpperCase());
+}
+</script>
+</body>
+</html>
