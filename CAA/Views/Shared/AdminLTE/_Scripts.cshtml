@@ -1,34 +1,147 @@
-﻿<script src="~/lib/jquery/dist/jquery.min.js"></script>
-<script src="~/lib/overlayscrollbars/browser/overlayscrollbars.browser.es6.min.js"></script>
-<script src="~/lib/popperjs/core/dist/umd/popper.min.js"></script>
-<script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
-<script src="~/lib/admin-lte/dist/js/adminlte.min.js"></script>
-<script src="~/lib/apexcharts/dist/apexcharts.js"></script>
-<script src="~/lib/jsvectormap/dist/js/jsvectormap.js"></script>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 
-<script src="~/js/siteActiveAutomaticoMenu.js" asp-append-version="true"></script>
-
-<!--begin::OverlayScrollbars Configure-->
 <script>
-    const SELECTOR_SIDEBAR_WRAPPER = '.sidebar-wrapper';
-    const Default = {
-      scrollbarTheme: 'os-theme-light',
-      scrollbarAutoHide: 'leave',
-      scrollbarClickScroll: true,
-    };
-    document.addEventListener('DOMContentLoaded', function () {
-      const sidebarWrapper = document.querySelector(SELECTOR_SIDEBAR_WRAPPER);
-      if (sidebarWrapper && typeof OverlayScrollbarsGlobal?.OverlayScrollbars !== 'undefined') {
-        OverlayScrollbarsGlobal.OverlayScrollbars(sidebarWrapper, {
-          scrollbars: {
-            theme: Default.scrollbarTheme,
-            autoHide: Default.scrollbarAutoHide,
-            clickScroll: Default.scrollbarClickScroll,
-          },
-        });
-      }
-    });
-</script>
-<!--end::OverlayScrollbars Configure-->
+(function () {
+    'use strict';
 
-<script src="~/js/colorswitch.js" asp-append-version="true"></script>
+    var STORAGE_KEY = 'caa-sidebar';
+
+    function isMobile() { return window.innerWidth <= 992; }
+
+    /* ── Restaurar estado salvo (antes do DOMContentLoaded para evitar flash) ── */
+    if (!isMobile()) {
+        if (localStorage.getItem(STORAGE_KEY) === 'mini') {
+            document.body.classList.remove('sidebar-expanded');
+        }
+    } else {
+        document.body.classList.remove('sidebar-expanded');
+    }
+
+    /* ── DOMContentLoaded ────────────────────────────────────────────────────── */
+    document.addEventListener('DOMContentLoaded', function () {
+
+        /* Marcar link ativo */
+        var url = window.location.href;
+
+        document.querySelectorAll('#sidebar a:not(.menu-parent):not(.brand-full):not(.brand-mini)').forEach(function (a) {
+            if (a.href === url) {
+                a.classList.add('active');
+            }
+        });
+
+        /* Abrir submenu pai do item ativo */
+        var activeSubLink = document.querySelector('#sidebar .submenu a.active');
+        if (activeSubLink) {
+            var parentItem = activeSubLink.closest('.has-submenu');
+            if (parentItem) parentItem.classList.add('open');
+        }
+
+        /* Breadcrumb */
+        buildBreadcrumb();
+
+        /* Resize: ajustar estado no redimensionamento */
+        window.addEventListener('resize', function () {
+            if (isMobile()) {
+                document.body.classList.remove('sidebar-expanded');
+            }
+        });
+    });
+
+    /* ── Toggle sidebar ─────────────────────────────────────────────────────── */
+    document.querySelectorAll('[data-toggle="sidebar"]').forEach(function (btn) {
+        btn.addEventListener('click', function (e) {
+            e.preventDefault();
+            document.body.classList.toggle('sidebar-expanded');
+            if (!isMobile()) {
+                localStorage.setItem(STORAGE_KEY,
+                    document.body.classList.contains('sidebar-expanded') ? 'expanded' : 'mini'
+                );
+            }
+        });
+    });
+
+    /* Fechar sidebar no mobile ao clicar no backdrop */
+    document.addEventListener('click', function (e) {
+        if (isMobile() && document.body.classList.contains('sidebar-expanded')) {
+            var sidebar = document.getElementById('sidebar');
+            if (sidebar && !sidebar.contains(e.target) && !e.target.closest('[data-toggle="sidebar"]')) {
+                document.body.classList.remove('sidebar-expanded');
+            }
+        }
+    });
+
+    /* ── Acordeão de submenus ───────────────────────────────────────────────── */
+    document.querySelectorAll('.menu-parent').forEach(function (link) {
+        link.addEventListener('click', function (e) {
+            e.preventDefault();
+
+            /* No estado mini (desktop), não abrir submenus */
+            if (!isMobile() && !document.body.classList.contains('sidebar-expanded')) return;
+
+            var item = this.closest('.has-submenu');
+            var isOpen = item.classList.contains('open');
+
+            /* Fechar todos */
+            document.querySelectorAll('.has-submenu.open').forEach(function (li) {
+                li.classList.remove('open');
+            });
+
+            if (!isOpen) item.classList.add('open');
+        });
+    });
+
+    /* ── Breadcrumb dinâmico ────────────────────────────────────────────────── */
+    function buildBreadcrumb() {
+        var bc = document.getElementById('topbar-breadcrumb');
+        if (!bc) return;
+
+        var activeLink = document.querySelector('#sidebar a.active:not(.menu-parent):not(.brand-full):not(.brand-mini)');
+        var sectionName = '';
+        var pageName = '';
+
+        if (activeLink) {
+            pageName = activeLink.textContent.trim();
+
+            var submenu = activeLink.closest('.submenu');
+            if (submenu) {
+                var parentItem = submenu.closest('.has-submenu');
+                if (parentItem) {
+                    var parentLabel = parentItem.querySelector('.menu-label');
+                    sectionName = parentLabel ? parentLabel.textContent.trim() : '';
+                }
+            }
+        }
+
+        var html = '<a href="/" class="bc-home"><i class="bi bi-house-door"></i> Home</a>';
+
+        if (sectionName) {
+            html += '<i class="bi bi-chevron-right bc-sep"></i>';
+            html += '<span class="bc-section">' + sectionName + '</span>';
+        }
+
+        if (pageName && pageName !== 'Home') {
+            html += '<i class="bi bi-chevron-right bc-sep"></i>';
+            html += '<span class="bc-current">' + pageName + '</span>';
+        }
+
+        bc.innerHTML = html;
+    }
+
+    /* ── Fullscreen ─────────────────────────────────────────────────────────── */
+    document.querySelectorAll('[data-toggle="fullscreen"]').forEach(function (btn) {
+        btn.addEventListener('click', function (e) {
+            e.preventDefault();
+            var icon = this.querySelector('i');
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+                if (icon) icon.className = 'bi bi-fullscreen-exit';
+            } else {
+                document.exitFullscreen();
+                if (icon) icon.className = 'bi bi-arrows-fullscreen';
+            }
+        });
+    });
+
+})();
+</script>
