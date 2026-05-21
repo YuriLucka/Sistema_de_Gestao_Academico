@@ -1,0 +1,435 @@
+@{
+    Layout = null;
+    var returnUrl = ViewBag.ReturnUrl as string ?? "";
+}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login — CAA Acadêmico</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect width='48' height='48' rx='8' fill='%2300AD8E'/%3E%3Ctext x='24' y='32' text-anchor='middle' font-size='28' font-family='Arial,sans-serif' fill='white' font-weight='bold'%3EA%3C/text%3E%3C/svg%3E" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --primary:       #128C7E;
+            --primary-dark:  #064e3b;
+            --primary-light: #25D366;
+            --black:         #0a1a17;
+            --dark-panel:    rgba(10, 26, 23, 0.97);
+            --text-primary:  #F5F5F5;
+            --text-secondary: rgba(245, 245, 245, 0.5);
+            --input-bg:      rgba(255, 255, 255, 0.04);
+            --input-border:  rgba(18, 140, 126, 0.3);
+            --input-focus:   rgba(18, 140, 126, 0.65);
+        }
+
+        html, body { height: 100%; font-family: 'Inter', sans-serif; background: var(--black); }
+
+        .page { display: flex; width: 100vw; height: 100dvh; overflow: hidden; }
+
+        /* ══ LEFT ══ */
+        .left {
+            position: relative;
+            flex: 1.2;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 52px 48px;
+        }
+
+        .left video {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 1;
+        }
+
+        .left::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(160deg, rgba(5,15,10,0.88) 0%, rgba(7,26,20,0.70) 45%, rgba(5,15,10,0.92) 100%);
+            z-index: 2;
+        }
+
+        .left::after {
+            content: '';
+            position: absolute;
+            right: 0; top: 0; bottom: 0;
+            width: 200px;
+            background: linear-gradient(to right, transparent, var(--black));
+            z-index: 3;
+        }
+
+        .left .accent-line {
+            position: absolute;
+            left: 0; top: 10%; bottom: 10%;
+            width: 4px;
+            background: linear-gradient(to bottom, transparent, var(--primary), transparent);
+            z-index: 4;
+        }
+
+        .left-top {
+            position: relative;
+            z-index: 5;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .left-top img {
+            height: 44px;
+            object-fit: contain;
+            filter: drop-shadow(0 4px 12px rgba(37,211,102,0.3));
+        }
+
+        .left-bottom {
+            position: relative;
+            z-index: 5;
+        }
+
+        .left-bottom h1 {
+            font-size: clamp(30px, 3.2vw, 46px);
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1.15;
+            margin-bottom: 14px;
+            letter-spacing: -0.8px;
+        }
+
+        .left-bottom h1 .highlight {
+            background: linear-gradient(135deg, var(--primary-light), var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .left-bottom p {
+            font-size: 13.5px;
+            color: var(--text-secondary);
+            line-height: 1.75;
+            max-width: 380px;
+            margin-bottom: 40px;
+        }
+
+        .stats-row { display: flex; gap: 32px; }
+        .stat-item { display: flex; flex-direction: column; gap: 2px; }
+        .stat-item strong { font-size: 22px; font-weight: 700; color: var(--primary-light); }
+        .stat-item span { font-size: 11px; color: var(--text-secondary); letter-spacing: 0.5px; }
+        .stat-divider { width: 1px; background: rgba(18,140,126,0.25); align-self: stretch; }
+
+        /* ══ RIGHT ══ */
+        .right {
+            width: 440px;
+            min-width: 390px;
+            background: var(--dark-panel);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 52px 48px;
+            position: relative;
+            border-left: 1px solid rgba(18,140,126,0.12);
+            overflow: hidden;
+        }
+
+        .right::before {
+            content: '';
+            position: absolute;
+            top: -80px; right: -80px;
+            width: 220px; height: 220px;
+            background: radial-gradient(circle, rgba(37,211,102,0.09), transparent 70%);
+            pointer-events: none;
+        }
+
+        .right::after {
+            content: '';
+            position: absolute;
+            bottom: -80px; left: -80px;
+            width: 200px; height: 200px;
+            background: radial-gradient(circle, rgba(18,140,126,0.07), transparent 70%);
+            pointer-events: none;
+        }
+
+        .panel-header { margin-bottom: 36px; }
+
+        .panel-header .eyebrow {
+            display: flex; align-items: center; gap: 8px; margin-bottom: 10px;
+        }
+        .panel-header .eyebrow .line {
+            width: 24px; height: 2px; background: var(--primary); border-radius: 2px;
+        }
+        .panel-header .eyebrow span {
+            font-size: 10px; font-weight: 600; letter-spacing: 2.5px;
+            text-transform: uppercase; color: var(--primary-light);
+        }
+
+        .panel-header h2 {
+            font-size: 24px; font-weight: 700; color: var(--text-primary);
+            letter-spacing: -0.4px; margin-bottom: 6px;
+        }
+
+        .panel-header p { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+
+        .form-group { margin-bottom: 20px; }
+
+        .form-group label {
+            display: block; font-size: 11px; font-weight: 600;
+            text-transform: uppercase; letter-spacing: 1.5px;
+            color: var(--text-secondary); margin-bottom: 8px;
+        }
+
+        .input-wrap { position: relative; display: flex; align-items: center; }
+
+        .input-wrap .icon-left {
+            position: absolute; left: 14px; font-size: 15px;
+            color: rgba(37,211,102,0.65); transition: color .25s;
+            pointer-events: none; z-index: 1;
+        }
+
+        .input-wrap input {
+            width: 100%;
+            padding: 13px 14px 13px 42px;
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            border-radius: 10px;
+            color: var(--text-primary);
+            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            transition: border-color .25s, background .25s, box-shadow .25s;
+            outline: none;
+        }
+
+        .input-wrap input::placeholder { color: rgba(245,245,245,0.2); }
+
+        .input-wrap input:focus {
+            border-color: var(--input-focus);
+            background: rgba(255,255,255,0.06);
+            box-shadow: 0 0 0 3px rgba(18,140,126,0.1), inset 0 1px 2px rgba(0,0,0,0.3);
+        }
+
+        .input-wrap:focus-within .icon-left { color: var(--primary-light); }
+
+        .input-wrap .toggle-password {
+            position: absolute; right: 14px; font-size: 16px;
+            color: rgba(37,211,102,0.6); cursor: pointer;
+            background: none; border: none; padding: 0;
+            transition: color .25s; line-height: 1; z-index: 1;
+        }
+        .input-wrap .toggle-password:hover { color: var(--primary-light); }
+
+        .validation-error {
+            background: rgba(220,53,69,0.12);
+            border: 1px solid rgba(220,53,69,0.4);
+            border-radius: 9px;
+            padding: 10px 14px;
+            margin-bottom: 20px;
+            font-size: 12px;
+            color: #FCA5A5;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+        .validation-error i { flex-shrink: 0; margin-top: 1px; }
+
+        .form-options {
+            display: flex; align-items: center;
+            justify-content: space-between; margin-bottom: 28px;
+        }
+
+        .remember { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+        .remember input[type="checkbox"] { display: none; }
+        .remember .checkmark {
+            width: 16px; height: 16px;
+            border: 1px solid var(--input-border);
+            border-radius: 4px; background: var(--input-bg);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 10px; color: transparent; transition: all .2s;
+        }
+        .remember input:checked ~ .checkmark {
+            background: var(--primary); border-color: var(--primary); color: #fff;
+        }
+        .remember-text { font-size: 12px; color: var(--text-secondary); user-select: none; }
+
+        .btn-login {
+            width: 100%; padding: 14px;
+            background: linear-gradient(135deg, var(--primary-light), var(--primary-dark));
+            border: none; border-radius: 10px;
+            color: #fff; font-family: 'Inter', sans-serif;
+            font-size: 13px; font-weight: 700;
+            letter-spacing: 1.5px; text-transform: uppercase;
+            cursor: pointer; display: flex; align-items: center;
+            justify-content: center; gap: 10px;
+            transition: all .25s;
+            box-shadow: 0 4px 24px rgba(18,140,126,0.4);
+            position: relative; overflow: hidden;
+        }
+        .btn-login::before {
+            content: ''; position: absolute; inset: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.12), transparent);
+            opacity: 0; transition: opacity .25s;
+        }
+        .btn-login:hover::before { opacity: 1; }
+        .btn-login:hover { transform: translateY(-1px); box-shadow: 0 8px 32px rgba(18,140,126,0.55); }
+        .btn-login:active { transform: translateY(0); }
+
+        .panel-footer {
+            margin-top: 28px; padding-top: 20px;
+            border-top: 1px solid rgba(18,140,126,0.12);
+            display: flex; align-items: center; gap: 8px;
+        }
+        .panel-footer i { font-size: 13px; color: rgba(37,211,102,0.6); }
+        .panel-footer span { font-size: 11px; color: var(--text-secondary); line-height: 1.5; }
+
+        /* ══ MOBILE ══ */
+        .mobile-brand { display: none; }
+
+        @@media (max-width: 768px) {
+            .page { flex-direction: column; height: 100dvh; overflow: hidden; }
+            .left { display: none; }
+            .right {
+                width: 100%; min-width: unset; height: 100dvh;
+                border-left: none; padding: 40px 28px;
+                background: var(--black); overflow: hidden;
+            }
+            .right::before, .right::after { display: none; }
+            .panel-header, form, .panel-footer { position: relative; z-index: 2; }
+            .mobile-brand {
+                display: flex; align-items: center; gap: 10px;
+                margin-bottom: 32px; position: relative; z-index: 2;
+            }
+            .mobile-brand img { height: 32px; object-fit: contain; }
+        }
+
+        @@media (max-width: 380px) { .right { padding: 32px 20px; } }
+    </style>
+</head>
+<body>
+    <div class="page">
+
+        <!-- ══ LEFT PANEL ══ -->
+        <div class="left">
+            <div class="accent-line"></div>
+
+            <video autoplay muted loop playsinline>
+                <source src="/video/videoLogin.mp4" type="video/mp4" />
+            </video>
+
+            <div class="left-top">
+                <img src="/img/marca_uam_campus_athon_branca_horizontal.png" alt="UAM Sorocaba" />
+            </div>
+
+            <div class="left-bottom">
+                <h1>Sistema de<br /><span class="highlight">Gestão Acadêmica</span></h1>
+                <p>Gerencie matrículas, estágios, documentos, ProUni e atendimento acadêmico em um único sistema integrado.</p>
+                <div class="stats-row">
+                    <div class="stat-item">
+                        <strong>ProUni</strong>
+                        <span>Documentação</span>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat-item">
+                        <strong>Estágios</strong>
+                        <span>Contratos</span>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat-item">
+                        <strong>CAA</strong>
+                        <span>Atendimento</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ══ RIGHT PANEL ══ -->
+        <div class="right">
+            <div class="mobile-brand">
+                <img src="/img/marca_uam_campus_athon_branca_horizontal.png" alt="UAM Sorocaba" />
+            </div>
+
+            <div class="panel-header">
+                <div class="eyebrow">
+                    <div class="line"></div>
+                    <span>Acesso restrito</span>
+                </div>
+                <h2>Entrar no sistema</h2>
+                <p>Insira suas credenciais para acessar o sistema acadêmico da UAM Sorocaba.</p>
+            </div>
+
+            @if (TempData["LoginError"] != null)
+            {
+                <div class="validation-error">
+                    <i class="bi bi-exclamation-circle-fill"></i>
+                    <span>@TempData["LoginError"]</span>
+                </div>
+            }
+
+            <form method="post" asp-controller="Account" asp-action="Login" asp-route-returnUrl="@returnUrl">
+                @Html.AntiForgeryToken()
+
+                <div class="form-group">
+                    <label for="emailInput">E-mail</label>
+                    <div class="input-wrap">
+                        <i class="bi bi-envelope icon-left"></i>
+                        <input type="email" id="emailInput" name="email"
+                               placeholder="seu@email.com" autocomplete="username" required />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="passwordInput">Senha</label>
+                    <div class="input-wrap">
+                        <i class="bi bi-lock icon-left"></i>
+                        <input type="password" id="passwordInput" name="password"
+                               placeholder="••••••••••••"
+                               autocomplete="current-password" required />
+                        <button type="button" class="toggle-password" id="btnToggleSenha"
+                                title="Mostrar/ocultar senha" aria-label="Alternar visibilidade da senha">
+                            <i class="bi bi-eye" id="toggleIcon"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-options">
+                    <label class="remember">
+                        <input type="checkbox" name="rememberMe" />
+                        <span class="checkmark"><i class="bi bi-check"></i></span>
+                        <span class="remember-text">Lembrar-me</span>
+                    </label>
+                </div>
+
+                <button class="btn-login" type="submit">
+                    <i class="bi bi-box-arrow-in-right"></i>
+                    Acessar Sistema
+                </button>
+            </form>
+
+            <div class="panel-footer">
+                <i class="bi bi-shield-check"></i>
+                <span>Acesso exclusivo para colaboradores da UAM Sorocaba</span>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        document.getElementById('btnToggleSenha').addEventListener('click', function () {
+            var input = document.getElementById('passwordInput');
+            var icon  = document.getElementById('toggleIcon');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.className = 'bi bi-eye-slash';
+            } else {
+                input.type = 'password';
+                icon.className = 'bi bi-eye';
+            }
+        });
+    </script>
+</body>
+</html>

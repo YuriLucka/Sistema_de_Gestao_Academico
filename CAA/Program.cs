@@ -1,5 +1,5 @@
-// Programa principal da aplicação ASP.NET Core Razor Pages
-// Este arquivo configura os serviços, autenticação, seed de dados e pipeline HTTP
+// Programa principal da aplicaï¿½ï¿½o ASP.NET Core Razor Pages
+// Este arquivo configura os serviï¿½os, autenticaï¿½ï¿½o, seed de dados e pipeline HTTP
 
 using CAA.Data;
 using CAA.Models;
@@ -11,7 +11,7 @@ using System.Globalization;
 using Microsoft.AspNetCore.Localization;
 using CAA.Hubs;
 
-// Criação do builder para configurar a aplicação
+// Criaï¿½ï¿½o do builder para configurar a aplicaï¿½ï¿½o
 var builder = WebApplication.CreateBuilder(args);
 
 // Adiciona o contexto do banco de dados usando a connection string do appsettings.json
@@ -20,46 +20,49 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter(); // Exibe detalhes de erros de banco em dev
 
-// Configuração da identidade (autenticação e autorização)
+// Configuraï¿½ï¿½o da identidade (autenticaï¿½ï¿½o e autorizaï¿½ï¿½o)
 builder.Services.AddDefaultIdentity<Usuario>(options =>
 {
-    options.SignIn.RequireConfirmedAccount = true; // Exige confirmação de e-mail para login
+    options.SignIn.RequireConfirmedAccount = true; // Exige confirmaï¿½ï¿½o de e-mail para login
 
-    // Configuração de bloqueio de conta após tentativas inválidas
+    // Configuraï¿½ï¿½o de bloqueio de conta apï¿½s tentativas invï¿½lidas
     options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5); // tempo de bloqueio
     options.Lockout.MaxFailedAccessAttempts = 5; // tentativas permitidas antes do bloqueio
-    options.Lockout.AllowedForNewUsers = true; // aplica para novos usuários
+    options.Lockout.AllowedForNewUsers = true; // aplica para novos usuï¿½rios
 })
 .AddRoles<IdentityRole>() // Suporte a roles (perfis)
-.AddEntityFrameworkStores<ApplicationDbContext>(); // Usa o contexto para armazenar usuários
+.AddEntityFrameworkStores<ApplicationDbContext>(); // Usa o contexto para armazenar usuï¿½rios
 
 builder.Services.ConfigureApplicationCookie(options =>
 {
+    options.LoginPath = "/Account/Login";
+    options.LogoutPath = "/Account/Logout";
+    options.AccessDeniedPath = "/Account/Login";
     options.ExpireTimeSpan = TimeSpan.FromDays(1);
     options.SlidingExpiration = false;
 });
 
 builder.Services.Configure<SecurityStampValidatorOptions>(options =>
 {
-    options.ValidationInterval = TimeSpan.Zero; // Valida o SecurityStamp a cada requisição
+    options.ValidationInterval = TimeSpan.Zero; // Valida o SecurityStamp a cada requisiï¿½ï¿½o
 });
 
 builder.Services.AddControllersWithViews(); // Suporte a controllers e views (MVC)
 builder.Services.AddSignalR();
 
-// Registro do serviço de envio de e-mail (injeção de dependência)
+// Registro do serviï¿½o de envio de e-mail (injeï¿½ï¿½o de dependï¿½ncia)
 builder.Services.AddTransient<IEmailSender, EmailSender>();
 
-// Criação do app (pipeline de requisições)
+// Criaï¿½ï¿½o do app (pipeline de requisiï¿½ï¿½es)
 var app = builder.Build();
 
-// Seed de dados iniciais (roles e usuário admin)
+// Seed de dados iniciais (roles e usuï¿½rio admin)
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     try
     {
-        // Chama o método unificado para rodar todos os seeders
+        // Chama o mï¿½todo unificado para rodar todos os seeders
         await SeedDataBase.SeedAll(services);
     }
     catch (Exception ex)
@@ -68,15 +71,15 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
-// Configuração do pipeline HTTP
+// Configuraï¿½ï¿½o do pipeline HTTP
 if (app.Environment.IsDevelopment())
 {
-    app.UseMigrationsEndPoint(); // Facilita migrações em dev
+    app.UseMigrationsEndPoint(); // Facilita migraï¿½ï¿½es em dev
 }
 else
 {
-    app.UseExceptionHandler("/Home/Error"); // Página de erro customizada
-    // O HSTS força HTTPS em produção
+    app.UseExceptionHandler("/Home/Error"); // Pï¿½gina de erro customizada
+    // O HSTS forï¿½a HTTPS em produï¿½ï¿½o
     app.UseHsts();
 }
 
@@ -92,21 +95,21 @@ app.UseRequestLocalization(localizationOptions);
 app.UseHttpsRedirection(); // Redireciona HTTP para HTTPS
 app.UseRouting(); // Habilita roteamento
 
-app.UseAuthentication(); // Habilita autenticação
-app.UseAuthorization(); // Habilita autorização
+app.UseAuthentication(); // Habilita autenticaï¿½ï¿½o
+app.UseAuthorization(); // Habilita autorizaï¿½ï¿½o
 
-app.MapStaticAssets(); // Mapeia arquivos estáticos (wwwroot)
+app.MapStaticAssets(); // Mapeia arquivos estï¿½ticos (wwwroot)
 
-// Rota padrão para controllers
+// Rota padrï¿½o para controllers
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
 
-// Mapeia páginas Razor
+// Mapeia pï¿½ginas Razor
 app.MapRazorPages()
    .WithStaticAssets();
 
 app.MapHub<ChatHub>("/chathub");
 
-app.Run(); // Inicia a aplicação
+app.Run(); // Inicia a aplicaï¿½ï¿½o
