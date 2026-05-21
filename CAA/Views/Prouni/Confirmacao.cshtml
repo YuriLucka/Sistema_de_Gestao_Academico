@@ -1,0 +1,78 @@
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Documentos Enviados — ProUni</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect width='48' height='48' rx='8' fill='%2300AD8E'/%3E%3Ctext x='24' y='32' text-anchor='middle' font-size='28' font-family='Arial,sans-serif' fill='white' font-weight='bold'%3EA%3C/text%3E%3C/svg%3E" />
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: linear-gradient(135deg, #e0f7f4 0%, #f4f6f8 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+        .card-confirmacao {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,89,78,.15);
+            padding: 3rem 2.5rem;
+            text-align: center;
+            max-width: 560px;
+            width: 100%;
+        }
+        .icone-sucesso {
+            width: 90px; height: 90px;
+            background: linear-gradient(135deg, #00594e, #25D366);
+            border-radius: 50%;
+            display: inline-flex; align-items: center; justify-content: center;
+            font-size: 2.5rem; color: white;
+            box-shadow: 0 6px 24px rgba(0,89,78,.3);
+            margin-bottom: 1.5rem;
+            animation: pulse 2s infinite;
+        }
+        @@keyframes pulse {
+            0%, 100% { box-shadow: 0 6px 24px rgba(0,89,78,.3); }
+            50% { box-shadow: 0 6px 32px rgba(37,211,102,.5); }
+        }
+        h2 { color: #00594e; font-weight: 800; }
+        .info-box {
+            background: #e0f7f4;
+            border-radius: 10px;
+            padding: 1rem 1.25rem;
+            margin: 1.5rem 0;
+            color: #00594e;
+            font-size: .95rem;
+        }
+        .btn-voltar {
+            background: #00594e; color: white; border: none;
+            padding: .75rem 2rem; border-radius: 10px;
+            font-weight: 600; transition: all .2s;
+            text-decoration: none; display: inline-block;
+        }
+        .btn-voltar:hover { background: #00493f; color: white; }
+    </style>
+</head>
+<body>
+    <div class="card-confirmacao">
+        <div class="icone-sucesso"><i class="bi bi-check-lg"></i></div>
+        <h2>Documentos Enviados!</h2>
+        <p class="text-muted lead">Seus documentos foram recebidos com sucesso.</p>
+
+        <div class="info-box">
+            <i class="bi bi-info-circle-fill me-2"></i>
+            <strong>Próximos passos:</strong> Nossa equipe irá analisar os documentos enviados. Você receberá um retorno assim que a análise for concluída.
+        </div>
+
+        <ul class="list-unstyled text-start small text-muted mb-4">
+            <li class="mb-2"><i class="bi bi-clock me-2 text-warning"></i>O prazo de análise é de até <strong>5 dias úteis</strong>.</li>
+            <li class="mb-2"><i class="bi bi-telephone me-2 text-success"></i>Em caso de dúvidas, entre em contato com a secretaria acadêmica.</li>
+            <li><i class="bi bi-exclamation-circle me-2 text-danger"></i>Documentos com qualidade insatisfatória poderão ser solicitados novamente.</li>
+        </ul>
+
+        <a href="/Prouni" class="btn-voltar">
+            <i class="bi bi-arrow-left me-2"></i>Voltar ao Início
+        </a>
+    </div>
+</body>
+</html>

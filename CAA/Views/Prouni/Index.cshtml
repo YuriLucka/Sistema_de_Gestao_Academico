@@ -1,0 +1,419 @@
+@model IEnumerable<CAA.Models.ProuniCampoDocumento>
+@{
+    Layout = null;
+    var campos = Model?.ToList() ?? new List<CAA.Models.ProuniCampoDocumento>();
+}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ProUni - Envio de Documentos</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect width='48' height='48' rx='8' fill='%2300AD8E'/%3E%3Ctext x='24' y='32' text-anchor='middle' font-size='28' font-family='Arial,sans-serif' fill='white' font-weight='bold'%3EA%3C/text%3E%3C/svg%3E" />
+    <style>
+        :root {
+            --verde: #00594e;
+            --verde-escuro: #00493f;
+            --verde-claro: #e0f7f4;
+        }
+        body { font-family: 'Segoe UI', sans-serif; background: #f4f6f8; color: #2d2d2d; }
+        .page-header {
+            background: linear-gradient(135deg, var(--verde) 0%, #128C7E 100%);
+            color: white;
+            padding: 2rem 0 1.5rem;
+            margin-bottom: 0;
+        }
+        .page-header img { max-height: 55px; filter: brightness(0) invert(1); }
+        .aviso-qualidade {
+            background: #fff3cd;
+            border-left: 5px solid #ffc107;
+            border-radius: 8px;
+            padding: 1rem 1.25rem;
+        }
+        .aviso-qualidade .aviso-titulo { font-weight: 700; color: #856404; margin-bottom: .5rem; }
+        .aviso-qualidade ul { margin: 0; padding-left: 1.2rem; color: #664d03; }
+        .card-campo {
+            border: 1.5px solid #dee2e6;
+            border-radius: 12px;
+            background: #fff;
+            transition: border-color .2s, box-shadow .2s;
+        }
+        .card-campo.tem-arquivo { border-color: var(--verde); box-shadow: 0 0 0 3px rgba(0,89,78,.12); }
+        .card-campo .campo-header {
+            background: var(--verde-claro);
+            border-radius: 10px 10px 0 0;
+            padding: .75rem 1rem;
+            font-weight: 700;
+            color: var(--verde);
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+        }
+        .badge-obrigatorio { background: #dc3545; color: white; font-size: .7rem; padding: .2rem .5rem; border-radius: 20px; }
+        .badge-opcional { background: #6c757d; color: white; font-size: .7rem; padding: .2rem .5rem; border-radius: 20px; }
+        .preview-area {
+            min-height: 160px;
+            border: 2px dashed #ced4da;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            color: #6c757d;
+            font-size: .9rem;
+            cursor: pointer;
+            transition: border-color .2s, background .2s;
+            position: relative;
+            overflow: hidden;
+        }
+        .preview-area:hover { border-color: var(--verde); background: var(--verde-claro); }
+        .preview-area img { max-height: 150px; max-width: 100%; border-radius: 6px; object-fit: contain; }
+        .preview-area .preview-nome {
+            position: absolute; bottom: 0; left: 0; right: 0;
+            background: rgba(0,89,78,.85); color: white;
+            font-size: .75rem; padding: .25rem .5rem;
+            text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .file-input-hidden { display: none; }
+        .btn-enviar {
+            background: var(--verde);
+            color: white;
+            border: none;
+            padding: .875rem 3rem;
+            font-size: 1.1rem;
+            font-weight: 700;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0,89,78,.35);
+            transition: all .2s;
+        }
+        .btn-enviar:hover { background: var(--verde-escuro); box-shadow: 0 8px 28px rgba(0,89,78,.45); }
+        .btn-enviar:disabled { background: #adb5bd; box-shadow: none; cursor: not-allowed; }
+        .secao-identificacao { background: white; border-radius: 12px; padding: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,.07); }
+        label.req::after { content: ' *'; color: #dc3545; }
+    </style>
+</head>
+<body>
+    <div class="page-header">
+        <div class="container">
+            <div class="d-flex align-items-center gap-3">
+                <img src="/img/marca_uam_campus_athon_branca_horizontal.png" alt="Logo" onerror="this.style.display='none'" />
+                <div>
+                    <h1 class="mb-0 fs-3 fw-bold">ProUni — Envio de Documentos</h1>
+                    <p class="mb-0 opacity-75 small">Submissão de documentação para análise</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container py-4">
+
+        @if (ViewBag.Erro != null)
+        {
+            <div class="alert alert-danger alert-dismissible fade show d-flex align-items-center gap-2" role="alert">
+                <i class="bi bi-exclamation-triangle-fill fs-5"></i>
+                <div>@ViewBag.Erro</div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        }
+
+        @if (!campos.Any())
+        {
+            <div class="alert alert-info text-center py-5">
+                <i class="bi bi-info-circle fs-2 d-block mb-2"></i>
+                <strong>Nenhum documento configurado.</strong><br/>
+                O sistema ainda não possui campos de documentos configurados para envio.
+            </div>
+        }
+        else
+        {
+            <!-- Aviso de qualidade -->
+            <div class="aviso-qualidade mb-4">
+                <div class="aviso-titulo"><i class="bi bi-exclamation-triangle-fill me-2"></i>Atenção — Requisitos de Qualidade dos Documentos</div>
+                <ul>
+                    <li>Fotografe em superfície plana, com boa iluminação e sem sombras sobre o documento.</li>
+                    <li>Todos os dados devem estar <strong>legíveis e completamente visíveis</strong> — sem cortes nas bordas.</li>
+                    <li>Evite fotos borradas, fora de foco ou com reflexo de luz.</li>
+                    <li>Documentos amassados, dobrados ou com dados ilegíveis <strong>serão recusados</strong>.</li>
+                    <li>Formatos aceitos: <strong>JPG, PNG ou PDF</strong>. Tamanho máximo por arquivo: <strong>10 MB</strong>.</li>
+                </ul>
+            </div>
+
+            <form id="formProuni" asp-action="Enviar" asp-controller="Prouni" method="post" enctype="multipart/form-data" novalidate>
+                @Html.AntiForgeryToken()
+
+                <!-- Identificação -->
+                <div class="secao-identificacao mb-4">
+                    <h5 class="fw-bold text-success mb-3"><i class="bi bi-person-fill me-2"></i>Identificação do Candidato</h5>
+                    <div class="row g-3">
+                        <div class="col-md-7">
+                            <label for="nomeCandidato" class="form-label req fw-semibold">Nome Completo</label>
+                            <input type="text" id="nomeCandidato" name="nomeCandidato"
+                                   class="form-control form-control-lg"
+                                   placeholder="Digite seu nome completo"
+                                   value="@(ViewBag.NomeCandidato as string ?? "")"
+                                   required autocomplete="name" />
+                        </div>
+                        <div class="col-md-5">
+                            <label for="cpfCandidato" class="form-label req fw-semibold">CPF</label>
+                            <input type="text" id="cpfCandidato" name="cpfCandidato"
+                                   class="form-control form-control-lg"
+                                   placeholder="000.000.000-00"
+                                   value="@(ViewBag.CpfCandidato as string ?? "")"
+                                   maxlength="14"
+                                   required autocomplete="off" inputmode="numeric" />
+                            <div id="cpfFeedback" class="invalid-feedback">CPF inválido.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Documentos -->
+                <h5 class="fw-bold mb-3"><i class="bi bi-folder2-open me-2"></i>Documentos para Envio</h5>
+                <div class="row g-4 mb-4">
+                    @foreach (var campo in campos)
+                    {
+                        @if (campo.TemFrenteVerso)
+                        {
+                            <div class="col-md-6">
+                                <div class="card-campo" id="card-@(campo.Id)_frente">
+                                    <div class="campo-header">
+                                        <i class="bi bi-file-earmark-image"></i>
+                                        @campo.Nome — Frente
+                                        @if (campo.Obrigatorio)
+                                        {
+                                            <span class="badge-obrigatorio">Obrigatório</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge-opcional">Opcional</span>
+                                        }
+                                    </div>
+                                    <div class="p-3">
+                                        <div class="preview-area" id="preview-@(campo.Id)_frente" onclick="document.getElementById('arquivo_@(campo.Id)_frente').click()">
+                                            <i class="bi bi-cloud-upload fs-2 mb-2"></i>
+                                            <span>Clique para selecionar o arquivo</span>
+                                            <small class="text-muted">JPG, PNG ou PDF</small>
+                                        </div>
+                                        <input type="file" id="arquivo_@(campo.Id)_frente" name="arquivo_@(campo.Id)_frente"
+                                               class="file-input-hidden" accept="image/*,application/pdf"
+                                               data-preview="preview-@(campo.Id)_frente"
+                                               data-card="card-@(campo.Id)_frente"
+                                               @(campo.Obrigatorio ? "required" : "") />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card-campo" id="card-@(campo.Id)_verso">
+                                    <div class="campo-header">
+                                        <i class="bi bi-file-earmark-image"></i>
+                                        @campo.Nome — Verso
+                                        @if (campo.Obrigatorio)
+                                        {
+                                            <span class="badge-obrigatorio">Obrigatório</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge-opcional">Opcional</span>
+                                        }
+                                    </div>
+                                    <div class="p-3">
+                                        <div class="preview-area" id="preview-@(campo.Id)_verso" onclick="document.getElementById('arquivo_@(campo.Id)_verso').click()">
+                                            <i class="bi bi-cloud-upload fs-2 mb-2"></i>
+                                            <span>Clique para selecionar o arquivo</span>
+                                            <small class="text-muted">JPG, PNG ou PDF</small>
+                                        </div>
+                                        <input type="file" id="arquivo_@(campo.Id)_verso" name="arquivo_@(campo.Id)_verso"
+                                               class="file-input-hidden" accept="image/*,application/pdf"
+                                               data-preview="preview-@(campo.Id)_verso"
+                                               data-card="card-@(campo.Id)_verso"
+                                               @(campo.Obrigatorio ? "required" : "") />
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="col-md-6">
+                                <div class="card-campo" id="card-@campo.Id">
+                                    <div class="campo-header">
+                                        <i class="bi bi-file-earmark-image"></i>
+                                        @campo.Nome
+                                        @if (campo.Obrigatorio)
+                                        {
+                                            <span class="badge-obrigatorio">Obrigatório</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge-opcional">Opcional</span>
+                                        }
+                                    </div>
+                                    <div class="p-3">
+                                        <div class="preview-area" id="preview-@campo.Id" onclick="document.getElementById('arquivo_@campo.Id').click()">
+                                            <i class="bi bi-cloud-upload fs-2 mb-2"></i>
+                                            <span>Clique para selecionar o arquivo</span>
+                                            <small class="text-muted">JPG, PNG ou PDF</small>
+                                        </div>
+                                        <input type="file" id="arquivo_@campo.Id" name="arquivo_@campo.Id"
+                                               class="file-input-hidden" accept="image/*,application/pdf"
+                                               data-preview="preview-@campo.Id"
+                                               data-card="card-@campo.Id"
+                                               @(campo.Obrigatorio ? "required" : "") />
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+
+                <!-- Botão enviar -->
+                <div class="text-center py-3">
+                    <button type="button" id="btnEnviar" class="btn-enviar" onclick="confirmarEnvio()">
+                        <i class="bi bi-send-fill me-2"></i>Enviar Documentos
+                    </button>
+                    <p class="text-muted small mt-2">Após o envio, seus documentos serão analisados pela equipe responsável.</p>
+                </div>
+            </form>
+        }
+    </div>
+
+    <!-- Modal de confirmação -->
+    <div class="modal fade" id="modalConfirmar" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title fw-bold">Confirmar Envio</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body text-center py-3">
+                    <i class="bi bi-send-check fs-1 text-success d-block mb-3"></i>
+                    <p class="mb-1">Você está prestes a enviar seus documentos para análise.</p>
+                    <p class="text-muted small">Verifique se todos os arquivos foram anexados corretamente antes de confirmar.</p>
+                    <div id="resumoEnvio" class="text-start mt-3 small"></div>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-success fw-bold px-4" onclick="submeterFormulario()">
+                        <i class="bi bi-check-lg me-1"></i>Confirmar Envio
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Máscara CPF
+        document.getElementById('cpfCandidato').addEventListener('input', function () {
+            let v = this.value.replace(/\D/g, '').slice(0, 11);
+            v = v.replace(/(\d{3})(\d)/, '$1.$2');
+            v = v.replace(/(\d{3})\.(\d{3})(\d)/, '$1.$2.$3');
+            v = v.replace(/(\d{3})\.(\d{3})\.(\d{3})(\d)/, '$1.$2.$3-$4');
+            this.value = v;
+            validarCpfInput(this);
+        });
+
+        function validarCpfInput(input) {
+            const cpf = input.value.replace(/\D/g, '');
+            if (cpf.length < 11) { input.classList.remove('is-invalid', 'is-valid'); return; }
+            if (cpfValido(cpf)) {
+                input.classList.remove('is-invalid'); input.classList.add('is-valid');
+            } else {
+                input.classList.remove('is-valid'); input.classList.add('is-invalid');
+            }
+        }
+
+        function cpfValido(cpf) {
+            if (cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) return false;
+            let soma = 0, resto;
+            for (let i = 0; i < 9; i++) soma += parseInt(cpf[i]) * (10 - i);
+            resto = 11 - (soma % 11); if (resto >= 10) resto = 0;
+            if (resto !== parseInt(cpf[9])) return false;
+            soma = 0;
+            for (let i = 0; i < 10; i++) soma += parseInt(cpf[i]) * (11 - i);
+            resto = 11 - (soma % 11); if (resto >= 10) resto = 0;
+            return resto === parseInt(cpf[10]);
+        }
+
+        // Preview de arquivo
+        document.querySelectorAll('.file-input-hidden').forEach(function (input) {
+            input.addEventListener('change', function () {
+                const previewEl = document.getElementById(this.dataset.preview);
+                const cardEl = document.getElementById(this.dataset.card);
+                const file = this.files[0];
+
+                if (!file) {
+                    previewEl.innerHTML = '<i class="bi bi-cloud-upload fs-2 mb-2"></i><span>Clique para selecionar o arquivo</span><small class="text-muted">JPG, PNG ou PDF</small>';
+                    cardEl.classList.remove('tem-arquivo');
+                    return;
+                }
+
+                if (file.size > 10 * 1024 * 1024) {
+                    alert('O arquivo "' + file.name + '" excede 10 MB. Selecione um arquivo menor.');
+                    this.value = '';
+                    return;
+                }
+
+                cardEl.classList.add('tem-arquivo');
+
+                if (file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        previewEl.innerHTML = '<img src="' + e.target.result + '" /><div class="preview-nome">' + file.name + '</div>';
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    previewEl.innerHTML = '<i class="bi bi-file-earmark-pdf fs-2 text-danger mb-2"></i><span class="fw-semibold">' + file.name + '</span><small class="text-muted">PDF selecionado</small>';
+                }
+            });
+        });
+
+        function confirmarEnvio() {
+            const nome = document.getElementById('nomeCandidato').value.trim();
+            const cpf = document.getElementById('cpfCandidato').value;
+            const cpfLimpo = cpf.replace(/\D/g, '');
+
+            if (!nome) {
+                document.getElementById('nomeCandidato').focus();
+                document.getElementById('nomeCandidato').classList.add('is-invalid');
+                return;
+            }
+            if (!cpfValido(cpfLimpo)) {
+                document.getElementById('cpfCandidato').focus();
+                document.getElementById('cpfCandidato').classList.add('is-invalid');
+                return;
+            }
+
+            // Verifica obrigatórios sem arquivo
+            const obrigatoriosSemArquivo = [];
+            document.querySelectorAll('input[type="file"][required]').forEach(function (inp) {
+                if (!inp.files || inp.files.length === 0) {
+                    const card = document.getElementById(inp.dataset.card);
+                    const header = card ? card.querySelector('.campo-header') : null;
+                    if (header) obrigatoriosSemArquivo.push(header.textContent.trim());
+                }
+            });
+
+            if (obrigatoriosSemArquivo.length > 0) {
+                alert('Os seguintes documentos obrigatórios ainda não foram selecionados:\n\n• ' + obrigatoriosSemArquivo.join('\n• '));
+                return;
+            }
+
+            // Monta resumo
+            let resumo = '<strong>Nome:</strong> ' + nome + '<br><strong>CPF:</strong> ' + cpf + '<br>';
+            let qtdAnexos = 0;
+            document.querySelectorAll('.file-input-hidden').forEach(function (inp) {
+                if (inp.files && inp.files.length > 0) qtdAnexos++;
+            });
+            resumo += '<strong>Arquivos selecionados:</strong> ' + qtdAnexos;
+            document.getElementById('resumoEnvio').innerHTML = resumo;
+
+            new bootstrap.Modal(document.getElementById('modalConfirmar')).show();
+        }
+
+        function submeterFormulario() {
+            document.getElementById('formProuni').submit();
+        }
+    </script>
+</body>
+</html>

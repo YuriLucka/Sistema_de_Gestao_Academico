@@ -4,14 +4,14 @@ using Microsoft.AspNetCore.Identity;
 namespace CAA.Data.Seeders
 {
     /// <summary>
-    /// Seeder responsável por garantir a existência das roles (perfis) do sistema.
+    /// Seeder responsï¿½vel por garantir a existï¿½ncia das roles (perfis) do sistema.
     /// </summary>
     public static class RolesSeeder
     {
         /// <summary>
-        /// Garante que todas as roles necessárias estejam criadas no banco de dados.
+        /// Garante que todas as roles necessï¿½rias estejam criadas no banco de dados.
         /// </summary>
-        /// <param name="serviceProvider">Service provider para resolução de dependências</param>
+        /// <param name="serviceProvider">Service provider para resoluï¿½ï¿½o de dependï¿½ncias</param>
         public static async Task SeedAsync(IServiceProvider serviceProvider)
         {
             var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
@@ -22,16 +22,17 @@ namespace CAA.Data.Seeders
                 "Logs & Auditoria",
                 "Parametros",
                 "Recados",
-                "Fichas Médicas",
-                "Agendas & Calendários",
+                "Fichas Mï¿½dicas",
+                "Agendas & Calendï¿½rios",
                 "Central de Contatos",
                 "Cursos",
-                "Matrículas",
-                "Estágios",
+                "Matrï¿½culas",
+                "Estï¿½gios",
                 "Documentos Institucionais",
-                "Links Úteis"
+                "Links ï¿½teis",
+                "ProUni"
             };
-            // Cria cada role caso ainda não exista
+            // Cria cada role caso ainda nï¿½o exista
             foreach (var role in roles)
             {
                 if (!await roleManager.RoleExistsAsync(role))

@@ -46,6 +46,9 @@ namespace CAA.Data
         public DbSet<FichaMedica> FichaMedica { get; set; }
         public DbSet<ParametroGeral> ParametroGeral { get; set; }
         public DbSet<Mensagem> Mensagem { get; set; }
+        public DbSet<ProuniCampoDocumento> ProuniCampoDocumentos { get; set; }
+        public DbSet<ProuniSubmissao> ProuniSubmissoes { get; set; }
+        public DbSet<ProuniDocumentoAnexado> ProuniDocumentosAnexados { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -1,0 +1,113 @@
+@model IEnumerable<CAA.Models.ProuniCampoDocumento>
+@{
+    ViewData["Title"] = "ProUni — Campos de Documentos";
+    Layout = "~/Views/Shared/AdminLTE/_Layout.cshtml";
+}
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2 align-items-center">
+            <div class="col">
+                <h1 class="m-0"><i class="bi bi-list-check me-2"></i>Campos de Documentos — ProUni</h1>
+            </div>
+            <div class="col-auto">
+                <a asp-action="Create" class="btn btn-success">
+                    <i class="bi bi-plus-lg me-1"></i>Novo Campo
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="content">
+    <div class="container-fluid">
+
+        @if (TempData["Sucesso"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="bi bi-check-circle me-2"></i>@TempData["Sucesso"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        }
+
+        <div class="card card-outline card-success">
+            <div class="card-header">
+                <h3 class="card-title">Campos configurados para o formulário público de envio de documentos ProUni.</h3>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped mb-0">
+                        <thead class="table-dark">
+                            <tr>
+                                <th style="width:60px">Ordem</th>
+                                <th>Nome do Documento</th>
+                                <th class="text-center">Frente e Verso</th>
+                                <th class="text-center">Obrigatório</th>
+                                <th class="text-center">Ativo</th>
+                                <th class="text-center" style="width:160px">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (!Model.Any())
+                            {
+                                <tr>
+                                    <td colspan="6" class="text-center text-muted py-4">
+                                        <i class="bi bi-inbox fs-3 d-block mb-2"></i>
+                                        Nenhum campo cadastrado. <a asp-action="Create">Cadastre o primeiro.</a>
+                                    </td>
+                                </tr>
+                            }
+                            @foreach (var campo in Model)
+                            {
+                                <tr>
+                                    <td class="text-center fw-bold">@campo.Ordem</td>
+                                    <td class="fw-semibold">@campo.Nome</td>
+                                    <td class="text-center">
+                                        @if (campo.TemFrenteVerso)
+                                        {
+                                            <span class="badge bg-info text-dark"><i class="bi bi-front me-1"></i>Sim</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary">Não</span>
+                                        }
+                                    </td>
+                                    <td class="text-center">
+                                        @if (campo.Obrigatorio)
+                                        {
+                                            <span class="badge bg-danger">Obrigatório</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary">Opcional</span>
+                                        }
+                                    </td>
+                                    <td class="text-center">
+                                        @if (campo.Ativo)
+                                        {
+                                            <span class="badge bg-success">Ativo</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-warning text-dark">Inativo</span>
+                                        }
+                                    </td>
+                                    <td class="text-center">
+                                        <a asp-action="Edit" asp-route-id="@campo.Id"
+                                           class="btn btn-sm btn-outline-primary me-1" title="Editar">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <a asp-action="Delete" asp-route-id="@campo.Id"
+                                           class="btn btn-sm btn-outline-danger" title="Excluir">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

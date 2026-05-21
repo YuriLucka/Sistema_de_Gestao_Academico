@@ -134,6 +134,34 @@
                         </ul>
                     </li>
                 }
+                <!-- ProUni -->
+                @if (User.IsInRole("ProUni") || User.IsInRole("Admin"))
+                {
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon bi bi-mortarboard"></i>
+                            <p>
+                                ProUni
+                                <i class="nav-arrow bi bi-chevron-right"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a asp-action="Analise" asp-controller="Prouni" class="nav-link">
+                                    <p>Análise de Documentos</p>
+                                </a>
+                            </li>
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <li class="nav-item">
+                                    <a asp-action="Index" asp-controller="ProuniCampo" class="nav-link">
+                                        <p>Campos de Documentos</p>
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    </li>
+                }
                 <!-- Links Úteis -->
                 @if (User.IsInRole("Links Úteis") || User.IsInRole("Admin"))
                 {

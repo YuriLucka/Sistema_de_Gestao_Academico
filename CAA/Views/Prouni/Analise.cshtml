@@ -1,0 +1,386 @@
+@model IEnumerable<CAA.Models.ProuniSubmissaoListaVm>
+@{
+    ViewData["Title"] = "ProUni — Análise de Documentos";
+    Layout = "~/Views/Shared/AdminLTE/_Layout.cshtml";
+}
+
+@section Styles {
+    <style>
+        .badge-status { font-size: .78rem; padding: .35em .65em; border-radius: 20px; font-weight: 600; }
+        .status-Pendente { background: #ffc107; color: #212529; }
+        .status-EmAnalise { background: #0dcaf0; color: #212529; }
+        .status-Aprovado { background: #198754; color: white; }
+        .status-Reprovado { background: #dc3545; color: white; }
+        .status-DocumentosPendentes { background: #fd7e14; color: white; }
+        .doc-card { border: 2px solid #dee2e6; border-radius: 10px; transition: border-color .2s; }
+        .doc-card.status-Aprovado { border-color: #198754; }
+        .doc-card.status-Reprovado { border-color: #dc3545; }
+        .doc-card .doc-img { max-height: 240px; width: 100%; object-fit: contain; border-radius: 6px; background: #f8f9fa; cursor: zoom-in; }
+        .doc-nao-enviado { min-height: 180px; display: flex; align-items: center; justify-content: center; flex-direction: column; color: #adb5bd; border: 2px dashed #dee2e6; border-radius: 8px; }
+        #painelDocs { display: none; }
+        #painelDocs.visivel { display: block; }
+        .tr-selecionada td { background: #e0f7f4 !important; }
+    </style>
+}
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2 align-items-center">
+            <div class="col">
+                <h1 class="m-0"><i class="bi bi-mortarboard me-2"></i>ProUni — Análise de Documentos</h1>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="content">
+    <div class="container-fluid">
+
+        <!-- Filtros -->
+        <div class="card card-outline card-primary mb-4">
+            <div class="card-header"><h3 class="card-title"><i class="bi bi-funnel me-1"></i>Filtros</h3></div>
+            <div class="card-body">
+                <form method="get" asp-action="Analise" asp-controller="Prouni">
+                    <div class="row g-3 align-items-end">
+                        <div class="col-md-4">
+                            <label class="form-label">Nome</label>
+                            <input type="text" name="nome" class="form-control" placeholder="Buscar por nome..."
+                                   value="@ViewBag.Filtro_Nome" />
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">CPF</label>
+                            <input type="text" name="cpf" class="form-control" placeholder="000.000.000-00"
+                                   value="@ViewBag.Filtro_Cpf" />
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Status</label>
+                            <select name="status" class="form-select">
+                                <option value="">Todos</option>
+                                <option value="Pendente" selected="@(ViewBag.Filtro_Status == "Pendente")">Pendente</option>
+                                <option value="EmAnalise" selected="@(ViewBag.Filtro_Status == "EmAnalise")">Em Análise</option>
+                                <option value="DocumentosPendentes" selected="@(ViewBag.Filtro_Status == "DocumentosPendentes")">Documentos Pendentes</option>
+                                <option value="Aprovado" selected="@(ViewBag.Filtro_Status == "Aprovado")">Aprovado</option>
+                                <option value="Reprovado" selected="@(ViewBag.Filtro_Status == "Reprovado")">Reprovado</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2 d-flex gap-2">
+                            <button type="submit" class="btn btn-primary flex-fill"><i class="bi bi-search me-1"></i>Filtrar</button>
+                            <a href="@Url.Action("Analise")" class="btn btn-outline-secondary" title="Limpar filtros"><i class="bi bi-x-lg"></i></a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Tabela de submissões -->
+        <div class="card card-outline card-success mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h3 class="card-title"><i class="bi bi-table me-1"></i>Submissões Recebidas</h3>
+                <span class="badge bg-secondary fs-6">@Model.Count() registros</span>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table id="tblSubmissoes" class="table table-hover table-striped mb-0">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Nome do Candidato</th>
+                                <th>CPF</th>
+                                <th>Data de Envio</th>
+                                <th class="text-center">Docs Enviados</th>
+                                <th class="text-center">Status</th>
+                                <th class="text-center">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (!Model.Any())
+                            {
+                                <tr>
+                                    <td colspan="6" class="text-center text-muted py-4">
+                                        <i class="bi bi-inbox fs-3 d-block mb-2"></i>
+                                        Nenhuma submissão encontrada.
+                                    </td>
+                                </tr>
+                            }
+                            @foreach (var s in Model)
+                            {
+                                <tr id="linha-@s.Id">
+                                    <td class="fw-semibold">@s.NomeCandidato</td>
+                                    <td class="font-monospace">@s.CpfCandidato</td>
+                                    <td>@s.DataEnvio.ToString("dd/MM/yyyy HH:mm")</td>
+                                    <td class="text-center">
+                                        <span class="badge @(s.DocsEnviados == s.TotalDocs ? "bg-success" : "bg-warning text-dark")">
+                                            @s.DocsEnviados / @s.TotalDocs
+                                        </span>
+                                    </td>
+                                    <td class="text-center">
+                                        <span class="badge-status status-@s.Status">@StatusLabel(s.Status)</span>
+                                    </td>
+                                    <td class="text-center">
+                                        <button class="btn btn-sm btn-outline-primary btn-ver-docs"
+                                                data-id="@s.Id" title="Ver e analisar documentos">
+                                            <i class="bi bi-folder2-open me-1"></i>Ver Documentos
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Painel de análise (carregado sob demanda) -->
+        <div id="painelDocs" class="card card-outline card-warning">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h3 class="card-title" id="painelTitulo"><i class="bi bi-file-earmark-check me-1"></i>Análise de Documentos</h3>
+                <button class="btn btn-sm btn-outline-secondary" onclick="fecharPainel()"><i class="bi bi-x-lg"></i> Fechar</button>
+            </div>
+            <div class="card-body">
+                <div id="painelCarregando" class="text-center py-5 d-none">
+                    <div class="spinner-border text-primary"></div>
+                    <p class="mt-2 text-muted">Carregando documentos...</p>
+                </div>
+                <div id="painelConteudo"></div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Modal de imagem ampliada -->
+<div class="modal fade" id="modalImagem" tabindex="-1">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content bg-dark">
+            <div class="modal-header border-0 pb-0">
+                <span id="modalImagemTitulo" class="text-white fw-semibold"></span>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-center p-2">
+                <img id="modalImagemSrc" src="" class="img-fluid" style="max-height:80vh;" />
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        let submissaoAtualId = null;
+
+        document.querySelectorAll('.btn-ver-docs').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                const id = this.dataset.id;
+                carregarDocumentos(id);
+                document.querySelectorAll('tr').forEach(t => t.classList.remove('tr-selecionada'));
+                document.getElementById('linha-' + id)?.classList.add('tr-selecionada');
+                document.getElementById('painelDocs').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
+
+        function carregarDocumentos(id) {
+            submissaoAtualId = id;
+            const painel = document.getElementById('painelDocs');
+            const loading = document.getElementById('painelCarregando');
+            const conteudo = document.getElementById('painelConteudo');
+
+            painel.classList.add('visivel');
+            loading.classList.remove('d-none');
+            conteudo.innerHTML = '';
+
+            fetch('/Prouni/DocumentosSubmissao/' + id)
+                .then(r => r.json())
+                .then(data => {
+                    loading.classList.add('d-none');
+                    document.getElementById('painelTitulo').innerHTML =
+                        '<i class="bi bi-file-earmark-check me-1"></i>Análise: ' + data.nomeCandidato + ' — ' + data.cpfCandidato;
+                    conteudo.innerHTML = construirPainel(data);
+                    conteudo.querySelectorAll('.doc-img').forEach(img => {
+                        img.addEventListener('click', function () {
+                            document.getElementById('modalImagemSrc').src = this.src;
+                            document.getElementById('modalImagemTitulo').textContent = this.alt;
+                            new bootstrap.Modal(document.getElementById('modalImagem')).show();
+                        });
+                    });
+                })
+                .catch(() => {
+                    loading.classList.add('d-none');
+                    conteudo.innerHTML = '<div class="alert alert-danger">Erro ao carregar documentos.</div>';
+                });
+        }
+
+        function construirPainel(data) {
+            const dataEnvio = new Date(data.dataEnvio).toLocaleString('pt-BR');
+            let html = `<div class="mb-3 text-muted small">
+                <i class="bi bi-clock me-1"></i>Enviado em: <strong>${dataEnvio}</strong>
+            </div>`;
+
+            html += '<div class="row g-4 mb-4">';
+            data.documentos.forEach(doc => {
+                const labelLado = doc.lado !== 'Unico' ? ' — ' + doc.lado : '';
+                const titulo = doc.campoNome + labelLado;
+                const statusClass = 'doc-card status-' + doc.status;
+                const badgeClass = getBadgeClass(doc.status);
+                const badgeLabel = getStatusLabel(doc.status);
+
+                let conteudoDoc;
+                if (doc.temArquivo) {
+                    if (doc.contentType && doc.contentType.startsWith('image/')) {
+                        conteudoDoc = `<img src="/Prouni/Arquivo/${doc.id}" class="doc-img" alt="${titulo}" title="Clique para ampliar" />`;
+                    } else {
+                        conteudoDoc = `<div class="d-flex align-items-center justify-content-center" style="min-height:160px;">
+                            <a href="/Prouni/Arquivo/${doc.id}" target="_blank" class="btn btn-outline-primary">
+                                <i class="bi bi-file-earmark-arrow-down me-2"></i>Visualizar Arquivo
+                            </a></div>`;
+                    }
+                } else {
+                    conteudoDoc = `<div class="doc-nao-enviado">
+                        <i class="bi bi-x-circle fs-2 mb-2"></i><span>Não enviado</span></div>`;
+                }
+
+                html += `<div class="col-md-4 col-sm-6">
+                    <div class="${statusClass}" id="card-doc-${doc.id}">
+                        <div class="p-2 border-bottom d-flex justify-content-between align-items-center">
+                            <strong class="small">${titulo}</strong>
+                            <span class="badge ${badgeClass}" id="badge-${doc.id}">${badgeLabel}</span>
+                        </div>
+                        <div class="p-2">${conteudoDoc}</div>
+                        <div class="p-2 border-top">
+                            <input type="text" class="form-control form-control-sm mb-2"
+                                   id="coment-${doc.id}" placeholder="Comentário sobre este documento"
+                                   value="${doc.comentario || ''}">
+                            <div class="d-flex gap-2">
+                                <button class="btn btn-success btn-sm flex-fill"
+                                        onclick="atualizarDoc(${doc.id}, 'Aprovado')">
+                                    <i class="bi bi-check-lg"></i> Aprovar
+                                </button>
+                                <button class="btn btn-danger btn-sm flex-fill"
+                                        onclick="atualizarDoc(${doc.id}, 'Reprovado')">
+                                    <i class="bi bi-x-lg"></i> Reprovar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
+            });
+            html += '</div>';
+
+            // Parecer geral
+            html += `<hr>
+            <h6 class="fw-bold mb-3"><i class="bi bi-clipboard-check me-2"></i>Parecer Geral da Submissão</h6>
+            <div class="row g-3 align-items-end">
+                <div class="col-md-4">
+                    <label class="form-label">Status da Submissão</label>
+                    <select class="form-select" id="statusSubmissao">
+                        <option value="Pendente" ${data.status === 'Pendente' ? 'selected' : ''}>Pendente</option>
+                        <option value="EmAnalise" ${data.status === 'EmAnalise' ? 'selected' : ''}>Em Análise</option>
+                        <option value="DocumentosPendentes" ${data.status === 'DocumentosPendentes' ? 'selected' : ''}>Documentos Pendentes</option>
+                        <option value="Aprovado" ${data.status === 'Aprovado' ? 'selected' : ''}>Aprovado</option>
+                        <option value="Reprovado" ${data.status === 'Reprovado' ? 'selected' : ''}>Reprovado</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Comentário Geral</label>
+                    <textarea class="form-control" id="comentarioSubmissao" rows="2">${data.comentario || ''}</textarea>
+                </div>
+                <div class="col-md-2">
+                    <button class="btn btn-primary w-100 fw-semibold" onclick="salvarStatus(${data.id})">
+                        <i class="bi bi-save me-1"></i>Salvar
+                    </button>
+                </div>
+            </div>`;
+
+            return html;
+        }
+
+        function atualizarDoc(id, status) {
+            const comentario = document.getElementById('coment-' + id)?.value || '';
+            fetch('/Prouni/AtualizarDocumento', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'RequestVerificationToken': getToken() },
+                body: JSON.stringify({ id, status, comentario })
+            }).then(r => {
+                if (r.ok) {
+                    const card = document.getElementById('card-doc-' + id);
+                    const badge = document.getElementById('badge-' + id);
+                    if (card) { card.className = 'doc-card status-' + status; }
+                    if (badge) { badge.className = 'badge ' + getBadgeClass(status); badge.textContent = getStatusLabel(status); }
+                    toastr.success('Documento atualizado!');
+                } else {
+                    toastr.error('Erro ao atualizar documento.');
+                }
+            });
+        }
+
+        function salvarStatus(id) {
+            const status = document.getElementById('statusSubmissao').value;
+            const comentario = document.getElementById('comentarioSubmissao').value;
+            fetch('/Prouni/AtualizarStatusSubmissao', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'RequestVerificationToken': getToken() },
+                body: JSON.stringify({ id, status, comentario })
+            }).then(r => {
+                if (r.ok) {
+                    // Atualiza badge na tabela
+                    const linha = document.getElementById('linha-' + id);
+                    if (linha) {
+                        const badgeCell = linha.querySelector('.badge-status');
+                        if (badgeCell) {
+                            badgeCell.className = 'badge-status status-' + status;
+                            badgeCell.textContent = getStatusLabelPtBr(status);
+                        }
+                    }
+                    toastr.success('Status da submissão salvo com sucesso!');
+                } else {
+                    toastr.error('Erro ao salvar status.');
+                }
+            });
+        }
+
+        function fecharPainel() {
+            document.getElementById('painelDocs').classList.remove('visivel');
+            document.querySelectorAll('tr').forEach(t => t.classList.remove('tr-selecionada'));
+        }
+
+        function getToken() {
+            return document.querySelector('input[name="__RequestVerificationToken"]')?.value
+                || document.cookie.split(';').map(c => c.trim()).find(c => c.startsWith('XSRF-TOKEN='))?.split('=')[1] || '';
+        }
+
+        function getBadgeClass(status) {
+            const map = {
+                'NaoEnviado': 'bg-secondary', 'Aguardando': 'bg-warning text-dark',
+                'Aprovado': 'bg-success', 'Reprovado': 'bg-danger'
+            };
+            return map[status] || 'bg-secondary';
+        }
+
+        function getStatusLabel(status) {
+            const map = {
+                'NaoEnviado': 'Não Enviado', 'Aguardando': 'Aguardando',
+                'Aprovado': 'Aprovado', 'Reprovado': 'Reprovado'
+            };
+            return map[status] || status;
+        }
+
+        function getStatusLabelPtBr(status) {
+            const map = {
+                'Pendente': 'Pendente', 'EmAnalise': 'Em Análise',
+                'Aprovado': 'Aprovado', 'Reprovado': 'Reprovado',
+                'DocumentosPendentes': 'Doc. Pendentes'
+            };
+            return map[status] || status;
+        }
+    </script>
+    @Html.AntiForgeryToken()
+}
+
+@functions {
+    string StatusLabel(string s) => s switch
+    {
+        "Pendente" => "Pendente",
+        "EmAnalise" => "Em Análise",
+        "Aprovado" => "Aprovado",
+        "Reprovado" => "Reprovado",
+        "DocumentosPendentes" => "Doc. Pendentes",
+        _ => s
+    };
+}

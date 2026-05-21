@@ -1,0 +1,82 @@
+@model CAA.Models.ProuniCampoDocumento
+@{
+    ViewData["Title"] = "Novo Campo de Documento — ProUni";
+    Layout = "~/Views/Shared/AdminLTE/_Layout.cshtml";
+}
+
+<div class="content-header">
+    <div class="container-fluid">
+        <h1 class="m-0"><i class="bi bi-plus-circle me-2"></i>Novo Campo de Documento</h1>
+    </div>
+</div>
+
+<div class="content">
+    <div class="container-fluid">
+        <div class="card card-outline card-success" style="max-width:640px;">
+            <div class="card-header">
+                <h3 class="card-title">Preencha as informações do campo</h3>
+            </div>
+            <div class="card-body">
+                <form asp-action="Create" method="post">
+                    @Html.AntiForgeryToken()
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger d-none"></div>
+
+                    <div class="mb-3">
+                        <label asp-for="Nome" class="form-label fw-semibold"></label>
+                        <input asp-for="Nome" class="form-control" placeholder="Ex: RG, CPF, Histórico Escolar..." />
+                        <span asp-validation-for="Nome" class="text-danger small"></span>
+                        <div class="form-text">Este nome aparecerá no formulário público.</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Ordem" class="form-label fw-semibold"></label>
+                        <input asp-for="Ordem" class="form-control" type="number" min="1" value="@ViewBag.ProximaOrdem" />
+                        <span asp-validation-for="Ordem" class="text-danger small"></span>
+                        <div class="form-text">Determina a ordem de exibição no formulário (menor = primeiro).</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="form-check form-switch">
+                            <input asp-for="TemFrenteVerso" class="form-check-input" type="checkbox" role="switch" />
+                            <label asp-for="TemFrenteVerso" class="form-check-label fw-semibold">
+                                Tem Frente e Verso
+                            </label>
+                        </div>
+                        <div class="form-text">Se ativado, gera dois campos separados: <em>Frente</em> e <em>Verso</em>.</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="form-check form-switch">
+                            <input asp-for="Obrigatorio" class="form-check-input" type="checkbox" role="switch" checked />
+                            <label asp-for="Obrigatorio" class="form-check-label fw-semibold">
+                                Obrigatório
+                            </label>
+                        </div>
+                        <div class="form-text">Se marcado, o candidato não poderá enviar sem anexar este documento.</div>
+                    </div>
+
+                    <div class="mb-4">
+                        <div class="form-check form-switch">
+                            <input asp-for="Ativo" class="form-check-input" type="checkbox" role="switch" checked />
+                            <label asp-for="Ativo" class="form-check-label fw-semibold">
+                                Ativo
+                            </label>
+                        </div>
+                        <div class="form-text">Campos inativos não aparecem no formulário público.</div>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-success px-4">
+                            <i class="bi bi-check-lg me-1"></i>Salvar
+                        </button>
+                        <a asp-action="Index" class="btn btn-outline-secondary">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
